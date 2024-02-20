@@ -12,8 +12,9 @@ class RegisterRepositoryImpl extends RegisterRepository {
   Future<RegisterResponse> register(RegisterDto registerDto) async {
     final response = await _httpClient.post(
         Uri.parse('http://localhost:8080/auth/register'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8'
+            headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'No-Auth'
         },
         body: registerDto.toJson());
     if (response.statusCode == 200) {
