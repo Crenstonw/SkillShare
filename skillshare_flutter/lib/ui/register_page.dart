@@ -10,6 +10,18 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: Column(
+        children: [
+          const Text('Register'),
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'nombre',
+            ),
+            onSaved: (String? value) {},
+          )
+        ],
+      ),
+    );
   }
 }
