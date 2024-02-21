@@ -22,8 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     loginRepository = LoginRepositoryImpl();
-    _loginBloc = LoginBloc(loginRepository)
-      ..add(DoLoginEvent("user1@email.com", "1234"));
+    _loginBloc = LoginBloc(loginRepository);
     super.initState();
   }
 
@@ -38,29 +37,31 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _loginBloc,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: BlocConsumer<LoginBloc, LoginState>(
-          buildWhen: (context, state) {
-            return state is LoginInitial ||
-                state is DoLoginSuccess ||
-                state is DoLoginError ||
-                state is DoLoginLoading;
-          },
-          builder: (context, state) {
-            if (state is DoLoginSuccess) {
-              return const Text('Login success');
-            } else if (state is DoLoginError) {
-              return const Text('Login error');
-            } else if (state is DoLoginLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return Center(child: _buildLoginForm());
-          },
-          /*listenWhen: (context, state) {
-            return state is GetRequestTokenSuccess;
-          },*/
-          listener: (BuildContext context, LoginState state) {},
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: BlocConsumer<LoginBloc, LoginState>(
+            buildWhen: (context, state) {
+              return state is LoginInitial ||
+                  state is DoLoginSuccess ||
+                  state is DoLoginError ||
+                  state is DoLoginLoading;
+            },
+            builder: (context, state) {
+              if (state is DoLoginSuccess) {
+                return const Text('Login success');
+              } else if (state is DoLoginError) {
+                return const Text('Login error');
+              } else if (state is DoLoginLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return Center(child: _buildLoginForm());
+            },
+            /*listenWhen: (context, state) {
+              return state is GetRequestTokenSuccess;
+            },*/
+            listener: (BuildContext context, LoginState state) {},
+          ),
         ),
       ),
     );
