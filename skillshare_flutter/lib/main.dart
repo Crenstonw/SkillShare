@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skillshare_flutter/ui/login_page.dart';
 import 'package:skillshare_flutter/ui/register_page.dart';
 
 void main() {
@@ -10,7 +11,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-       home: RegisterPage());
+    return MaterialApp(home: LoginPage());
   }
 }
