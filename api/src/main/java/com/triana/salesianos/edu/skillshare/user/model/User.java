@@ -1,5 +1,6 @@
 package com.triana.salesianos.edu.skillshare.user.model;
 
+import com.triana.salesianos.edu.skillshare.order.model.Order;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -65,6 +67,9 @@ public class User implements UserDetails {
 
     @Builder.Default
     private boolean enabled = true;
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
+    private Set<Order> orders = new LinkedHashSet<>();
 
     @Override
     public String getUsername() {

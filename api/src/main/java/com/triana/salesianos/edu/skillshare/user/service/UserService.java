@@ -1,5 +1,6 @@
 package com.triana.salesianos.edu.skillshare.user.service;
 
+import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
 import com.triana.salesianos.edu.skillshare.user.dto.CreateUserRequest;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.model.UserRole;
@@ -9,9 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +39,16 @@ public class UserService {
 
     public Optional<User> findByEmail(String email) {
         return userRepository.buscarPorEmail(email);
+    }
+
+    public List<AllUserResponse> getAllUsers() {
+        List<User> findAll = userRepository.findAll();
+        List<AllUserResponse> result = new ArrayList<>();
+
+        for(User user : findAll) {
+            result.add(AllUserResponse.of(user));
+        }
+
+        return result;
     }
 }
