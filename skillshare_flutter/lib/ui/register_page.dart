@@ -22,49 +22,98 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const Text('Register'),
-          Card(
-            child: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'email',
+      backgroundColor: Color.fromARGB(1000, 191, 218, 208),
+      body: Padding(
+        padding: EdgeInsets.only(top: 70),
+        child: SizedBox(
+          height: 2000,
+          child: Column(
+            children: [
+              const Text(
+                'SkillShare',
+                style: TextStyle(
+                    fontSize: 38,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900),
               ),
-              onChanged: (value) => email = value,
-            ),
-          ),
-          Card(
-            child: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'name',
+              const Text(
+                'Let\'s get started',
+                style: TextStyle(fontSize: 26),
               ),
-              onChanged: (value) => name = value,
-            ),
-          ),
-          Card(
-            child: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'surname',
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'email',
+                    ),
+                    onChanged: (value) => email = value,
+                  ),
+                ),
               ),
-              onChanged: (value) => surname = value,
-            ),
-          ),
-          Card(
-            child: TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'password',
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'name',
+                    ),
+                    onChanged: (value) => name = value,
+                  ),
+                ),
               ),
-              onChanged: (value) => password = value,
-            ),
-          ),
-          ElevatedButton(
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'surname',
+                    ),
+                    onChanged: (value) => surname = value,
+                  ),
+                ),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'password',
+                    ),
+                    onChanged: (value) => password = value,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: RichText(
+                  text: const TextSpan(children: [
+                    TextSpan(
+                        text: 'Already have an account? ',
+                        style: TextStyle(color: Colors.black)),
+                    TextSpan(
+                        text: 'Sign in',
+                        style: TextStyle(
+                            color: Color.fromARGB(1000, 18, 170, 115)))
+                  ]),
+                ),
+              ),
+              ElevatedButton(
                 onPressed: () {
                   registerRepository = RegisterRepositoryImpl();
-                  _registerBloc = RegisterBloc(registerRepository)..add(RegisterFetch(email, name, surname, password));
+                  _registerBloc = RegisterBloc(registerRepository)
+                    ..add(RegisterFetch(email, name, surname, password));
                 },
-                child: Text('Register'),
+                child: const Text(
+                  'Get Started',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
               ),
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }
