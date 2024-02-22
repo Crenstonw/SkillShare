@@ -7,9 +7,11 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 @Builder
 public record AllUserResponse(
+        UUID id,
         String email,
         String username,
         String name,
@@ -22,6 +24,7 @@ public record AllUserResponse(
 
     public static AllUserResponse of(User user) {
         return AllUserResponse.builder()
+                .id(user.getId())
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .name(user.getName())
