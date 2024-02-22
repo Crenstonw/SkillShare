@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skillshare_flutter/blocs/login/login_bloc.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository_impl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+//https://www.youtube.com/watch?v=GGNiT9PgrFQ
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -49,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
             },
             builder: (context, state) {
               if (state is DoLoginSuccess) {
-                return const Text('Login success');
+                return const Text('SharedPreferences.getString().toString()');
               } else if (state is DoLoginError) {
                 return const Text('Login error');
               } else if (state is DoLoginLoading) {

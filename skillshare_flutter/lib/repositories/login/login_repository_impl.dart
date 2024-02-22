@@ -4,12 +4,14 @@ import 'package:http/http.dart';
 import 'package:skillshare_flutter/models/dtos/login_dto.dart';
 import 'package:skillshare_flutter/models/login_response.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginRepositoryImpl extends LoginRepository {
   final Client _httpClient = Client();
 
   @override
   Future<LoginResponse> login(LoginDto loginDto) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final jsonBody = json.encode(loginDto.toJson());
     final response =
         await _httpClient.post(Uri.parse('http://10.0.2.2:8080/auth/login'),
@@ -18,7 +20,10 @@ class LoginRepositoryImpl extends LoginRepository {
             },
             body: jsonBody);
     if (response.statusCode == 201) {
-      return LoginResponse.fromJson(response.body);
+      final finalResponse = LoginResponse.fromJson(response.body);
+      await prefs.setString('token', finalResponse.token!);
+
+      return finalResponse;
     } else {
       throw Exception('Failed to login');
     }

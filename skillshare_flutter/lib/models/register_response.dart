@@ -5,8 +5,15 @@ class RegisterResponse {
 	String? email;
 	String? username;
 	String? createdAt;
+	String? token;
 
-	RegisterResponse({this.id, this.email, this.username, this.createdAt});
+	RegisterResponse({
+		this.id, 
+		this.email, 
+		this.username, 
+		this.createdAt, 
+		this.token, 
+	});
 
 	factory RegisterResponse.fromMap(Map<String, dynamic> data) {
 		return RegisterResponse(
@@ -14,6 +21,7 @@ class RegisterResponse {
 			email: data['email'] as String?,
 			username: data['username'] as String?,
 			createdAt: data['createdAt'] as String?,
+			token: data['token'] as String?,
 		);
 	}
 
@@ -24,6 +32,7 @@ class RegisterResponse {
 				'email': email,
 				'username': username,
 				'createdAt': createdAt,
+				'token': token,
 			};
 
   /// `dart:convert`
