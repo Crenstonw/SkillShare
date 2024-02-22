@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skillshare_flutter/blocs/login/login_bloc.dart';
+import 'package:skillshare_flutter/environments/local_storage.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository_impl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
             },
             builder: (context, state) {
               if (state is DoLoginSuccess) {
-                return const Text('SharedPreferences.getString().toString()');
+                return Text(Localstorage().prefs.getString('token')!);
               } else if (state is DoLoginError) {
                 return const Text('Login error');
               } else if (state is DoLoginLoading) {
