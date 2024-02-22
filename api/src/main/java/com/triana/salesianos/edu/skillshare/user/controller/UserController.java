@@ -27,12 +27,22 @@ public class UserController {
 
 
     @PostMapping("/auth/register")
-    public ResponseEntity<UserResponse> createUSerWithUserRole(
+    public ResponseEntity<JwtUserResponse> createUSerWithUserRole(
             @RequestBody CreateUserRequest createUserRequest
     ) {
         User user = service.createUserWithUserRole(createUserRequest);
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                createUserRequest.email(),
+                                createUserRequest.password()
+                        )
+                );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtProvider.generateToken(authentication);
+        User userResponse = (User) authentication.getPrincipal();
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
+        return ResponseEntity.status(HttpStatus.CREATED).body(JwtUserResponse.of(userResponse, token));
     }
 
     @PostMapping("/auth/login")
