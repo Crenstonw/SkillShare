@@ -4,8 +4,8 @@ import 'package:skillshare_flutter/ui/login_page.dart';
 import 'package:skillshare_flutter/ui/register_page.dart';
 
 void main() async {
-  await Localstorage().configurePrefs();
   runApp(const MainApp());
+  await Localstorage().configurePrefs();
 }
 
 class MainApp extends StatelessWidget {
