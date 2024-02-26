@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skillshare_flutter/blocs/login/login_bloc.dart';
-import 'package:skillshare_flutter/environments/local_storage.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository_impl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,9 +14,12 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formLogin = GlobalKey<FormState>();
+  //final _formLogin = GlobalKey<FormState>();
   final userTextController = TextEditingController();
   final passTextController = TextEditingController();
+
+  late String email;
+  late String password;
 
   late LoginRepository loginRepository;
   late LoginBloc _loginBloc;
@@ -41,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
     return BlocProvider.value(
       value: _loginBloc,
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(1000, 191, 218, 208),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: BlocConsumer<LoginBloc, LoginState>(
@@ -52,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
             },
             builder: (context, state) {
               if (state is DoLoginSuccess) {
-                return Text('Login success');
+                return const Text('Login success');
               } else if (state is DoLoginError) {
                 return const Text('Login error');
               } else if (state is DoLoginLoading) {
@@ -71,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _buildLoginForm() {
-    return Form(
+    return /*Form(
       key: _formLogin,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -129,6 +132,74 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ],
       ),
-    );
+    );*/
+       Padding(
+        padding: EdgeInsets.only(top: 70),
+        child: SizedBox(
+          height: 2000,
+          child: Column(
+            children: [
+              const Text(
+                'SkillShare',
+                style: TextStyle(
+                    fontSize: 38,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900),
+              ),
+              const Text(
+                'Let\'s get started',
+                style: TextStyle(fontSize: 26),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'email',
+                    ),
+                    onChanged: (value) => email = value,
+                  ),
+                ),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'password',
+                    ),
+                    onChanged: (value) => password = value,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: RichText(
+                  text: const TextSpan(children: [
+                    TextSpan(
+                        text: 'Don\'t you have an account? ',
+                        style: TextStyle(color: Colors.black)),
+                    TextSpan(
+                        text: 'Sign up',
+                        style: TextStyle(
+                            color: Color.fromARGB(1000, 18, 170, 115)))
+                  ]),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                    _loginBloc.add(DoLoginEvent(email, password));
+                },
+                child: const Text(
+                  'LogIn',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
   }
 }
