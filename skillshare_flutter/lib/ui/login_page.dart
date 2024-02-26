@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
             },
             builder: (context, state) {
               if (state is DoLoginSuccess) {
-                return Text(Localstorage().prefs.getString('token')!);
+                return Text('Login success');
               } else if (state is DoLoginError) {
                 return const Text('Login error');
               } else if (state is DoLoginLoading) {

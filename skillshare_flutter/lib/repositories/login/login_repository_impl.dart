@@ -21,7 +21,7 @@ class LoginRepositoryImpl extends LoginRepository {
             body: jsonBody);
     if (response.statusCode == 201) {
       final finalResponse = LoginResponse.fromJson(response.body);
-      Localstorage().prefs.setString('token', finalResponse.token!);
+      Localstorage.prefs.setString('token', finalResponse.token!);
 
       return finalResponse;
     } else {
