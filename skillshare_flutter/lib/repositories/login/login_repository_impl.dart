@@ -5,7 +5,6 @@ import 'package:skillshare_flutter/environments/local_storage.dart';
 import 'package:skillshare_flutter/models/dtos/login_dto.dart';
 import 'package:skillshare_flutter/models/login_response.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginRepositoryImpl extends LoginRepository {
   final Client _httpClient = Client();

@@ -1,13 +1,18 @@
 package com.triana.salesianos.edu.skillshare.user.service;
 
+import com.triana.salesianos.edu.skillshare.order.model.Order;
+import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
 import com.triana.salesianos.edu.skillshare.security.errorhandling.JwtTokenException;
 import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
 import com.triana.salesianos.edu.skillshare.user.dto.CreateUserRequest;
 import com.triana.salesianos.edu.skillshare.user.dto.EditUserRequest;
+import com.triana.salesianos.edu.skillshare.user.dto.FavoriteDto;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.model.UserRole;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +25,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
+
+    private final OrderRepository orderRepository;
 
     public User createUser(CreateUserRequest createUserRequest, Set<UserRole> roles) {
         User user = User.builder()
@@ -79,5 +86,23 @@ public class UserService {
     public void deleteUser(String id) {
         Optional<User> findUser = userRepository.findById(UUID.fromString(id));
         findUser.ifPresent(userRepository::delete);
+    }
+
+    public FavoriteDto newFavoriteOrder(String id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> findUser = userRepository.buscarPorUsername(userDetails.getUsername());
+        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
+        if(findUser.isPresent() && findOrder.isPresent()) {
+            User user = findUser.get();
+            Collection<Order> newFavoriteList = new ArrayList<>();
+            for(Order order : user.getFavoriteOrders()) {
+                newFavoriteList.add(order);
+            }
+            newFavoriteList.add(findOrder.get());
+            user.setFavoriteOrders(newFavoriteList);
+            userRepository.save(user);
+            return FavoriteDto.of(user);
+        }
+        return null;
     }
 }

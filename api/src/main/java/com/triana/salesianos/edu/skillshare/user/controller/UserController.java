@@ -84,4 +84,9 @@ public class UserController {
         service.deleteUser(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @PutMapping("/user/favorite/{id}")
+    public ResponseEntity<FavoriteDto> newFavoriteOrder(@PathVariable String id) {
+        return ResponseEntity.ok().body(service.newFavoriteOrder(id));
+    }
 }
