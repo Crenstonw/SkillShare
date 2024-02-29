@@ -38,7 +38,7 @@ public class InitData {
         userRepository.save(user1);
 
         Order order1 = Order.builder()
-                .id(UUID.randomUUID())
+                .id(UUID.fromString("e438c08c-4e3b-48dc-9b35-95e5ddbdff81"))
                 .title("titulo")
                 .user(user1)
                 .description("descripcion de la ordenanza")

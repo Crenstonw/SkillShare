@@ -70,7 +70,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<AllUserResponse> getUser(@PathVariable String id) {
+    public ResponseEntity<UserDetailsDto> getUser(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getUser(id));
     }
 
@@ -86,7 +86,7 @@ public class UserController {
     }
 
     @PutMapping("/user/favorite/{id}")
-    public ResponseEntity<FavoriteDto> newFavoriteOrder(@PathVariable String id) {
+    public ResponseEntity<List<FavoriteDto>> newFavoriteOrder(@PathVariable String id) {
         return ResponseEntity.ok().body(service.newFavoriteOrder(id));
     }
 }

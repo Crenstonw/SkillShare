@@ -70,7 +70,7 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<Order> orders = new LinkedHashSet<>();
 
-    @OneToMany(orphanRemoval = true)
+    @OneToMany()
     @JoinColumn(name = "user_id")
     private Collection<Order> favoriteOrders = new ArrayList<>();
 

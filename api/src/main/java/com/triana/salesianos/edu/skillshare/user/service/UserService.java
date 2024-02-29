@@ -1,12 +1,10 @@
 package com.triana.salesianos.edu.skillshare.user.service;
 
+import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
 import com.triana.salesianos.edu.skillshare.security.errorhandling.JwtTokenException;
-import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
-import com.triana.salesianos.edu.skillshare.user.dto.CreateUserRequest;
-import com.triana.salesianos.edu.skillshare.user.dto.EditUserRequest;
-import com.triana.salesianos.edu.skillshare.user.dto.FavoriteDto;
+import com.triana.salesianos.edu.skillshare.user.dto.*;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.model.UserRole;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
@@ -54,17 +52,15 @@ public class UserService {
         List<User> findAll = userRepository.findAll();
         List<AllUserResponse> result = new ArrayList<>();
 
-        for(User user : findAll) {
-            result.add(AllUserResponse.of(user));
-        }
+        for(User user : findAll) {result.add(AllUserResponse.of(user));}
 
         return result;
     }
 
-    public AllUserResponse getUser(String id) {
+    public UserDetailsDto getUser(String id) {
         Optional<User> findUser = userRepository.findById(UUID.fromString(id));
         if(findUser.isPresent()) {
-            return AllUserResponse.of(findUser.get());
+            return UserDetailsDto.of(findUser.get());
         } else throw new JwtTokenException("User not found");
     }
 
@@ -88,21 +84,17 @@ public class UserService {
         findUser.ifPresent(userRepository::delete);
     }
 
-    public FavoriteDto newFavoriteOrder(String id) {
+    public List<FavoriteDto> newFavoriteOrder(String id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> findUser = userRepository.buscarPorUsername(userDetails.getUsername());
-        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        if(findUser.isPresent() && findOrder.isPresent()) {
-            User user = findUser.get();
-            Collection<Order> newFavoriteList = new ArrayList<>();
-            for(Order order : user.getFavoriteOrders()) {
-                newFavoriteList.add(order);
-            }
-            newFavoriteList.add(findOrder.get());
-            user.setFavoriteOrders(newFavoriteList);
-            userRepository.save(user);
-            return FavoriteDto.of(user);
+        User user = userRepository.buscarPorUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
+        Collection<Order> newFavoriteList = user.getFavoriteOrders();
+        List<FavoriteDto> result = new ArrayList<>();
+        user.setFavoriteOrders(newFavoriteList);
+        userRepository.save(user);
+        for(Order forOrder : newFavoriteList) {
+            result.add(FavoriteDto.of(forOrder));
         }
-        return null;
+        return result;
     }
 }

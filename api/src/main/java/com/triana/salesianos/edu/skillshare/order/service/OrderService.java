@@ -1,9 +1,13 @@
 package com.triana.salesianos.edu.skillshare.order.service;
 
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
+import com.triana.salesianos.edu.skillshare.order.dto.Prueba;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
+import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
+import com.triana.salesianos.edu.skillshare.user.model.User;
+import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,7 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
 
     public List<OrderResponse> getAllOrders() {
         List<Order> findAll = orderRepository.findAll();
