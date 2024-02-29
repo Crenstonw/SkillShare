@@ -65,7 +65,7 @@ public class UserService {
         Optional<User> findUser = userRepository.findById(UUID.fromString(id));
         if(findUser.isPresent()) {
             return AllUserResponse.of(findUser.get());
-        } else throw new JwtTokenException("si");
+        } else throw new JwtTokenException("User not found");
     }
 
     public AllUserResponse editUser(String id, EditUserRequest editUserRequest) {

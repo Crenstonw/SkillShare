@@ -3,10 +3,11 @@ package com.triana.salesianos.edu.skillshare.order.dto;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.model.Tag;
 import com.triana.salesianos.edu.skillshare.user.model.User;
+import lombok.Builder;
 
 import java.util.Set;
 import java.util.UUID;
-
+@Builder
 public record OrderResponse(
         UUID id,
         String title,
