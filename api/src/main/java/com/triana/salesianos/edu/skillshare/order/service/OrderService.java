@@ -21,7 +21,6 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
 
     public List<OrderResponse> getAllOrders() {
         List<Order> findAll = orderRepository.findAll();

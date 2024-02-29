@@ -89,4 +89,9 @@ public class UserController {
     public ResponseEntity<List<FavoriteDto>> newFavoriteOrder(@PathVariable String id) {
         return ResponseEntity.ok().body(service.newFavoriteOrder(id));
     }
+
+    @PutMapping("/user/unfavorite/{id}")
+    public ResponseEntity<List<FavoriteDto>> deleteFavoriteOrder(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.deleteFavoriteOrder(id));
+    }
 }

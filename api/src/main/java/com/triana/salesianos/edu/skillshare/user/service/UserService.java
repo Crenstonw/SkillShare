@@ -89,9 +89,28 @@ public class UserService {
         User user = userRepository.buscarPorUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
         Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
         Collection<Order> newFavoriteList = user.getFavoriteOrders();
+        newFavoriteList.add(order);
         List<FavoriteDto> result = new ArrayList<>();
         user.setFavoriteOrders(newFavoriteList);
         userRepository.save(user);
+        for(Order forOrder : newFavoriteList) {
+            result.add(FavoriteDto.of(forOrder));
+        }
+        return result;
+    }
+
+    public List<FavoriteDto> deleteFavoriteOrder(String id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.buscarPorUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
+
+        Collection<Order> newFavoriteList = user.getFavoriteOrders();
+        newFavoriteList.removeIf(forOrder -> Objects.equals(forOrder, order));
+
+        user.setFavoriteOrders(newFavoriteList);
+        userRepository.save(user);
+
+        List<FavoriteDto> result = new ArrayList<>();
         for(Order forOrder : newFavoriteList) {
             result.add(FavoriteDto.of(forOrder));
         }

@@ -71,7 +71,7 @@ public class User implements UserDetails {
     private Set<Order> orders = new LinkedHashSet<>();
 
     @OneToMany()
-    @JoinColumn(name = "user_id")
+    //@JoinColumn(name = "user_id")
     private Collection<Order> favoriteOrders = new ArrayList<>();
 
     @Override
