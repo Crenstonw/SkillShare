@@ -74,6 +74,9 @@ public class User implements UserDetails {
     //@JoinColumn(name = "user_id")
     private Collection<Order> favoriteOrders = new ArrayList<>();
 
+    @Column(name = "profile_picture")
+    private String profilePicture;
+
     @Override
     public String getUsername() {
         return username;

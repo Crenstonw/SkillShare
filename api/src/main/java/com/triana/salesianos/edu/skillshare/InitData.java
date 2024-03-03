@@ -28,6 +28,7 @@ public class InitData {
         User user1 = User.builder()
                 .id(UUID.randomUUID())
                 .email("user1@email.com")
+                .profilePicture("https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg")
                 .name("user1")
                 .surname("suruser1")
                 .username("username")
@@ -44,5 +45,13 @@ public class InitData {
                 .description("descripcion de la ordenanza")
                 .build();
         orderRepository.save(order1);
+
+        Order order2 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("titulo2")
+                .user(user1)
+                .description("descripcion 2 de la ordenanza")
+                .build();
+        orderRepository.save(order2);
     }
 }

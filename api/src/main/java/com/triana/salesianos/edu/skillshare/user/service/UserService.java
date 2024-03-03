@@ -70,6 +70,7 @@ public class UserService {
             findUser.get().setName(editUserRequest.name());
             findUser.get().setSurname(editUserRequest.surname());
             findUser.get().setPassword(passwordEncoder.encode(editUserRequest.password()));
+            findUser.get().setProfilePicture(editUserRequest.profilePicture());
 
             userRepository.save(findUser.get());
 
@@ -115,5 +116,13 @@ public class UserService {
             result.add(FavoriteDto.of(forOrder));
         }
         return result;
+    }
+
+    public AllUserResponse actualUserInfo() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User user = userRepository.buscarPorUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+
+        return AllUserResponse.of(user);
     }
 }

@@ -18,8 +18,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   void _doLogin(DoLoginEvent event, Emitter<LoginState> emit) async {
     emit(DoLoginLoading());
-    final SharedPreferences prefs = await _prefs;
-    final String requestToken = prefs.getString('request_token') ?? '';
 
     try {
       final LoginDto loginDto =

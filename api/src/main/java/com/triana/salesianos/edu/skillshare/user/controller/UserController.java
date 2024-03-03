@@ -94,4 +94,9 @@ public class UserController {
     public ResponseEntity<List<FavoriteDto>> deleteFavoriteOrder(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteFavoriteOrder(id));
     }
+
+    @GetMapping("/user/me")
+    public ResponseEntity<AllUserResponse> actualUserInfo() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.actualUserInfo());
+    }
 }
