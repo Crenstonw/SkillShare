@@ -2,7 +2,9 @@ package com.triana.salesianos.edu.skillshare;
 
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
+import com.triana.salesianos.edu.skillshare.order.model.Tag;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
+import com.triana.salesianos.edu.skillshare.order.repository.TagRepository;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.model.UserRole;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
@@ -22,6 +26,7 @@ public class InitData {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TagRepository tagRepository;
 
     @PostConstruct
     public void initData() {
@@ -38,11 +43,22 @@ public class InitData {
                 .build();
         userRepository.save(user1);
 
+        /*Tag tag1 = Tag.builder()
+                .id(UUID.randomUUID())
+                .name("tag1")
+                .build();
+        Tag tag2 = Tag.builder()
+                .id(UUID.randomUUID())
+                .name("tag2")
+                .build();
+        tagRepository.save(tag1);*/
+
         Order order1 = Order.builder()
                 .id(UUID.fromString("e438c08c-4e3b-48dc-9b35-95e5ddbdff81"))
                 .title("titulo")
                 .user(user1)
                 .description("descripcion de la ordenanza")
+                //.tags(Set.of(tag1))
                 .build();
         orderRepository.save(order1);
 
@@ -51,6 +67,7 @@ public class InitData {
                 .title("titulo2")
                 .user(user1)
                 .description("descripcion 2 de la ordenanza")
+                //.tags(Set.of(tag1))
                 .build();
         orderRepository.save(order2);
     }

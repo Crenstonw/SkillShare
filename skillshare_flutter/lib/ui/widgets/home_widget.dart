@@ -138,7 +138,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             margin: const EdgeInsets.all(12),
             padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 210, 0),
             child: const Text('Jobs relevant to you')),
-        const SizedBox(height: 500, child: OrderListWidget())
+        const Expanded(child: OrderListWidget())
       ],
     );
   }

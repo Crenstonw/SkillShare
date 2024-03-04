@@ -37,8 +37,12 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "order_id")
+    @ManyToMany
+    @JoinTable(
+            name = "order_tag",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
     private Set<Tag> tags = new LinkedHashSet<>();
 
 }

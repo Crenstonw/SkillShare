@@ -4,6 +4,7 @@ import 'package:skillshare_flutter/blocs/orderList/order_list_bloc.dart';
 import 'package:skillshare_flutter/models/order_list_response.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository_impl.dart';
+import 'package:skillshare_flutter/ui/order_detail_page.dart';
 
 class OrderListWidget extends StatefulWidget {
   const OrderListWidget({super.key});
@@ -53,12 +54,67 @@ class _OrderListWidgetState extends State<OrderListWidget> {
     return ListView.builder(
       itemCount: orderList.length,
       itemBuilder: (context, index) {
-        return Card(
-          child: Column(
-            children: [
-              Text(orderList[index].title!,
-                  style: const TextStyle(fontSize: 24)),
-            ],
+        return InkWell(
+          onTap: () {
+            Order order = orderList[index];
+            Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetailPage(order: order)));
+          },
+          child: Card(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 45,
+                            height: 45,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.black),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(25),
+                              child: Image.network(
+                                orderList[index].user!.profilePicture!,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  orderList[index].title!,
+                                  style: const TextStyle(fontSize: 27),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                child: Text('By: ${orderList[index].user!.username!}'),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.favorite_border,
+                          color: Colors.red,
+                          size: 35,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

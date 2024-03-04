@@ -71,8 +71,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((auth) -> auth
                         //.requestMatchers(antMatcher("/user/**")).hasRole("ADMIN")
                         //.requestMatchers(antMatcher("/user/me")).hasRole("USER")
-                        .requestMatchers(antMatcher("/order/**")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/order")).hasRole("ADMIN")
+                        //.requestMatchers(antMatcher("/order/**")).hasRole("ADMIN")
+                        //.requestMatchers(antMatcher("/order")).hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
