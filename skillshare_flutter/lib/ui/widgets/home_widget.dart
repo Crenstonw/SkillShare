@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skillshare_flutter/blocs/home/home_bloc.dart';
@@ -54,9 +53,18 @@ class _HomeWidgetState extends State<HomeWidget> {
             },
             builder: (context, state) {
               if (state is DoHomeSuccess) {
-                return _buildHomeWidget(state.userResponse);
+                return Center(child: _buildHomeWidget(state.userResponse));
               } else if (state is DoHomeError) {
-                return const Text('something went wrong');
+                return Center(
+                    child: Column(
+                  children: [
+                    const Text(
+                      'An error ocurred, page didn\'t load correctly',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    _buildHomeWidget(profilePicture)
+                  ],
+                ));
               } else if (state is DoHomeLoading) {
                 return const Center(child: CircularProgressIndicator());
               }
@@ -76,7 +84,6 @@ class _HomeWidgetState extends State<HomeWidget> {
     return Column(
       children: [
         Row(
-          
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
@@ -97,10 +104,39 @@ class _HomeWidgetState extends State<HomeWidget> {
             const Icon(Icons.notifications)
           ],
         ),
-        const TextField(),
-        Container(margin: const EdgeInsets.all(12),
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 180, 0),
-          child: const Text('Jobs relevant to you'))
+        Container(
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 19, 91, 70),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              const Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Buscar...',
+                    filled: true,
+                    fillColor: Color.fromARGB(255, 19, 91, 70),
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  //...
+                },
+              ),
+            ],
+          ),
+        ),
+        Container(
+            margin: const EdgeInsets.all(12),
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 210, 0),
+            child: const Text('Jobs relevant to you'))
       ],
     );
   }

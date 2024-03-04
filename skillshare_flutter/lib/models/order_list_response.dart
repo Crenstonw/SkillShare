@@ -1,31 +1,53 @@
 import 'dart:convert';
 
-class OrdersResponse {
+class OrderListResponse {
+  List<Order>? orders;
+
+  OrderListResponse({this.orders});
+
+  factory OrderListResponse.fromMap(Map<String, dynamic> data) {
+    return OrderListResponse(
+      orders: (data['orders'] as List<dynamic>?)
+          ?.map((e) => Order.fromMap(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toMap() => {
+        'orders': orders?.map((e) => e.toMap()).toList(),
+      };
+
+  /// `dart:convert`
+  ///
+  /// Parses the string and returns the resulting Json object as [OrderListResponse].
+  factory OrderListResponse.fromJson(String data) {
+    return OrderListResponse.fromMap(json.decode(data) as Map<String, dynamic>);
+  }
+
+  /// `dart:convert`
+  ///
+  /// Converts [OrderListResponse] to a JSON string.
+  String toJson() => json.encode(toMap());
+}
+
+class Order {
   String? id;
   String? title;
   String? description;
   User? user;
   List<dynamic>? tags;
 
-  OrdersResponse({
-    this.id,
-    this.title,
-    this.description,
-    this.user,
-    this.tags,
-  });
+  Order({this.id, this.title, this.description, this.user, this.tags});
 
-  factory OrdersResponse.fromMap(Map<String, dynamic> data) {
-    return OrdersResponse(
-      id: data['id'] as String?,
-      title: data['title'] as String?,
-      description: data['description'] as String?,
-      user: data['user'] == null
-          ? null
-          : User.fromMap(data['user'] as Map<String, dynamic>),
-      tags: data['tags'] as List<dynamic>?,
-    );
-  }
+  factory Order.fromMap(Map<String, dynamic> data) => Order(
+        id: data['id'] as String?,
+        title: data['title'] as String?,
+        description: data['description'] as String?,
+        user: data['user'] == null
+            ? null
+            : User.fromMap(data['user'] as Map<String, dynamic>),
+        tags: data['tags'] as List<dynamic>?,
+      );
 
   Map<String, dynamic> toMap() => {
         'id': id,
@@ -37,14 +59,14 @@ class OrdersResponse {
 
   /// `dart:convert`
   ///
-  /// Parses the string and returns the resulting Json object as [OrdersResponse].
-  factory OrdersResponse.fromJson(String data) {
-    return OrdersResponse.fromMap(json.decode(data) as Map<String, dynamic>);
+  /// Parses the string and returns the resulting Json object as [Order].
+  factory Order.fromJson(String data) {
+    return Order.fromMap(json.decode(data) as Map<String, dynamic>);
   }
 
   /// `dart:convert`
   ///
-  /// Converts [OrdersResponse] to a JSON string.
+  /// Converts [Order] to a JSON string.
   String toJson() => json.encode(toMap());
 }
 
@@ -55,7 +77,7 @@ class User {
   String? name;
   String? surname;
   String? password;
-  dynamic profilePicture;
+  String? profilePicture;
   String? userRole;
   DateTime? createdAt;
   bool? enabled;
@@ -80,7 +102,7 @@ class User {
         name: data['name'] as String?,
         surname: data['surname'] as String?,
         password: data['password'] as String?,
-        profilePicture: data['profilePicture'] as dynamic,
+        profilePicture: data['profilePicture'] as String?,
         userRole: data['userRole'] as String?,
         createdAt: data['createdAt'] == null
             ? null

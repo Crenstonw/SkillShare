@@ -1,5 +1,6 @@
 package com.triana.salesianos.edu.skillshare.order.service;
 
+import com.triana.salesianos.edu.skillshare.order.dto.ListOrderResponse;
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.dto.Prueba;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
@@ -22,11 +23,12 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
-    public List<OrderResponse> getAllOrders() {
+    public ListOrderResponse getAllOrders() {
         List<Order> findAll = orderRepository.findAll();
-        List<OrderResponse> result = new ArrayList<>();
+        List<OrderResponse> list = new ArrayList<>();
 
-        for(Order order : findAll) {result.add(OrderResponse.of(order));}
+        for(Order order : findAll) {list.add(OrderResponse.of(order));}
+        ListOrderResponse result = ListOrderResponse.of(list);
 
         return result;
     }

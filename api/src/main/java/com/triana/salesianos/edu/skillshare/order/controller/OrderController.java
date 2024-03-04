@@ -1,5 +1,6 @@
 package com.triana.salesianos.edu.skillshare.order.controller;
 
+import com.triana.salesianos.edu.skillshare.order.dto.ListOrderResponse;
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.dto.Prueba;
 import com.triana.salesianos.edu.skillshare.order.service.OrderService;
@@ -20,7 +21,7 @@ public class OrderController {
     private final OrderService service;
 
     @GetMapping("/order")
-    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+    public ResponseEntity<ListOrderResponse> getAllOrders() {
         return ResponseEntity.status(HttpStatus.OK).body(service.getAllOrders());
     }
 
