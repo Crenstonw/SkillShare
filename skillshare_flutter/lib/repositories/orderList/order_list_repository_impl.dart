@@ -8,12 +8,11 @@ class OrderListRepositoryImpl extends OrderListRepository {
 
   @override
   Future<List<Order>> orderList() async {
-    final response = await _httpClient.post(
-        Uri.parse('http://10.0.2.2:8080/auth/login'),
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${Localstorage.prefs.getString('token')}'
-        });
+    final response = await _httpClient
+        .get(Uri.parse('http://10.0.2.2:8080/order'), headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Localstorage.prefs.getString('token')}'
+    });
     if (response.statusCode == 200) {
       final finalResponse = OrderListResponse.fromJson(response.body);
       return finalResponse.orders!;
