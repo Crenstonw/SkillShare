@@ -39,5 +39,14 @@ public class OrderService {
 
         return OrderResponse.of(findOrder);
     }
-    
+
+    public ListOrderResponse getOrderListByTitle(String title) {
+        List<Order> findOrders = orderRepository.findORderListByTitle(title);
+        List<OrderResponse> listToDto = new ArrayList<>();
+
+        for(Order order : findOrders) {
+            listToDto.add(OrderResponse.of(order));
+        }
+        return ListOrderResponse.of(listToDto);
+    }
 }

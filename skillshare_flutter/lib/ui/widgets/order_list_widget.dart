@@ -7,7 +7,8 @@ import 'package:skillshare_flutter/repositories/orderList/order_list_repository_
 import 'package:skillshare_flutter/ui/order_detail_page.dart';
 
 class OrderListWidget extends StatefulWidget {
-  const OrderListWidget({super.key});
+  final String title;
+  const OrderListWidget({super.key, required this.title});
 
   @override
   State<OrderListWidget> createState() => _OrderListWidgetState();
@@ -32,22 +33,41 @@ class _OrderListWidgetState extends State<OrderListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: _orderListBloc,
-      child: BlocBuilder<OrderListBloc, OrderListState>(
-        builder: (context, state) {
-          if (state is DoOrderListSuccess) {
-            return Center(
-                child: _buildOrderListWidget(state.orderListResponse));
-          } else if (state is DoOrderListError) {
-            return const Text('error');
-          } else if (state is DoOrderListLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return const Text('data');
-        },
-      ),
-    );
+    if (widget.title.isEmpty) {
+      return BlocProvider.value(
+        value: _orderListBloc,
+        child: BlocBuilder<OrderListBloc, OrderListState>(
+          builder: (context, state) {
+            if (state is DoOrderListSuccess) {
+              return Center(
+                  child: _buildOrderListWidget(state.orderListResponse));
+            } else if (state is DoOrderListError) {
+              return const Text('error');
+            } else if (state is DoOrderListLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return const Text('data');
+          },
+        ),
+      );
+    } else {
+      return BlocProvider.value(
+        value: _orderListBloc,
+        child: BlocBuilder<OrderListBloc, OrderListState>(
+          builder: (context, state) {
+            if (state is DoOrderListSuccess) {
+              return Center(
+                  child: _buildOrderListWidget(state.orderListResponse));
+            } else if (state is DoOrderListError) {
+              return const Text('error');
+            } else if (state is DoOrderListLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return const Text('data');
+          },
+        ),
+      );
+    }
   }
 
   _buildOrderListWidget(List<Order> orderList) {
@@ -57,7 +77,10 @@ class _OrderListWidgetState extends State<OrderListWidget> {
         return InkWell(
           onTap: () {
             Order order = orderList[index];
-            Navigator.push(context, MaterialPageRoute(builder: (context) => OrderDetailPage(order: order)));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => OrderDetailPage(order: order)));
           },
           child: Card(
             child: Column(
@@ -86,6 +109,7 @@ class _OrderListWidgetState extends State<OrderListWidget> {
                             ),
                           ),
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -96,7 +120,8 @@ class _OrderListWidgetState extends State<OrderListWidget> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                child: Text('By: ${orderList[index].user!.username!}'),
+                                child: Text(
+                                    'By: ${orderList[index].user!.username!}'),
                               )
                             ],
                           ),
@@ -116,6 +141,7 @@ class _OrderListWidgetState extends State<OrderListWidget> {
               ],
             ),
           ),
+          
         );
       },
     );

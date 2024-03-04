@@ -30,4 +30,9 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(service.getOrderById(id));
     }
 
+    @GetMapping("/order/find/{title}")
+    public ResponseEntity<ListOrderResponse> getOrderListByTitle(@PathVariable String title) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getOrderListByTitle(title));
+    }
+
 }

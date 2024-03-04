@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skillshare_flutter/blocs/home/home_bloc.dart';
 import 'package:skillshare_flutter/repositories/home/home_repository.dart';
 import 'package:skillshare_flutter/repositories/home/home_repository_impl.dart';
+import 'package:skillshare_flutter/repositories/orderList/order_list_repository.dart';
+import 'package:skillshare_flutter/repositories/orderList/order_list_repository_impl.dart';
 import 'package:skillshare_flutter/ui/widgets/order_list_widget.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -21,6 +23,8 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   late String profilePicture =
       "https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg";
+
+  late String searchTitle = '';
 
   @override
   void initState() {
@@ -63,7 +67,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                       'An error ocurred, page didn\'t load correctly',
                       style: TextStyle(color: Colors.red),
                     ),
-                    _buildHomeWidget(profilePicture)
+                    _buildHomeWidget(widget.toString())
                   ],
                 ));
               } else if (state is DoHomeLoading) {
@@ -84,61 +88,70 @@ class _HomeWidgetState extends State<HomeWidget> {
   _buildHomeWidget(String pf) {
     return Column(
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.black),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(25),
-                child: Image.network(
-                  pf,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            const Icon(Icons.notifications)
-          ],
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 19, 91, 70),
-            borderRadius: BorderRadius.circular(30),
-          ),
-          padding: const EdgeInsets.all(16.0),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Buscar...',
-                    filled: true,
-                    fillColor: Color.fromARGB(255, 19, 91, 70),
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.black),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(25),
+                  child: Image.network(
+                    pf,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-              IconButton(
-                icon: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  //...
-                },
-              ),
+              const Icon(Icons.notifications)
             ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 19, 91, 70),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            padding: const EdgeInsets.all(0.1),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'Search...',
+                      filled: true,
+                      fillColor: Color.fromARGB(255, 19, 91, 70),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        searchTitle = value;
+                      });
+                    },
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {},
+                ),
+              ],
+            ),
           ),
         ),
         Container(
             margin: const EdgeInsets.all(12),
             padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 210, 0),
             child: const Text('Jobs relevant to you')),
-        const Expanded(child: OrderListWidget())
+        Expanded(child: OrderListWidget(title: searchTitle))
       ],
     );
   }
