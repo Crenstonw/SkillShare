@@ -32,13 +32,13 @@ public class InitData {
     public void initData() {
         User user1 = User.builder()
                 .id(UUID.randomUUID())
-                .email("user1@email.com")
+                .email("a")
                 .profilePicture("https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg")
                 .name("user1")
                 .surname("suruser1")
-                .username("username")
+                .username("ManoloOlo23")
                 .createdAt(LocalDateTime.now())
-                .password(passwordEncoder.encode("1234"))
+                .password(passwordEncoder.encode("a"))
                 .userRole(EnumSet.of(UserRole.ADMIN))
                 .build();
         userRepository.save(user1);
@@ -57,7 +57,7 @@ public class InitData {
                 .id(UUID.fromString("e438c08c-4e3b-48dc-9b35-95e5ddbdff81"))
                 .title("titulo")
                 .user(user1)
-                .description("descripcion de la ordenanza")
+                .description("descripcion de la ordenanza lorem ipsum amet")
                 //.tags(Set.of(tag1))
                 .build();
         orderRepository.save(order1);
@@ -70,5 +70,32 @@ public class InitData {
                 //.tags(Set.of(tag1))
                 .build();
         orderRepository.save(order2);
+
+        Order order3 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Arreglo cortacespes")
+                .user(user1)
+                .description("Hago de todo en realidad, pero arreglar cortacespes es lo que mejor se me da")
+                //.tags(Set.of(tag1))
+                .build();
+        orderRepository.save(order3);
+
+        Order order4 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Saco la basura por ti")
+                .user(user1)
+                .description("descripcion 2 de la ordenanza")
+                //.tags(Set.of(tag1))
+                .build();
+        orderRepository.save(order4);
+
+        Order order5 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("titulo2")
+                .user(user1)
+                .description("descripcion 2 de la ordenanza")
+                //.tags(Set.of(tag1))
+                .build();
+        orderRepository.save(order5);
     }
 }

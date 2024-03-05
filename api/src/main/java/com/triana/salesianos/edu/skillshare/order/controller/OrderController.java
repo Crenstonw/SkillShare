@@ -1,16 +1,13 @@
 package com.triana.salesianos.edu.skillshare.order.controller;
 
 import com.triana.salesianos.edu.skillshare.order.dto.ListOrderResponse;
+import com.triana.salesianos.edu.skillshare.order.dto.NewOrderRequest;
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
-import com.triana.salesianos.edu.skillshare.order.dto.Prueba;
 import com.triana.salesianos.edu.skillshare.order.service.OrderService;
-import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,6 +30,11 @@ public class OrderController {
     @GetMapping("/order/find/{title}")
     public ResponseEntity<ListOrderResponse> getOrderListByTitle(@PathVariable String title) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getOrderListByTitle(title));
+    }
+
+    @PostMapping("/order/new")
+    public ResponseEntity<OrderResponse> newOrder(@RequestBody NewOrderRequest order) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.newOrder(order));
     }
 
 }

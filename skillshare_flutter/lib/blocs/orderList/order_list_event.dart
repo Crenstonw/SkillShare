@@ -4,5 +4,6 @@ part of 'order_list_bloc.dart';
 sealed class OrderListEvent {}
 
 class DoOrderListEvent extends OrderListEvent {
-  DoOrderListEvent();
+  final String title;
+  DoOrderListEvent(this.title);
 }

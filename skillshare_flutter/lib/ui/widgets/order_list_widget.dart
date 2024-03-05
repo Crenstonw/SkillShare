@@ -22,8 +22,14 @@ class _OrderListWidgetState extends State<OrderListWidget> {
   void initState() {
     orderListRepository = OrderListRepositoryImpl();
     _orderListBloc = OrderListBloc(orderListRepository)
-      ..add(DoOrderListEvent());
+      ..add(DoOrderListEvent(widget.title));
     super.initState();
+  }
+
+  void reload() {
+    orderListRepository = OrderListRepositoryImpl();
+    _orderListBloc = OrderListBloc(orderListRepository)
+      ..add(DoOrderListEvent(widget.title));
   }
 
   @override
@@ -33,115 +39,102 @@ class _OrderListWidgetState extends State<OrderListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.title.isEmpty) {
-      return BlocProvider.value(
-        value: _orderListBloc,
-        child: BlocBuilder<OrderListBloc, OrderListState>(
-          builder: (context, state) {
-            if (state is DoOrderListSuccess) {
-              return Center(
-                  child: _buildOrderListWidget(state.orderListResponse));
-            } else if (state is DoOrderListError) {
-              return const Text('error');
-            } else if (state is DoOrderListLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return const Text('data');
-          },
-        ),
-      );
-    } else {
-      return BlocProvider.value(
-        value: _orderListBloc,
-        child: BlocBuilder<OrderListBloc, OrderListState>(
-          builder: (context, state) {
-            if (state is DoOrderListSuccess) {
-              return Center(
-                  child: _buildOrderListWidget(state.orderListResponse));
-            } else if (state is DoOrderListError) {
-              return const Text('error');
-            } else if (state is DoOrderListLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return const Text('data');
-          },
-        ),
-      );
-    }
+    return BlocProvider.value(
+      value: _orderListBloc,
+      child: BlocBuilder<OrderListBloc, OrderListState>(
+        builder: (context, state) {
+          if (state is DoOrderListSuccess) {
+            return Center(
+                child: _buildOrderListWidget(state.orderListResponse));
+          } else if (state is DoOrderListError) {
+            return const Text('error');
+          } else if (state is DoOrderListLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return const Text('data');
+        },
+      ),
+    );
   }
 
   _buildOrderListWidget(List<Order> orderList) {
     return ListView.builder(
       itemCount: orderList.length,
       itemBuilder: (context, index) {
-        return InkWell(
-          onTap: () {
-            Order order = orderList[index];
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OrderDetailPage(order: order)));
-          },
-          child: Card(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 45,
-                            height: 45,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.black),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(25),
-                              child: Image.network(
-                                orderList[index].user!.profilePicture!,
-                                fit: BoxFit.cover,
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(2, 10, 2, 10),
+          child: InkWell(
+            onTap: () {
+              Order order = orderList[index];
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OrderDetailPage(order: order)));
+            },
+            child: Card(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 45,
+                              height: 45,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.black),
                               ),
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  orderList[index].title!,
-                                  style: const TextStyle(fontSize: 27),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(25),
+                                child: Image.network(
+                                  orderList[index].user!.profilePicture!,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                child: Text(
-                                    'By: ${orderList[index].user!.username!}'),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.favorite_border,
-                          color: Colors.red,
-                          size: 35,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 220,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      orderList[index].title!,
+                                      style: const TextStyle(fontSize: 20),
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                                  child: Text(
+                                      'By: ${orderList[index].user!.username!}'),
+                                )
+                              ],
+                            ),
+                          ],
                         ),
-                      )
-                    ],
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.favorite_border,
+                            color: Colors.red,
+                            size: 35,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-          
         );
       },
     );

@@ -18,7 +18,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     emit(DoOrderListLoading());
 
     try {
-      final response = await orderListRepository.orderList();
+      final response = await orderListRepository.orderList(event.title);
       emit(DoOrderListSuccess(response));
       return;
     } on Exception catch (e) {

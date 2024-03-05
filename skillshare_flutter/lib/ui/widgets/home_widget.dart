@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skillshare_flutter/blocs/home/home_bloc.dart';
 import 'package:skillshare_flutter/repositories/home/home_repository.dart';
 import 'package:skillshare_flutter/repositories/home/home_repository_impl.dart';
-import 'package:skillshare_flutter/repositories/orderList/order_list_repository.dart';
-import 'package:skillshare_flutter/repositories/orderList/order_list_repository_impl.dart';
 import 'package:skillshare_flutter/ui/widgets/order_list_widget.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -151,8 +149,12 @@ class _HomeWidgetState extends State<HomeWidget> {
             margin: const EdgeInsets.all(12),
             padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 210, 0),
             child: const Text('Jobs relevant to you')),
-        Expanded(child: OrderListWidget(title: searchTitle))
+        _orderListWidget()
       ],
     );
+  }
+
+  _orderListWidget() {
+    return Expanded(child: OrderListWidget(title: searchTitle));
   }
 }

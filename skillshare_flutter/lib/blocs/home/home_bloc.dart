@@ -11,8 +11,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   HomeBloc(this.homeRepository) : super(HomeInitial()) {
     on<DoHomeEvent>(_doHome);
-    on<DoOrderListEvent>(_doOrderList);
-    on<DoSearchOrderListEvent>(_doSearchOrderList as EventHandler<DoSearchOrderListEvent, HomeState>);
+    /*on<DoOrderListEvent>(_doOrderList);
+    on<DoSearchOrderListEvent>(_doSearchOrderList as EventHandler<DoSearchOrderListEvent, HomeState>);*/
   }
 
   void _doHome(DoHomeEvent event, Emitter<HomeState> emit) async {
@@ -28,7 +28,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  void _doOrderList(
+  /*void _doOrderList(
       DoOrderListEvent event, Emitter<HomeState> emit) async {
     emit(DoHomeLoading());
 
@@ -53,5 +53,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       print('Error en el bloc: $e');
       emit(DoSearchOrderListError(e.toString()));
     }
-  }
+  }*/
 }

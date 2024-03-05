@@ -38,11 +38,9 @@ public class Order {
     private User user;
 
     @ManyToMany
-    @JoinTable(
-            name = "order_tag",
+    @JoinTable(name = "order_entity_tags",
             joinColumns = @JoinColumn(name = "order_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
+            inverseJoinColumns = @JoinColumn(name = "tags_id"))
     private Set<Tag> tags = new LinkedHashSet<>();
 
 }

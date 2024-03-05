@@ -17,7 +17,7 @@ final class DoHomeError extends HomeState {
   DoHomeError(this.errorMensaje);
 }
 
-final class DoOrderListSuccess extends HomeState {
+/*final class DoOrderListSuccess extends HomeState {
   final List<Order> orderListResponse;
   DoOrderListSuccess(this.orderListResponse);
 }
@@ -35,4 +35,4 @@ final class DoSearchOrderListSuccess extends HomeState {
 final class DoSearchOrderListError extends HomeState {
   final String errorMensaje;
   DoSearchOrderListError(this.errorMensaje);
-}
+}*/

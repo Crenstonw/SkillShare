@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:skillshare_flutter/ui/new_order_page.dart';
 import 'package:skillshare_flutter/ui/widgets/favorite_widget.dart';
 import 'package:skillshare_flutter/ui/widgets/home_widget.dart';
 
@@ -14,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeWidget(),
     FavoriteWidget(),
-    Text('data'),
+    NewOrderPage(),
     Text('data'),
     Text('data')
   ];
