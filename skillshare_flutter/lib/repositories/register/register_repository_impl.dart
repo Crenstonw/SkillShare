@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:skillshare_flutter/environments/local_storage.dart';
 import 'package:skillshare_flutter/models/dtos/register_dto.dart';
 import 'package:skillshare_flutter/models/register_response.dart';
 import 'package:skillshare_flutter/repositories/register/register_repository.dart';
@@ -18,7 +19,9 @@ class RegisterRepositoryImpl extends RegisterRepository {
             },
             body: jsonBody);
     if (response.statusCode == 201) {
-      return RegisterResponse.fromJson(response.body);
+      final finalResponse = RegisterResponse.fromJson(response.body);
+      Localstorage.prefs.setString('token', finalResponse.token!);
+      return finalResponse;
     } else {
       throw Exception('Failed to register');
     }

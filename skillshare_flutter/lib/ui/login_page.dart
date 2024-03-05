@@ -1,8 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skillshare_flutter/blocs/login/login_bloc.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository_impl.dart';
+import 'package:skillshare_flutter/ui/home_page.dart';
+import 'package:skillshare_flutter/ui/register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -12,9 +15,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final _formLogin = GlobalKey<FormState>();
   final userTextController = TextEditingController();
   final passTextController = TextEditingController();
+
+  late String email;
+  late String password;
 
   late LoginRepository loginRepository;
   late LoginBloc _loginBloc;
@@ -38,6 +43,7 @@ class _LoginPageState extends State<LoginPage> {
     return BlocProvider.value(
       value: _loginBloc,
       child: Scaffold(
+        backgroundColor: const Color.fromARGB(1000, 191, 218, 208),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
           child: BlocConsumer<LoginBloc, LoginState>(
@@ -49,13 +55,21 @@ class _LoginPageState extends State<LoginPage> {
             },
             builder: (context, state) {
               if (state is DoLoginSuccess) {
-                return const Text('Login success');
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  Navigator.pushAndRemoveUntil(
+                    (context),
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => const HomePage(),
+                    ),
+                    (route) => false,
+                  );
+                });
               } else if (state is DoLoginError) {
-                return const Text('Login error');
+                return _buildLoginForm(true);
               } else if (state is DoLoginLoading) {
                 return const Center(child: CircularProgressIndicator());
               }
-              return Center(child: _buildLoginForm());
+              return Center(child: _buildLoginForm(false));
             },
             /*listenWhen: (context, state) {
               return state is GetRequestTokenSuccess;
@@ -67,65 +81,165 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _buildLoginForm() {
-    return Form(
-      key: _formLogin,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Login',
-            textAlign: TextAlign.start,
-            style: TextStyle(fontSize: 40),
+  _buildLoginForm(bool isLoginError) {
+    if (isLoginError) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 70),
+        child: SizedBox(
+          height: 2000,
+          child: Column(
+            children: [
+              const Text(
+                'SkillShare',
+                style: TextStyle(
+                    fontSize: 38,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900),
+              ),
+              const Text(
+                'Let\'s get started',
+                style: TextStyle(fontSize: 26),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'email',
+                    ),
+                    onChanged: (value) => email = value,
+                  ),
+                ),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'password',
+                    ),
+                    onChanged: (value) => password = value,
+                  ),
+                ),
+              ),
+              const Text('Incorrect credentials',
+                  style: TextStyle(color: Colors.red)),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: RichText(
+                  text: TextSpan(children: [
+                    const TextSpan(
+                        text: 'Don\'t you have an account? ',
+                        style: TextStyle(color: Colors.black)),
+                    TextSpan(
+                        text: 'Sign up',
+                        style: const TextStyle(
+                            color: Color.fromARGB(1000, 18, 170, 115)),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const RegisterPage()),
+                              (route) => false,
+                            );
+                          })
+                  ]),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _loginBloc.add(DoLoginEvent(email, password));
+                },
+                child: const Text(
+                  'LogIn',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(
-            height: 20,
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.only(top: 70),
+        child: SizedBox(
+          height: 2000,
+          child: Column(
+            children: [
+              const Text(
+                'SkillShare',
+                style: TextStyle(
+                    fontSize: 38,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900),
+              ),
+              const Text(
+                'Let\'s get started',
+                style: TextStyle(fontSize: 26),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'email',
+                    ),
+                    onChanged: (value) => email = value,
+                  ),
+                ),
+              ),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'password',
+                    ),
+                    onChanged: (value) => password = value,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: RichText(
+                  text: TextSpan(children: [
+                    const TextSpan(
+                        text: 'Don\'t you have an account? ',
+                        style: TextStyle(color: Colors.black)),
+                    TextSpan(
+                        text: 'Sign up',
+                        style: const TextStyle(
+                            color: Color.fromARGB(1000, 18, 170, 115)),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const RegisterPage()),
+                              (route) => false,
+                            );
+                          })
+                  ]),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _loginBloc.add(DoLoginEvent(email, password));
+                },
+                child: const Text(
+                  'LogIn',
+                  style: TextStyle(
+                    fontSize: 18,
+                  ),
+                ),
+              ),
+            ],
           ),
-          TextFormField(
-            controller: userTextController,
-            decoration: const InputDecoration(
-                border: OutlineInputBorder(), labelText: 'Email'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          TextFormField(
-            controller: passTextController,
-            obscureText: true,
-            decoration: const InputDecoration(
-                border: OutlineInputBorder(), labelText: 'Password'),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              child: Text('Login'.toUpperCase()),
-              onPressed: () {
-                if (_formLogin.currentState!.validate()) {
-                  _loginBloc.add(DoLoginEvent(
-                      userTextController.text, passTextController.text));
-                }
-              },
-            ),
-          ),
-        ],
-      ),
-    );
+        ),
+      );
+    }
   }
 }

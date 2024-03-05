@@ -7,13 +7,15 @@ import lombok.Builder;
 public record EditUserRequest(
         String name,
         String surname,
-        String password
+        String password,
+        String profilePicture
 ) {
     public static EditUserRequest of(User user) {
         return EditUserRequest.builder()
                 .name(user.getName())
                 .surname(user.getSurname())
                 .password(user.getPassword())
+                .profilePicture(user.getProfilePicture())
                 .build();
 
     }

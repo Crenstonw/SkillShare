@@ -17,6 +17,7 @@ public record AllUserResponse(
         String name,
         String surname,
         String password,
+        String profilePicture,
         String userRole,
         LocalDateTime createdAt,
         boolean enabled
@@ -30,6 +31,7 @@ public record AllUserResponse(
                 .name(user.getName())
                 .surname(user.getSurname())
                 .password(user.getPassword())
+                .profilePicture(user.getProfilePicture())
                 .userRole(user.getUserRole().toString())
                 .createdAt(user.getCreatedAt())
                 .enabled(user.isEnabled())

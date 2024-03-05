@@ -7,12 +7,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
 @Table(name = "order_entity")
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
@@ -35,8 +37,10 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "order_id")
+    @ManyToMany
+    @JoinTable(name = "order_entity_tags",
+            joinColumns = @JoinColumn(name = "order_id"),
+            inverseJoinColumns = @JoinColumn(name = "tags_id"))
     private Set<Tag> tags = new LinkedHashSet<>();
 
 }

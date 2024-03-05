@@ -1,15 +1,14 @@
 package com.triana.salesianos.edu.skillshare.order.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Table(name = "order_entity")
@@ -26,4 +25,5 @@ public class Tag {
 
     @Column(name = "name")
     private String name;
+
 }

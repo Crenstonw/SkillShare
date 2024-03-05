@@ -70,7 +70,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<AllUserResponse> getUser(@PathVariable String id) {
+    public ResponseEntity<UserDetailsDto> getUser(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getUser(id));
     }
 
@@ -83,5 +83,20 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable String id) {
         service.deleteUser(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/user/favorite/{id}")
+    public ResponseEntity<List<FavoriteDto>> newFavoriteOrder(@PathVariable String id) {
+        return ResponseEntity.ok().body(service.newFavoriteOrder(id));
+    }
+
+    @PutMapping("/user/unfavorite/{id}")
+    public ResponseEntity<List<FavoriteDto>> deleteFavoriteOrder(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.deleteFavoriteOrder(id));
+    }
+
+    @GetMapping("/user/me")
+    public ResponseEntity<AllUserResponse> actualUserInfo() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.actualUserInfo());
     }
 }

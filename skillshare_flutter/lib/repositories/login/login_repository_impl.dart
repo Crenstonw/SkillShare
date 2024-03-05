@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:skillshare_flutter/environments/local_storage.dart';
 import 'package:skillshare_flutter/models/dtos/login_dto.dart';
 import 'package:skillshare_flutter/models/login_response.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository.dart';
@@ -18,7 +19,10 @@ class LoginRepositoryImpl extends LoginRepository {
             },
             body: jsonBody);
     if (response.statusCode == 201) {
-      return LoginResponse.fromJson(response.body);
+      final finalResponse = LoginResponse.fromJson(response.body);
+      Localstorage.prefs.setString('token', finalResponse.token!);
+
+      return finalResponse;
     } else {
       throw Exception('Failed to login');
     }
