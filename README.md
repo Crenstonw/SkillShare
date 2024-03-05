@@ -38,15 +38,25 @@
 
 ## Demostración de funciones y aplicaciones
 <p>La página del Login</p>
+
 ![image](https://github.com/Crenstonw/SkillShare/assets/119967718/9e9c27fc-17b3-40f6-b413-e599371fb1b6)
+
 <p>La página de register</p>
+
 ![image](https://github.com/Crenstonw/SkillShare/assets/119967718/d29803b8-01ce-4850-b0d3-35c43a6eef0c)
+
 <p>La página de home</p>
+
 ![image](https://github.com/Crenstonw/SkillShare/assets/119967718/039defea-3932-4f42-8f3f-caa285c18a39)
+
 <p>Añadir un nuevo post</p>
+
 ![image](https://github.com/Crenstonw/SkillShare/assets/119967718/21b899b9-5863-479d-83f6-987f804deed1)
+
 <p>Detalles del post</p>
+
 ![image](https://github.com/Crenstonw/SkillShare/assets/119967718/9b93ed6a-7214-45c2-b65c-18474f5f633a)
+
 
 ## Tecnologías utilizadas
 <ul>
