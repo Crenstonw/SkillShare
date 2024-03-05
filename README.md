@@ -34,7 +34,11 @@
 </ul>
 
 ## Despliegue del Proyecto
-
+<p>Para iniciar sesión con la cuenta de administrador utilice esta cuenta:</p>
+<ul>
+  <li><strong>Email:</strong> a</li>
+  <li><strong>Password:</strong> a</li>
+</ul>
 
 ## Demostración de funciones y aplicaciones
 <p>La página del Login</p>
