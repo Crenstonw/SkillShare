@@ -1,0 +1,823 @@
+{
+	"info": {
+		"_postman_id": "ecb24e85-b1a2-41b4-bc66-2b01e9cbaed2",
+		"name": "SkillShare",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30052621"
+	},
+	"item": [
+		{
+			"name": "Login/Register",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = pm.response.json();\r",
+									"pm.collectionVariables.set(\"access_token\", json.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"a\",\r\n    \"password\": \"a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"user1@email.com\",\r\n    \"password\": \"1234\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/auth/login",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 29 Feb 2024 07:57:10 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"d41d7747-0ef7-48b2-86bd-9d33d77cb402\",\n    \"email\": \"user1@email.com\",\n    \"username\": \"username\",\n    \"createdAt\": \"29/02/2024 08:53:02\",\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkNDFkNzc0Ny0wZWY3LTQ4YjItODZiZC05ZDMzZDc3Y2I0MDIiLCJpYXQiOjE3MDkyNzk4MzB9.a6tExf6Eh7WwbGFLLxjh7buApgOyLo6y_bviZvr9arCi58HE-H0UdZJut1eSr5YGWR3xMqeA4c9K3uT2BcZMEg\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var json = pm.response.json();\r",
+									"pm.collectionVariables.set(\"access_token\", json.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"email@email.com\",\r\n    \"name\": \"nombre\",\r\n    \"surname\": \"apellidos\",\r\n    \"password\": \"contraseña\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Register",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"email@email.com\",\r\n    \"name\": \"nombre\",\r\n    \"surname\": \"apellidos\",\r\n    \"password\": \"contraseña\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/auth/register",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 29 Feb 2024 07:57:05 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"99ae6051-f14f-49cd-b2f3-3544426ffb33\",\n    \"email\": \"email@email.com\",\n    \"username\": \"nombreapellidos\",\n    \"createdAt\": \"29/02/2024 08:57:05\",\n    \"token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5OWFlNjA1MS1mMTRmLTQ5Y2QtYjJmMy0zNTQ0NDI2ZmZiMzMiLCJpYXQiOjE3MDkyNzk4MjV9.ko8w2wuh28fZjOHdeOU5ZD30yhUcXpEtJ2OZFDKsotTk2ucchm1JQvpg_1cqNI0KURFUEX-V0-dQ1ibOvb_sMg\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "GetAllUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "GetAllUsers",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/user",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"user"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 29 Feb 2024 07:41:01 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"875f02bb-d504-4db7-9fb3-b8df5ffe0e2b\",\n        \"email\": \"user1@email.com\",\n        \"username\": \"username\",\n        \"name\": \"user1\",\n        \"surname\": \"suruser1\",\n        \"password\": \"{bcrypt}$2a$10$FOtgRITIvoaye7zxlk5mxeO0U/mGxWjyOwjC.eguTCFCBs8A7k3la\",\n        \"userRole\": \"[ADMIN]\",\n        \"createdAt\": \"2024-02-29T08:37:30.609373\",\n        \"enabled\": true\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "GetUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/user/8989733b-3811-46e6-9261-7f1b09b0ad1a",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"8989733b-3811-46e6-9261-7f1b09b0ad1a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CurrentUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/user/me",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"me"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "CurrentUser",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}/user/me",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"user",
+										"me"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 02 Mar 2024 20:01:50 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"96e6ce65-10eb-4ccf-8e6b-f93a2737216b\",\n    \"email\": \"user1@email.com\",\n    \"username\": \"username\",\n    \"name\": \"user1\",\n    \"surname\": \"suruser1\",\n    \"password\": \"{bcrypt}$2a$10$mBT5aZSY/i.CIpHrFph4p.Nhv958G3zjIoB4KqX9UpP.jHYqzzYOq\",\n    \"profilePicture\": null,\n    \"userRole\": \"[ADMIN]\",\n    \"createdAt\": \"2024-03-02T21:01:00.998724\",\n    \"enabled\": true\n}"
+						}
+					]
+				},
+				{
+					"name": "EditUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"a\",\r\n    \"surname\": \"a\",\r\n    \"password\": \"a\",\r\n    \"profilePicture\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkU60w11NIhPuopZVg_PQurtGNfcnv8quVSQ&usqp=CAU\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/user/84774719-3bce-49de-84c3-38f61b5ed67c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"user",
+								"84774719-3bce-49de-84c3-38f61b5ed67c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Favorite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/user/favorite/e438c08c-4e3b-48dc-9b35-95e5ddbdff81",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"favorite",
+								"e438c08c-4e3b-48dc-9b35-95e5ddbdff81"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unfavorite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/user/unfavorite/e438c08c-4e3b-48dc-9b35-95e5ddbdff81",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"unfavorite",
+								"e438c08c-4e3b-48dc-9b35-95e5ddbdff81"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/user/328a849d-8688-4df7-9268-f46d73c9f7c7",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"328a849d-8688-4df7-9268-f46d73c9f7c7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"nuevo order\",\r\n    \"description\": \"la descripcion de la nueva orden\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/order/new",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"order",
+								"new"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "New Request",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"nuevo order\",\r\n    \"description\": \"la descripcion de la nueva orden\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}/order/new",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"order",
+										"new"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 05 Mar 2024 11:47:50 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"0db00c82-75b6-410d-a8fd-bba43ba6b48a\",\n    \"title\": \"nuevo order\",\n    \"description\": \"la descripcion de la nueva orden\",\n    \"user\": {\n        \"id\": \"14fb4b6a-27b6-47ee-bd3f-c03bd2e194d4\",\n        \"email\": \"a\",\n        \"username\": \"ManoloOlo23\",\n        \"name\": \"user1\",\n        \"surname\": \"suruser1\",\n        \"password\": \"{bcrypt}$2a$10$A5G3ZHgLtpEHYfZxdXkoAupE8blkyGhnjsASBwChcFgPDO2ylmobq\",\n        \"profilePicture\": \"https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg\",\n        \"userRole\": \"[ADMIN]\",\n        \"createdAt\": \"2024-03-05T12:46:51.701204\",\n        \"enabled\": true\n    },\n    \"tags\": null\n}"
+						}
+					]
+				},
+				{
+					"name": "AllOrders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/order",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OrderById",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/order/e438c08c-4e3b-48dc-9b35-95e5ddbdff81",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"order",
+								"e438c08c-4e3b-48dc-9b35-95e5ddbdff81"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OrderListByTitle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/order/find/*",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"order",
+								"find",
+								"*"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "localhost",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
