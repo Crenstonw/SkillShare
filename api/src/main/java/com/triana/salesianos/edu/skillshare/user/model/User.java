@@ -11,10 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Table(name = "user_entity")
@@ -50,6 +47,8 @@ public class User implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     protected Set<UserRole> userRole;
 
+
+
     @Builder.Default
     protected LocalDateTime lastPasswordChangedAt = LocalDateTime.now();
 
@@ -70,6 +69,13 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<Order> orders = new LinkedHashSet<>();
+
+    @OneToMany()
+    //@JoinColumn(name = "user_id")
+    private Collection<Order> favoriteOrders = new ArrayList<>();
+
+    @Column(name = "profile_picture")
+    private String profilePicture;
 
     @Override
     public String getUsername() {

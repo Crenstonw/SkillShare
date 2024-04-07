@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,9 +42,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception{
         AuthenticationManagerBuilder authenticationManagerBuilder= http.getSharedObject(AuthenticationManagerBuilder.class);
 
-        AuthenticationManager authenticationManager = authenticationManagerBuilder.authenticationProvider(authenticationProvider()).build();
-
-        return  authenticationManager;
+        return authenticationManagerBuilder.authenticationProvider(authenticationProvider()).build();
     }
 
     @Bean
@@ -69,22 +68,17 @@ public class SecurityConfig {
                 )
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers(antMatcher("/users/**")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/inventariable/new")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/inventariable/edit/**")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/inventariable/delete/**")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/ticket/all")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/ticket/inventariable/**")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/ticket/**/estado")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/ticket/**/asignar")).hasRole("ADMIN")
-                        .requestMatchers(antMatcher("/ticket/asignados/me")).hasRole("ADMIN")
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers(antMatcher("/user")).hasRole("ADMIN")
+                        .requestMatchers(antMatcher("/user/**")).hasRole("ADMIN")
+                        //.requestMatchers(antMatcher("/order/**")).hasRole("ADMIN")
+                        //.requestMatchers(antMatcher("/order")).hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.headers((headers) -> headers
-                .frameOptions(opt -> opt.disable()));
+                .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
 
         return http.build();
     }

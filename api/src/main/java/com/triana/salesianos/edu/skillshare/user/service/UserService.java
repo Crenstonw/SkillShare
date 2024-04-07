@@ -1,13 +1,16 @@
 package com.triana.salesianos.edu.skillshare.user.service;
 
+import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
+import com.triana.salesianos.edu.skillshare.order.model.Order;
+import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
 import com.triana.salesianos.edu.skillshare.security.errorhandling.JwtTokenException;
-import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
-import com.triana.salesianos.edu.skillshare.user.dto.CreateUserRequest;
-import com.triana.salesianos.edu.skillshare.user.dto.EditUserRequest;
+import com.triana.salesianos.edu.skillshare.user.dto.*;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.model.UserRole;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +24,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final OrderRepository orderRepository;
+
     public User createUser(CreateUserRequest createUserRequest, Set<UserRole> roles) {
         User user = User.builder()
                 .id(UUID.randomUUID())
@@ -29,6 +34,7 @@ public class UserService {
                 .surname(createUserRequest.surname())
                 .password(passwordEncoder.encode(createUserRequest.password()))
                 .username(createUserRequest.name() + createUserRequest.surname())
+                .profilePicture("https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg")
                 .userRole(roles)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -47,18 +53,16 @@ public class UserService {
         List<User> findAll = userRepository.findAll();
         List<AllUserResponse> result = new ArrayList<>();
 
-        for(User user : findAll) {
-            result.add(AllUserResponse.of(user));
-        }
+        for(User user : findAll) {result.add(AllUserResponse.of(user));}
 
         return result;
     }
 
-    public AllUserResponse getUser(String id) {
+    public UserDetailsDto getUser(String id) {
         Optional<User> findUser = userRepository.findById(UUID.fromString(id));
         if(findUser.isPresent()) {
-            return AllUserResponse.of(findUser.get());
-        } else throw new JwtTokenException("si");
+            return UserDetailsDto.of(findUser.get());
+        } else throw new JwtTokenException("User not found");
     }
 
     public AllUserResponse editUser(String id, EditUserRequest editUserRequest) {
@@ -67,6 +71,7 @@ public class UserService {
             findUser.get().setName(editUserRequest.name());
             findUser.get().setSurname(editUserRequest.surname());
             findUser.get().setPassword(passwordEncoder.encode(editUserRequest.password()));
+            findUser.get().setProfilePicture(editUserRequest.profilePicture());
 
             userRepository.save(findUser.get());
 
@@ -79,5 +84,46 @@ public class UserService {
     public void deleteUser(String id) {
         Optional<User> findUser = userRepository.findById(UUID.fromString(id));
         findUser.ifPresent(userRepository::delete);
+    }
+
+    public List<FavoriteDto> newFavoriteOrder(String id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.buscarPorUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
+        Collection<Order> newFavoriteList = user.getFavoriteOrders();
+        newFavoriteList.add(order);
+        List<FavoriteDto> result = new ArrayList<>();
+        user.setFavoriteOrders(newFavoriteList);
+        userRepository.save(user);
+        for(Order forOrder : newFavoriteList) {
+            result.add(FavoriteDto.of(forOrder));
+        }
+        return result;
+    }
+
+    public List<FavoriteDto> deleteFavoriteOrder(String id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.buscarPorUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
+
+        Collection<Order> newFavoriteList = user.getFavoriteOrders();
+        newFavoriteList.removeIf(forOrder -> Objects.equals(forOrder, order));
+
+        user.setFavoriteOrders(newFavoriteList);
+        userRepository.save(user);
+
+        List<FavoriteDto> result = new ArrayList<>();
+        for(Order forOrder : newFavoriteList) {
+            result.add(FavoriteDto.of(forOrder));
+        }
+        return result;
+    }
+
+    public AllUserResponse actualUserInfo() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User user = userRepository.buscarPorUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+
+        return AllUserResponse.of(user);
     }
 }
