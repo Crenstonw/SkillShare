@@ -70,8 +70,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<Order> orders = new LinkedHashSet<>();
 
-    @OneToMany()
-    //@JoinColumn(name = "user_id")
+    @OneToMany
+    @JoinColumn(name = "user_id")
     private Collection<Order> favoriteOrders = new ArrayList<>();
 
     @Column(name = "profile_picture")

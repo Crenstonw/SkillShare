@@ -1,5 +1,7 @@
 package com.triana.salesianos.edu.skillshare;
 
+import com.triana.salesianos.edu.skillshare.message.model.DirectMessage;
+import com.triana.salesianos.edu.skillshare.message.repository.DirectMessageRepository;
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.model.Tag;
@@ -27,9 +29,11 @@ public class InitData {
     private final OrderRepository orderRepository;
     private final PasswordEncoder passwordEncoder;
     private final TagRepository tagRepository;
+    private final DirectMessageRepository directMessageRepository;
 
     @PostConstruct
     public void initData() {
+        /////////////////////////////Users///////////////////////////////////////
         User user1 = User.builder()
                 .id(UUID.randomUUID())
                 .email("a")
@@ -41,8 +45,28 @@ public class InitData {
                 .password(passwordEncoder.encode("a"))
                 .userRole(EnumSet.of(UserRole.ADMIN))
                 .build();
-        userRepository.save(user1);
-
+        User user2 = User.builder()
+                .id(UUID.randomUUID())
+                .email("b")
+                .profilePicture("https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg")
+                .name("user2")
+                .surname("suruser2")
+                .username("MiAbeja39")
+                .createdAt(LocalDateTime.now())
+                .password(passwordEncoder.encode("b"))
+                .userRole(EnumSet.of(UserRole.USER))
+                .build();
+        userRepository.saveAll(List.of(user1, user2));
+        /////////////////////////////Direct Messages///////////////////////////////////////
+        DirectMessage dm1 = DirectMessage.builder()
+                .id(UUID.randomUUID())
+                .title("titulo del mensaje directo")
+                .message("mensaje del mensaje directo")
+                .userFrom(user1)
+                .userTo(user2)
+                .build();
+        directMessageRepository.saveAll(List.of(dm1));
+        /////////////////////////////Tags///////////////////////////////////////
         Tag tag1 = Tag.builder()
                 .id(UUID.randomUUID())
                 .name("tag1")
@@ -52,7 +76,7 @@ public class InitData {
                 .name("tag2")
                 .build();
         tagRepository.saveAll(List.of(tag1, tag2));
-
+        /////////////////////////////Orders///////////////////////////////////////
         Order order1 = Order.builder()
                 .id(UUID.fromString("e438c08c-4e3b-48dc-9b35-95e5ddbdff81"))
                 .title("titulo")
