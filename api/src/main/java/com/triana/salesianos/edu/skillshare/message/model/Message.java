@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -25,5 +26,8 @@ public class Message {
 
     @Column(name = "message")
     private String message;
+
+    @Column(name = "date_time")
+    private LocalDateTime dateTime;
 
 }

@@ -1,6 +1,7 @@
 package com.triana.salesianos.edu.skillshare.message.controller;
 
 import com.triana.salesianos.edu.skillshare.message.dto.DirectMessageResponse;
+import com.triana.salesianos.edu.skillshare.message.dto.ListDirectMessageResponse;
 import com.triana.salesianos.edu.skillshare.message.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
 
     private final MessageService service;
+
+    //////////////////////////////Direct Messages///////////////////////////////////
+    @GetMapping("/direct")
+    public ResponseEntity<ListDirectMessageResponse> getMyDirectMessages() {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getMyDirectMessages());
+    }
     @GetMapping("/direct/{id}")
     public ResponseEntity<DirectMessageResponse> getMessageById(@PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(service.getDirectMessageById(id));
     }
+
+    @
+
+    //////////////////////////////Order Messages///////////////////////////////////
 }
