@@ -42,5 +42,4 @@ public class Order {
             joinColumns = @JoinColumn(name = "order_id"),
             inverseJoinColumns = @JoinColumn(name = "tags_id"))
     private Set<Tag> tags = new LinkedHashSet<>();
-
 }

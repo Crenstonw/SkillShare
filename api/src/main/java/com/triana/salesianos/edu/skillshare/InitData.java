@@ -43,7 +43,7 @@ public class InitData {
                 .build();
         userRepository.save(user1);
 
-        /*Tag tag1 = Tag.builder()
+        Tag tag1 = Tag.builder()
                 .id(UUID.randomUUID())
                 .name("tag1")
                 .build();
@@ -51,14 +51,14 @@ public class InitData {
                 .id(UUID.randomUUID())
                 .name("tag2")
                 .build();
-        tagRepository.save(tag1);*/
+        tagRepository.saveAll(List.of(tag1, tag2));
 
         Order order1 = Order.builder()
                 .id(UUID.fromString("e438c08c-4e3b-48dc-9b35-95e5ddbdff81"))
                 .title("titulo")
                 .user(user1)
                 .description("descripcion de la ordenanza lorem ipsum amet")
-                //.tags(Set.of(tag1))
+                .tags(Set.of(tag1))
                 .build();
         orderRepository.save(order1);
 
@@ -67,7 +67,7 @@ public class InitData {
                 .title("titulo2")
                 .user(user1)
                 .description("descripcion 2 de la ordenanza")
-                //.tags(Set.of(tag1))
+                .tags(Set.of(tag1, tag2))
                 .build();
         orderRepository.save(order2);
 
@@ -76,7 +76,7 @@ public class InitData {
                 .title("Arreglo cortacespes")
                 .user(user1)
                 .description("Hago de todo en realidad, pero arreglar cortacespes es lo que mejor se me da")
-                //.tags(Set.of(tag1))
+                .tags(Set.of(tag1))
                 .build();
         orderRepository.save(order3);
 
@@ -85,7 +85,7 @@ public class InitData {
                 .title("Saco la basura por ti")
                 .user(user1)
                 .description("descripcion 2 de la ordenanza")
-                //.tags(Set.of(tag1))
+                .tags(Set.of(tag1))
                 .build();
         orderRepository.save(order4);
 
@@ -94,7 +94,7 @@ public class InitData {
                 .title("titulo2")
                 .user(user1)
                 .description("descripcion 2 de la ordenanza")
-                //.tags(Set.of(tag1))
+                .tags(Set.of(tag1))
                 .build();
         orderRepository.save(order5);
     }

@@ -11,7 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Table(name = "order_entity")
+@Table(name = "tag_entity")
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
