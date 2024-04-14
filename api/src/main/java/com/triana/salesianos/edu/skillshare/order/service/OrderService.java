@@ -3,11 +3,9 @@ package com.triana.salesianos.edu.skillshare.order.service;
 import com.triana.salesianos.edu.skillshare.order.dto.ListOrderResponse;
 import com.triana.salesianos.edu.skillshare.order.dto.NewOrderRequest;
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
-import com.triana.salesianos.edu.skillshare.order.dto.Prueba;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
-import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -56,7 +53,7 @@ public class OrderService {
 
     public OrderResponse newOrder(NewOrderRequest orderRequest){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.buscarPorUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
         Order newOrder = Order.builder()
                 .id(UUID.randomUUID())
                 .title(orderRequest.title())

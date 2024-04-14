@@ -62,10 +62,19 @@ public class InitData {
                 .id(UUID.randomUUID())
                 .title("titulo del mensaje directo")
                 .message("mensaje del mensaje directo")
+                .dateTime(LocalDateTime.now())
                 .userFrom(user1)
                 .userTo(user2)
                 .build();
-        directMessageRepository.saveAll(List.of(dm1));
+        DirectMessage dm2 = DirectMessage.builder()
+                .id(UUID.randomUUID())
+                .title("titulo del mensaje directo antiguo")
+                .message("mensaje del mensaje directo antiguo")
+                .dateTime(LocalDateTime.of(2021, 10, 12, 10, 22, 22))
+                .userFrom(user1)
+                .userTo(user2)
+                .build();
+        directMessageRepository.saveAll(List.of(dm1, dm2));
         /////////////////////////////Tags///////////////////////////////////////
         Tag tag1 = Tag.builder()
                 .id(UUID.randomUUID())

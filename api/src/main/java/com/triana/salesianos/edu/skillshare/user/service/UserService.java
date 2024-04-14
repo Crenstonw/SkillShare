@@ -46,7 +46,7 @@ public class UserService {
     }
 
     public Optional<User> findByEmail(String email) {
-        return userRepository.buscarPorEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     public List<AllUserResponse> getAllUsers() {
@@ -88,7 +88,7 @@ public class UserService {
 
     public List<FavoriteDto> newFavoriteOrder(String id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.buscarPorUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
         Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
         Collection<Order> newFavoriteList = user.getFavoriteOrders();
         newFavoriteList.add(order);
@@ -103,7 +103,7 @@ public class UserService {
 
     public List<FavoriteDto> deleteFavoriteOrder(String id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.buscarPorUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
         Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
 
         Collection<Order> newFavoriteList = user.getFavoriteOrders();
@@ -122,7 +122,7 @@ public class UserService {
     public AllUserResponse actualUserInfo() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        User user = userRepository.buscarPorUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
 
         return AllUserResponse.of(user);
     }
