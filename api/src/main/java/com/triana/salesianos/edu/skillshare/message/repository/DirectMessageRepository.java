@@ -14,6 +14,7 @@ public interface DirectMessageRepository extends JpaRepository<DirectMessage, UU
             SELECT dm
             FROM DirectMessage dm
             WHERE dm.userFrom = ?1
+            AND dm.userTo = ?1
             """)
     List<DirectMessage> findDirectMessagesByUserFrom(User user);
 

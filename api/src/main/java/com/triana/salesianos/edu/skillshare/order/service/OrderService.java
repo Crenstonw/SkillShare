@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -42,7 +43,7 @@ public class OrderService {
     }
 
     public ListOrderResponse getOrderListByTitle(String title) {
-        List<Order> findOrders = orderRepository.findORderListByTitle(title);
+        List<Order> findOrders = orderRepository.findOrderListByTitle(title);
         List<OrderResponse> listToDto = new ArrayList<>();
 
         for(Order order : findOrders) {
@@ -62,5 +63,12 @@ public class OrderService {
                 .build();
         orderRepository.save(newOrder);
         return OrderResponse.of(newOrder);
+    }
+
+    public void deleteOrder(String id) {
+        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
+        if(findOrder.isPresent()) {
+            orderRepository.delete(findOrder.get());
+        }
     }
 }

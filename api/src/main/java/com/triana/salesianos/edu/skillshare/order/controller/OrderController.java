@@ -13,28 +13,42 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/order")
 public class OrderController {
 
     private final OrderService service;
 
-    @GetMapping("/order")
+    @GetMapping
     public ResponseEntity<ListOrderResponse> getAllOrders() {
         return ResponseEntity.status(HttpStatus.OK).body(service.getAllOrders());
     }
 
-    @GetMapping("/order/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<OrderResponse> getOrderById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getOrderById(id));
     }
 
-    @GetMapping("/order/find/{title}")
+    @GetMapping("/search/{title}")
     public ResponseEntity<ListOrderResponse> getOrderListByTitle(@PathVariable String title) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getOrderListByTitle(title));
     }
 
-    @PostMapping("/order/new")
+    @PostMapping
     public ResponseEntity<OrderResponse> newOrder(@RequestBody NewOrderRequest order) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.newOrder(order));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderResponse> putOrder(
+            @PathVariable String id,
+            @RequestBody NewOrderRequest orderRequest) {
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable String id) {
+        service.deleteOrder(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

@@ -1,8 +1,6 @@
 package com.triana.salesianos.edu.skillshare.message.controller;
 
-import com.triana.salesianos.edu.skillshare.message.dto.DirectMessageResponse;
-import com.triana.salesianos.edu.skillshare.message.dto.ListDirectMessageResponse;
-import com.triana.salesianos.edu.skillshare.message.dto.NewDirectMessageRequest;
+import com.triana.salesianos.edu.skillshare.message.dto.*;
 import com.triana.salesianos.edu.skillshare.message.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,7 +30,9 @@ public class MessageController {
     }
 
     @PutMapping("/direct/{id}")
-    public ResponseEntity<DirectMessageResponse> putMessage(@PathVariable String id, @RequestBody NewDirectMessageRequest request) {
+    public ResponseEntity<DirectMessageResponse> putMessage(
+            @PathVariable String id,
+            @RequestBody NewDirectMessageRequest request) {
         return null;
     }
 
@@ -43,4 +43,36 @@ public class MessageController {
     }
 
     //////////////////////////////Order Messages///////////////////////////////////
+
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<ListOrderMessageResponse> getOrderMessages(
+            @PathVariable String orderId) {
+
+        return ResponseEntity.status(HttpStatus.OK).body(service
+                .getOrderMessages(orderId));
+    }
+
+    @PostMapping("/order")
+    public ResponseEntity<OrderMessageResponse> postOrderMessage(
+            @RequestBody NewOrderMessageRequest messageRequest
+    ) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.newOrderMessage(messageRequest));
+    }
+
+    @PutMapping("/order/{id}")
+    public ResponseEntity<OrderMessageResponse> putOrderMessage(
+            @PathVariable String id,
+            @RequestBody EditOrderMessageRequest messageRequest
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(service.editOrderMessage(id, messageRequest));
+    }
+
+    @DeleteMapping("/order/{id}")
+    public ResponseEntity<?> deleteOrderMessage(@PathVariable String id) {
+        service.deleteOrderMessage(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }
