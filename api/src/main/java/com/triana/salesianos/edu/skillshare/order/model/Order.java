@@ -1,5 +1,6 @@
 package com.triana.salesianos.edu.skillshare.order.model;
 
+import com.triana.salesianos.edu.skillshare.Tag.model.Tag;
 import com.triana.salesianos.edu.skillshare.message.model.OrderMessage;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import jakarta.persistence.*;
@@ -34,7 +35,8 @@ public class Order {
 
     @Enumerated
     @Column(name = "order_state", nullable = false)
-    private OrderState state;
+    @Builder.Default
+    private OrderState state = OrderState.OPEN;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

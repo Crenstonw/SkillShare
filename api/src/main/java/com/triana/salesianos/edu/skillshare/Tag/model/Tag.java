@@ -1,4 +1,4 @@
-package com.triana.salesianos.edu.skillshare.order.model;
+package com.triana.salesianos.edu.skillshare.Tag.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

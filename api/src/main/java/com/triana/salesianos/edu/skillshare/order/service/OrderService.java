@@ -1,22 +1,26 @@
 package com.triana.salesianos.edu.skillshare.order.service;
 
+import com.triana.salesianos.edu.skillshare.Tag.service.TagService;
 import com.triana.salesianos.edu.skillshare.order.dto.ListOrderResponse;
 import com.triana.salesianos.edu.skillshare.order.dto.NewOrderRequest;
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
+import com.triana.salesianos.edu.skillshare.order.model.OrderState;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -24,12 +28,15 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final TagService tagService;
 
-    public ListOrderResponse getAllOrders() {
-        List<Order> findAll = orderRepository.findAll();
-        List<OrderResponse> list = new ArrayList<>();
+    public Page<OrderResponse> getAllOrders(Pageable pageable) {
+        Page<Order> findAll = orderRepository.findAllOrders(pageable);
+        Page<OrderResponse> list = new PageImpl<>();
 
-        for(Order order : findAll) {list.add(OrderResponse.of(order));}
+        for(Order order : findAll) {
+            list.map());
+        }
         ListOrderResponse result = ListOrderResponse.of(list);
 
         return result;
@@ -59,16 +66,62 @@ public class OrderService {
                 .id(UUID.randomUUID())
                 .title(orderRequest.title())
                 .description(orderRequest.description())
+                .tags(tagService.addTags(orderRequest.tags()))
                 .user(user)
                 .build();
         orderRepository.save(newOrder);
         return OrderResponse.of(newOrder);
     }
 
+    public OrderResponse putOrder(String id, NewOrderRequest orderRequest) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
+        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
+        if(findOrder.isPresent() && Objects.equals(user, findOrder.get().getUser())) {
+            Order response = Order.builder()
+                    .id(findOrder.get().getId())
+                    .title(orderRequest.title())
+                    .description(orderRequest.description())
+                    .state(findOrder.get().getState())
+                    .createdAt(findOrder.get().getCreatedAt())
+                    .lastTimeModified(LocalDateTime.now())
+                    .tags(tagService.addTags(orderRequest.tags()))
+                    .orderMessages(findOrder.get().getOrderMessages())
+                    .user(findOrder.get().getUser())
+                    .build();
+            orderRepository.save(response);
+            return OrderResponse.of(response);
+        } else {
+            return null; //throw error
+        }
+
+    }
+
     public void deleteOrder(String id) {
         Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        if(findOrder.isPresent()) {
-            orderRepository.delete(findOrder.get());
+        findOrder.ifPresent(orderRepository::delete);
+    }
+
+    public OrderResponse changeStatus (String id, String status) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
+        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
+        if(findOrder.isPresent() && Objects.equals(user.get(), findOrder.get().getUser())) {
+            Order result = Order.builder()
+                    .id(findOrder.get().getId())
+                    .tags(findOrder.get().getTags())
+                    .orderMessages(findOrder.get().getOrderMessages())
+                    .state(OrderState.valueOf(status))
+                    .user(findOrder.get().getUser())
+                    .lastTimeModified(LocalDateTime.now())
+                    .createdAt(findOrder.get().getCreatedAt())
+                    .description(findOrder.get().getDescription())
+                    .title(findOrder.get().getTitle())
+                    .build();
+            orderRepository.save(result);
+            return OrderResponse.of(result);
+        } else {
+            return null;
         }
     }
 }

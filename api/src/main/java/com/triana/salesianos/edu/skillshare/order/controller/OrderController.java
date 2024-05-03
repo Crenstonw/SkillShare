@@ -5,6 +5,8 @@ import com.triana.salesianos.edu.skillshare.order.dto.NewOrderRequest;
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +21,8 @@ public class OrderController {
     private final OrderService service;
 
     @GetMapping
-    public ResponseEntity<ListOrderResponse> getAllOrders() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.getAllOrders());
+    public ResponseEntity<ListOrderResponse> getAllOrders(@PageableDefault Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getAllOrders(pageable));
     }
 
     @GetMapping("/{id}")
@@ -42,7 +44,12 @@ public class OrderController {
     public ResponseEntity<OrderResponse> putOrder(
             @PathVariable String id,
             @RequestBody NewOrderRequest orderRequest) {
-        return null;
+        return ResponseEntity.status(HttpStatus.OK).body(service.putOrder(id, orderRequest));
+    }
+
+    @PutMapping("/status/{id}")
+    public ResponseEntity<OrderResponse> changeStatus(@PathVariable String id, @RequestBody String status) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.changeStatus(id, status));
     }
 
     @DeleteMapping("/{id}")

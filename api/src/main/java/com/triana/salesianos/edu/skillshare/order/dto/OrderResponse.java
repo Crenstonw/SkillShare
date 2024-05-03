@@ -2,12 +2,13 @@ package com.triana.salesianos.edu.skillshare.order.dto;
 
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.model.OrderState;
-import com.triana.salesianos.edu.skillshare.order.model.Tag;
+import com.triana.salesianos.edu.skillshare.Tag.model.Tag;
 import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
-import com.triana.salesianos.edu.skillshare.user.model.User;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 @Builder
