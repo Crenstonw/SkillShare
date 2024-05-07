@@ -1,4 +1,4 @@
-package com.triana.salesianos.edu.skillshare.order.model;
+package com.triana.salesianos.edu.skillshare.Tag.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Table(name = "order_entity")
+@Table(name = "tag_entity")
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
