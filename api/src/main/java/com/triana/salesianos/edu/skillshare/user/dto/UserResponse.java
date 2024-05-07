@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Data
@@ -20,13 +21,17 @@ public class UserResponse {
     protected String email, username;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     protected LocalDateTime createdAt;
+    protected boolean isAdmin;
 
     public static UserResponse fromUser(User user) {
+        boolean isAdmin = Objects.equals(user.getUserRole().toString(), "[ADMIN]");
+        System.out.println(user.getUserRole().toString());
         return UserResponse.builder()
                 .id(user.getId().toString())
                 .username(user.getUsername())
                 .email(user.getEmail())
                 .createdAt(user.getCreatedAt())
+                .isAdmin(isAdmin)
                 .build();
     }
 }

@@ -18,6 +18,7 @@ public class JwtUserResponse extends UserResponse {
         this.username = userResponse.getUsername();
         this.email = userResponse.getEmail();
         this.createdAt = userResponse.getCreatedAt();
+        this.isAdmin = userResponse.isAdmin();
     }
 
     public static JwtUserResponse of (User user, String token) {
