@@ -19,26 +19,14 @@ import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<Order, UUID> {
 
-    /*@Query("""
-            SELECT new com.triana.salesianos.edu.skillshare.order.dto.OrderResponse(
-            o.id,
-            o.title,
-            o.description,
-            o.state,
-            o.createdAt,
-            o.lastTimeModified
-            
-            )
-            FROM Order o
-            """)*/
-    Page<OrderResponse> findAllOrders(Pageable pageable);
+    Page<Order> findAll(Pageable pageable);
 
     @Query("""
             SELECT o
             FROM Order o
-            WHERE o.title ILIKE %:title%
+            WHERE o.title LIKE %:title%
             """)
-    List<Order> findOrderListByTitle(String title);
+    Page<Order> findOrderListByTitle(String title, Pageable pageable);
 
     @Query("""
             SELECT o
@@ -46,7 +34,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             WHERE o.lastTimeModified >= ?1
             AND o.state = ?2
             """)
-    List<Order> findDeleteableOrders(LocalDateTime exiredDate, OrderState state);
+    List<Order> findDeleteableOrders(LocalDateTime expiredDate, OrderState state);
 
     @Query("""
             SELECT DISTINCT o

@@ -31,15 +31,9 @@ public class OrderService {
     private final TagService tagService;
 
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
-        Page<Order> findAll = orderRepository.findAllOrders(pageable);
-        Page<OrderResponse> list = new PageImpl<>();
+        Page<Order> orderPage = orderRepository.findAll(pageable);
 
-        for(Order order : findAll) {
-            list.map());
-        }
-        ListOrderResponse result = ListOrderResponse.of(list);
-
-        return result;
+        return orderPage.map(OrderResponse::of);
     }
 
     public OrderResponse getOrderById(String id) {
@@ -49,14 +43,9 @@ public class OrderService {
         return OrderResponse.of(findOrder);
     }
 
-    public ListOrderResponse getOrderListByTitle(String title) {
-        List<Order> findOrders = orderRepository.findOrderListByTitle(title);
-        List<OrderResponse> listToDto = new ArrayList<>();
-
-        for(Order order : findOrders) {
-            listToDto.add(OrderResponse.of(order));
-        }
-        return ListOrderResponse.of(listToDto);
+    public Page<OrderResponse> getOrderListByTitle(String title, Pageable pageable) {
+        Page<Order> findOrders = orderRepository.findOrderListByTitle(title, pageable);
+        return findOrders.map(OrderResponse::of);
     }
 
     public OrderResponse newOrder(NewOrderRequest orderRequest){

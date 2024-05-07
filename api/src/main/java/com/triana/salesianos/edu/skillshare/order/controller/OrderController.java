@@ -5,6 +5,7 @@ import com.triana.salesianos.edu.skillshare.order.dto.NewOrderRequest;
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class OrderController {
     private final OrderService service;
 
     @GetMapping
-    public ResponseEntity<ListOrderResponse> getAllOrders(@PageableDefault Pageable pageable) {
+    public ResponseEntity<Page<OrderResponse>> getAllOrders(@PageableDefault Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getAllOrders(pageable));
     }
 
@@ -31,8 +32,8 @@ public class OrderController {
     }
 
     @GetMapping("/search/{title}")
-    public ResponseEntity<ListOrderResponse> getOrderListByTitle(@PathVariable String title) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.getOrderListByTitle(title));
+    public ResponseEntity<Page<OrderResponse>> getOrderListByTitle(@PathVariable String title, @PageableDefault Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getOrderListByTitle(title, pageable));
     }
 
     @PostMapping
