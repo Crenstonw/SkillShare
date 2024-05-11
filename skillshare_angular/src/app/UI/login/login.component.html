@@ -1,4 +1,7 @@
 <div class="screen container" >
+    @for (alert of alerts; track alert) {
+        <ngb-alert [type]="alert.type" (closed)="close(alert)">{{ alert.message }}</ngb-alert>
+    }
     <div class="wrapper">
         <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="submit()">
             <h2 class="form-signin-heading">Please login</h2>

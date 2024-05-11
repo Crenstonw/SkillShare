@@ -1,1 +1,9 @@
-<app-login></app-login>
+<div class="d-flex flex-column min-vh-100">
+    @if (show) {
+    <app-header></app-header>
+    }
+    <router-outlet (activate)="toggleNavBar($event)"></router-outlet>
+    @if (show) {
+    <app-footer class="mt-auto"></app-footer>
+    }
+</div>
