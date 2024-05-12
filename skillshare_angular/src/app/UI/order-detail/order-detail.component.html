@@ -1,1 +1,14 @@
-<p>order-detail works!</p>
+<div class="ui col-10 d-flex flex-column justify-content-between text-white" style="margin-left: 8.33%;">
+    <div class="row">
+        <div class="col-6">
+            <h1 style="text-align: center;">{{order?.title}}</h1>
+        </div>
+        @for (message of order?.messages; track $index) {
+            <div class="bg-white my-5 text-black">
+                <p>{{message.title}}</p>
+                <p>{{message.message}}</p>
+            </div>
+            
+        }
+    </div>   
+</div>

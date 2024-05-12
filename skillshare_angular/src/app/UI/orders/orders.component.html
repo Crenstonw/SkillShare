@@ -8,7 +8,7 @@
         </div>
     </div>
     <div *ngFor="let i of items">
-        <app-order-cards [order]="i"></app-order-cards>
+        <app-order-cards (click)="details(i.id)" [order]="i"></app-order-cards>
     </div>
         
 </div>

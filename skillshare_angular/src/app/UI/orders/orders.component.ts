@@ -23,4 +23,8 @@ export class OrdersComponent implements OnInit {
     })
   }
 
+  details(id: string) {
+    window.location.pathname = `order/${id}`;
+  }
+
 }
