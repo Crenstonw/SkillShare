@@ -2,6 +2,7 @@ package com.triana.salesianos.edu.skillshare.order.controller;
 
 import com.triana.salesianos.edu.skillshare.order.dto.ListOrderResponse;
 import com.triana.salesianos.edu.skillshare.order.dto.NewOrderRequest;
+import com.triana.salesianos.edu.skillshare.order.dto.OrderDetailsResponse;
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/order")
 public class OrderController {
 
@@ -27,7 +29,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> getOrderById(@PathVariable String id) {
+    public ResponseEntity<OrderDetailsResponse> getOrderById(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getOrderById(id));
     }
 

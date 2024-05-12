@@ -3,6 +3,7 @@ package com.triana.salesianos.edu.skillshare.order.service;
 import com.triana.salesianos.edu.skillshare.Tag.service.TagService;
 import com.triana.salesianos.edu.skillshare.order.dto.ListOrderResponse;
 import com.triana.salesianos.edu.skillshare.order.dto.NewOrderRequest;
+import com.triana.salesianos.edu.skillshare.order.dto.OrderDetailsResponse;
 import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
@@ -31,16 +32,17 @@ public class OrderService {
     private final TagService tagService;
 
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
+        
         Page<Order> orderPage = orderRepository.findAll(pageable);
 
         return orderPage.map(OrderResponse::of);
     }
 
-    public OrderResponse getOrderById(String id) {
+    public OrderDetailsResponse getOrderById(String id) {
         Order findOrder = orderRepository.findById(UUID.fromString(id))
                 .orElseThrow(NoOrderException::new);
 
-        return OrderResponse.of(findOrder);
+        return OrderDetailsResponse.of(findOrder);
     }
 
     public Page<OrderResponse> getOrderListByTitle(String title, Pageable pageable) {
@@ -55,6 +57,7 @@ public class OrderService {
                 .id(UUID.randomUUID())
                 .title(orderRequest.title())
                 .description(orderRequest.description())
+                .price(orderRequest.price())
                 .tags(tagService.addTags(orderRequest.tags()))
                 .user(user)
                 .build();

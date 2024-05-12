@@ -1,0 +1,14 @@
+<div class="ui col-10 d-flex flex-column justify-content-between" style="margin-left: 8.33%;">
+    <div class="row">
+        <div class="col-6">
+            <h1 style="text-align: center;">Orders</h1>
+        </div>
+        <div class="col-6 item-align-center">
+            <button class="btn btn-danger">Hola</button>
+        </div>
+    </div>
+    <div *ngFor="let i of items">
+        <app-order-cards [order]="i"></app-order-cards>
+    </div>
+        
+</div>

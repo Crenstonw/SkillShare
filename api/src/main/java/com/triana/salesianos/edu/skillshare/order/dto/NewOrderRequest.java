@@ -4,6 +4,7 @@ import java.util.Set;
 public record NewOrderRequest(
         String title,
         String description,
-        Set<String> tags
+        Set<String> tags,
+        double price
 ) {
 }

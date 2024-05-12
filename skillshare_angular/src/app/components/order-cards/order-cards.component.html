@@ -1,0 +1,22 @@
+<div class="card my-2 col-12" style="text-align: center;">
+    <div class="col-12 px-2">
+        <div class="row d-flex align-items-center justify-content-start">
+            <img class="col-1" style="width: 75px; border-radius: 50%;" [src]="order?.user?.profilePicture">
+            <p class="col-8 mt-3 text-start">{{order?.user?.username}}</p>
+            <p class="col-2 m-0 p-0">{{order?.createdAt}}</p>
+            <div class="col-1 visible rounded py-1 + {{stateColor}}">
+                <p class="m-0 p-0" style="font-weight: bold;">{{order?.state}}</p>
+            </div>
+        </div>
+        <div class="row d-flex align-items-center justify-content-start my-3">
+            <h3 class="col-8 text-start">{{order?.title}}</h3>
+            <h1 class="col-4 px-5 text-end">{{order?.price}}$</h1>
+        </div>
+        <p class="col-12 text-start">{{order?.description}}</p>
+        <div class="row d-flex align-items-center justify-content-start m-2">
+            <div *ngFor="let tag of order?.tags" class="col-1 bg-dark text-white rounded py-1 mx-1">
+                <p class="m-0 p-0">{{tag.name}}</p>
+            </div>
+        </div>
+    </div>
+</div>

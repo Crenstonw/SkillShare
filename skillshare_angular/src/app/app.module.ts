@@ -11,6 +11,9 @@ import { PageNotFoundComponent } from './UI/page-not-found/page-not-found.compon
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { HomeComponent } from './UI/home/home.component';
+import { OrdersComponent } from './UI/orders/orders.component';
+import { OrderCardsComponent } from './components/order-cards/order-cards.component';
+import { OrderDetailComponent } from './UI/order-detail/order-detail.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +23,9 @@ import { HomeComponent } from './UI/home/home.component';
     HeaderComponent,
     FooterComponent,
     HomeComponent,
+    OrdersComponent,
+    OrderCardsComponent,
+    OrderDetailComponent,
   ],
   imports: [
     BrowserModule,
