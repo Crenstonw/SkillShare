@@ -1,10 +1,7 @@
 package com.triana.salesianos.edu.skillshare.order.service;
 
 import com.triana.salesianos.edu.skillshare.Tag.service.TagService;
-import com.triana.salesianos.edu.skillshare.order.dto.ListOrderResponse;
-import com.triana.salesianos.edu.skillshare.order.dto.NewOrderRequest;
-import com.triana.salesianos.edu.skillshare.order.dto.OrderDetailsResponse;
-import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
+import com.triana.salesianos.edu.skillshare.order.dto.*;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.model.OrderState;
@@ -94,7 +91,7 @@ public class OrderService {
         findOrder.ifPresent(orderRepository::delete);
     }
 
-    public OrderResponse changeStatus (String id, String status) {
+    public OrderResponse changeStatus (String id, StatusDto status) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
         Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
@@ -103,7 +100,8 @@ public class OrderService {
                     .id(findOrder.get().getId())
                     .tags(findOrder.get().getTags())
                     .orderMessages(findOrder.get().getOrderMessages())
-                    .state(OrderState.valueOf(status))
+                    .price(findOrder.get().getPrice())
+                    .state(OrderState.valueOf(status.status()))
                     .user(findOrder.get().getUser())
                     .lastTimeModified(LocalDateTime.now())
                     .createdAt(findOrder.get().getCreatedAt())

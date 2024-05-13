@@ -1,9 +1,6 @@
 package com.triana.salesianos.edu.skillshare.order.controller;
 
-import com.triana.salesianos.edu.skillshare.order.dto.ListOrderResponse;
-import com.triana.salesianos.edu.skillshare.order.dto.NewOrderRequest;
-import com.triana.salesianos.edu.skillshare.order.dto.OrderDetailsResponse;
-import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
+import com.triana.salesianos.edu.skillshare.order.dto.*;
 import com.triana.salesianos.edu.skillshare.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -51,7 +48,7 @@ public class OrderController {
     }
 
     @PutMapping("/status/{id}")
-    public ResponseEntity<OrderResponse> changeStatus(@PathVariable String id, @RequestBody String status) {
+    public ResponseEntity<OrderResponse> changeStatus(@PathVariable String id, @RequestBody StatusDto status) {
         return ResponseEntity.status(HttpStatus.OK).body(service.changeStatus(id, status));
     }
 

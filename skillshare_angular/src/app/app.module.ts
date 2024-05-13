@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './UI/login/login.component';
-import { NgbAlertModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbDropdownModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PageNotFoundComponent } from './UI/page-not-found/page-not-found.component';
@@ -33,7 +33,8 @@ import { OrderDetailComponent } from './UI/order-detail/order-detail.component';
     NgbModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgbAlertModule
+    NgbAlertModule,
+    NgbDropdownModule
   ],
   providers: [],
   bootstrap: [AppComponent]

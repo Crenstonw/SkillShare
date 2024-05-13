@@ -161,6 +161,7 @@ public class InitData {
                 .id(UUID.randomUUID())
                 .title("Gracias a todos")
                 .message("gracias a todos por vuestro apoyo")
+                .dateTime(LocalDateTime.of(2024, 4, 14, 12,34,54))
                 .author(user1)
                 .order(order1)
                 .build();
