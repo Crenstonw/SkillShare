@@ -66,10 +66,12 @@ public class OrderService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
         Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        if(findOrder.isPresent() && Objects.equals(user, findOrder.get().getUser())) {
+        if(findOrder.isPresent() && Objects.equals(user, findOrder.get().getUser())
+            || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
             Order response = Order.builder()
                     .id(findOrder.get().getId())
                     .title(orderRequest.title())
+                    .price(orderRequest.price())
                     .description(orderRequest.description())
                     .state(findOrder.get().getState())
                     .createdAt(findOrder.get().getCreatedAt())
@@ -84,11 +86,6 @@ public class OrderService {
             return null; //throw error
         }
 
-    }
-
-    public void deleteOrder(String id) {
-        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        findOrder.ifPresent(orderRepository::delete);
     }
 
     public OrderResponse changeStatus (String id, StatusDto status) {
@@ -113,5 +110,19 @@ public class OrderService {
         } else {
             return null;
         }
+    }
+
+    public void deleteOrder(String id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
+        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
+        if(Objects.equals(user.get().getUsername(), findOrder.get().getUser().getUsername())
+                || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
+            findOrder.ifPresent(orderRepository::delete);
+        } else {
+            //throw exception
+        }
+
+
     }
 }

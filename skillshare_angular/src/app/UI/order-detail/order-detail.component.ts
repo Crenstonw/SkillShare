@@ -1,10 +1,11 @@
 import { Component, OnInit, TemplateRef, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Order } from '../../models/orders.model';
+import { Order, Tag } from '../../models/orders.model';
 import { OrdersService } from '../../services/orders.service';
 import { OrderDetail } from '../../models/orderDetail.model';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService } from '../../services/message.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-order-detail',
@@ -13,6 +14,7 @@ import { MessageService } from '../../services/message.service';
 })
 export class OrderDetailComponent implements OnInit {
   actualMessageId: string = "";
+  editOrderForm!: FormGroup;
   order: OrderDetail | undefined;
   stateColor: string = '';
   private modalService = inject(NgbModal);
@@ -27,9 +29,50 @@ export class OrderDetailComponent implements OnInit {
     })
   }
 
+  ngOnInit(): void {
+  }
+
+  initForm() {
+    this.editOrderForm = new FormGroup({
+      title: new FormControl(this.order?.title),
+      description: new FormControl(this.order?.description),
+      price: new FormControl(this.order?.price),
+      tags: new FormControl(this.tagString(this.order!.tags))
+    });
+  }
+
+  tagString(tags: Tag[]): string {
+    let result: string = '';
+    tags.forEach(t => {
+      result = result.concat(t.name + ', ');
+    });
+    result = result.slice(0, -2);
+    return result;
+  }
+
+  tagUnString(str: string): string[] {
+    let empty: string [] = []
+    if(str.length != 0) 
+      return str.replace(/\s/g, '').split(',');
+    else 
+      return empty;
+  }
+
   deleteMessageModal(content: TemplateRef<any>, id: string) {
     this.actualMessageId = id;
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+      (result) => {
+        this.closeResult = `Closed with: ${result}`;
+      },
+      (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      },
+    );
+  }
+
+  orderModal(content: TemplateRef<any>) {
+    this.initForm();
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', size: 'xl' }).result.then(
       (result) => {
         this.closeResult = `Closed with: ${result}`;
       },
@@ -50,10 +93,6 @@ export class OrderDetailComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
-
-  }
-
   setState() {
     console.log(this.order?.state);
     if (this.order?.state === 'OPEN') {
@@ -71,10 +110,29 @@ export class OrderDetailComponent implements OnInit {
     })
   }
 
+  editOrder() {
+    console.log(this.tagUnString(this.editOrderForm.value.tags))
+    this.orderService.EditOrder(
+      this.order!.id, 
+      this.editOrderForm.value.title,
+      this.editOrderForm.value.description,
+      this.tagUnString(this.editOrderForm.value.tags),
+      this.editOrderForm.value.price,
+    ).subscribe(p => {
+      window.location.reload();
+    })
+  }
+
   deleteMessage() {
     this.messageService.DeleteMessage(this.actualMessageId).subscribe(p => {
       window.location.reload();
     })
     this.modalService.dismissAll();
+  }
+
+  deleteOrder() {
+    this.orderService.DeleteOrder(this.order!.id).subscribe(p => {
+      window.history.back();
+    })
   }
 }
