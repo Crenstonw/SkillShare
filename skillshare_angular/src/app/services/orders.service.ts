@@ -35,6 +35,24 @@ export class OrdersService {
     );
   }
 
+  NewOrder(title: string, description: string, tags: string[], price: number): Observable<Order> {
+    let token = localStorage.getItem('TOKEN');
+    return this.http.post<Order>(`http://localhost:8080/order`,
+      {
+        'title': `${title}`,
+        'description': `${description}`,
+        'tags': tags,
+        'price': `${price}`,
+      },
+      {
+        headers: {
+          acept: 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+  }
+
   ChangeStatus(status: string, id: string): Observable<Order> {
     let token = localStorage.getItem('TOKEN');
     return this.http.put<Order>(`http://localhost:8080/order/status/${id}`,

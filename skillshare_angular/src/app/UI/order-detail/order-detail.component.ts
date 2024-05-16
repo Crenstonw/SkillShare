@@ -52,8 +52,8 @@ export class OrderDetailComponent implements OnInit {
 
   tagUnString(str: string): string[] {
     let empty: string [] = []
-    if(str.length != 0) 
-      return str.replace(/\s/g, '').split(',');
+    if(str.length != 0)
+      return str.replace(/\s/g, '').split(',').reverse();
     else 
       return empty;
   }
@@ -108,6 +108,10 @@ export class OrderDetailComponent implements OnInit {
     this.orderService.ChangeStatus(status, this.order!.id).subscribe(p => {
       window.location.reload();
     })
+  }
+
+  goBack() {
+    window.history.back();
   }
 
   editOrder() {

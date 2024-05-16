@@ -1,3 +1,9 @@
-.animatedCard :hover {
+.animatedCard:hover{
     background-color: rgb(206, 206, 206);
+}
+
+.animatedCard:hover .col-1,
+.animatedCard:hover .col-8,
+.animatedCard:hover .col-2 {
+    background-color: inherit;
 }
