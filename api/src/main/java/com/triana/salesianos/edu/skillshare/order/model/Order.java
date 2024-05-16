@@ -30,6 +30,9 @@ public class Order {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "price")
+    private Double price;
+
     @Column(name = "description")
     private String description;
 

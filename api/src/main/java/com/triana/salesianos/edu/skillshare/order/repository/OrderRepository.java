@@ -18,7 +18,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<Order, UUID> {
-
+    @Query("""
+            SELECT o
+            FROM Order o
+            ORDER BY o.createdAt DESC
+            """)
     Page<Order> findAll(Pageable pageable);
 
     @Query("""
