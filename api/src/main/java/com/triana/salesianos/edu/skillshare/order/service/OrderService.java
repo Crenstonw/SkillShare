@@ -92,7 +92,8 @@ public class OrderService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
         Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        if(findOrder.isPresent() && Objects.equals(user.get(), findOrder.get().getUser())) {
+        if(findOrder.isPresent() && Objects.equals(user.get(), findOrder.get().getUser())
+            || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
             Order result = Order.builder()
                     .id(findOrder.get().getId())
                     .tags(findOrder.get().getTags())
