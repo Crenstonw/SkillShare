@@ -14,6 +14,7 @@ import { HomeComponent } from './UI/home/home.component';
 import { OrdersComponent } from './UI/orders/orders.component';
 import { OrderCardsComponent } from './components/order-cards/order-cards.component';
 import { OrderDetailComponent } from './UI/order-detail/order-detail.component';
+import { TagsComponent } from './UI/tags/tags.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { OrderDetailComponent } from './UI/order-detail/order-detail.component';
     OrdersComponent,
     OrderCardsComponent,
     OrderDetailComponent,
+    TagsComponent,
   ],
   imports: [
     BrowserModule,
