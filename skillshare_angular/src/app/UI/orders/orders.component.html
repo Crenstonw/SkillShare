@@ -1,0 +1,45 @@
+<div class="ui col-10 d-flex flex-column justify-content-between" style="margin-left: 8.33%;">
+    <div class="row d-flex justify-content-between">
+        <div class="col-6">
+            <h1 style="text-align: start;">Orders</h1>
+        </div>
+        <div class="col-6" style="text-align: end;">
+            <button class="btn btn-success" (click)="orderModal(newOrderm)">New Order</button>
+        </div>
+    </div>
+    <div *ngFor="let i of items">
+        <app-order-cards (click)="details(i.id)" [order]="i"></app-order-cards>
+    </div>
+</div>
+
+<ng-template #newOrderm let-modal>
+    <div class="modal-header bg-success">
+        <h4 class="modal-title text-white" id="modal-basic-title">New Order</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form id="editForm" class="form-editOrder" [formGroup]="newOrderForm" (ngSubmit)="newOrder()">
+            <div class="mb-3 mt-3">
+                <label for="title" class="form-label">Title:</label>
+                <input formControlName="title" type="text" class="form-control" id="title" placeholder="Enter title"
+                    name="title">
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="price" class="form-label">price:</label>
+                <input formControlName="price" type="number" class="form-control" id="price" placeholder="Enter price"
+                    name="title">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label>
+                <textarea formControlName="description" class="form-control" rows="5" id="description"
+                    name="text"></textarea>
+            </div>
+            <label for="comment">Tags: (must be separated by comas)</label>
+            <textarea formControlName="tags" class="form-control" rows="5" id="comment" name="text"></textarea>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark" form="editForm"
+            (click)="modal.close('save')">Create new order</button>
+    </div>
+</ng-template>

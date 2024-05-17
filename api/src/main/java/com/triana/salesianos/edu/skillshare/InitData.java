@@ -51,7 +51,7 @@ public class InitData {
         User user2 = User.builder()
                 .id(UUID.randomUUID())
                 .email("b")
-                .profilePicture("https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg")
+                .profilePicture("https://imgs.search.brave.com/R8p7rPuOhYh7POJU6sNypX7SHBJ1yKcf5rWrbPQwydQ/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93d3cu/cHVibGljZG9tYWlu/cGljdHVyZXMubmV0/L3BpY3R1cmVzLzE2/MDAwMC92ZWxrYS9i/YW5hbmEtbWFuLmpw/Zw")
                 .name("user2")
                 .surname("suruser2")
                 .username("MiAbeja39")
@@ -96,6 +96,7 @@ public class InitData {
                 .title("titulo")
                 .user(user1)
                 .state(OrderState.OPEN)
+                .price(23.34)
                 .description("descripcion de la ordenanza lorem ipsum amet")
                 .createdAt(LocalDateTime.now().minusMonths(4))
                 .lastTimeModified(LocalDateTime.now().minusMonths(1).minusDays(29))
@@ -107,6 +108,7 @@ public class InitData {
                 .id(UUID.randomUUID())
                 .title("titulo2")
                 .user(user1)
+                .price(23.34)
                 .state(OrderState.OPEN)
                 .description("descripcion 2 de la ordenanza")
                 .tags(Set.of(tag1, tag2))
@@ -116,7 +118,8 @@ public class InitData {
         Order order3 = Order.builder()
                 .id(UUID.randomUUID())
                 .title("Arreglo cortacespes")
-                .user(user1)
+                .user(user2)
+                .price(23.34)
                 .state(OrderState.OCCUPIED)
                 .description("Hago de todo en realidad, pero arreglar cortacespes es lo que mejor se me da")
                 .tags(Set.of(tag1))
@@ -127,6 +130,7 @@ public class InitData {
                 .id(UUID.randomUUID())
                 .title("Saco la basura por ti")
                 .user(user1)
+                .price(23.34)
                 .state(OrderState.CLOSED)
                 .description("descripcion 2 de la ordenanza")
                 .tags(Set.of(tag1))
@@ -136,7 +140,8 @@ public class InitData {
         Order order5 = Order.builder()
                 .id(UUID.randomUUID())
                 .title("titulo3")
-                .user(user1)
+                .user(user2)
+                .price(23.34)
                 .state(OrderState.CLOSED)
                 .description("descripcion 2 de la ordenanza")
                 .tags(Set.of(tag1))
@@ -152,6 +157,14 @@ public class InitData {
                 .author(user2)
                 .order(order1)
                 .build();
-        orderMessageRepository.saveAll(List.of(om1));
+        OrderMessage om2 = OrderMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Gracias a todos")
+                .message("gracias a todos por vuestro apoyo")
+                .dateTime(LocalDateTime.of(2024, 4, 14, 12,34,54))
+                .author(user1)
+                .order(order1)
+                .build();
+        orderMessageRepository.saveAll(List.of(om1, om2));
     }
 }

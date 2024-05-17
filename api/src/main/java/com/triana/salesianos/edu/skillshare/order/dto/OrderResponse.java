@@ -16,6 +16,7 @@ public record OrderResponse(
         UUID id,
         String title,
         String description,
+        double price,
 
         OrderState state,
         LocalDateTime createdAt,
@@ -32,6 +33,7 @@ public record OrderResponse(
         return OrderResponse.builder()
                 .id(order.getId())
                 .title(order.getTitle())
+                .price(order.getPrice())
                 .description(order.getDescription())
                 .state(order.getState())
                 .createdAt(order.getCreatedAt())

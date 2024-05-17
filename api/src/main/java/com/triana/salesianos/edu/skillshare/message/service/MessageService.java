@@ -142,7 +142,7 @@ public class MessageService {
         Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
         Optional<OrderMessage> findMessage = orderMessageRepository
                 .findById(UUID.fromString(id));
-        if(findMessage.isPresent() && findMessage.get().getAuthor() == user.get()) {
+        if(findMessage.isPresent() && findMessage.get().getAuthor() == user.get() || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
             orderMessageRepository.delete(findMessage.get());
         } else {
              //throw error

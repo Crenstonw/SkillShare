@@ -1,0 +1,149 @@
+<div class="col-10 row" style="margin-left: 8%;">
+<button class="btn col-1 my-2" (click)="goBack()"><svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+        fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+            d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
+    </svg>
+</button>
+</div>
+<div class="ui col-10 d-flex flex-column justify-content-between bg-white rounded-5 row" style="margin-left: 8.33%;">
+    <div class="row">
+        <div class="row col-8">
+            <div class="col-10">
+                <div class="col-12 row">
+                    <h1 class="py-4 ms-4 col-8">{{order?.title}}</h1>
+                    <div ngbDropdown class="dropdown mx-4 col-2 py-4">
+                        <button class="btn dropdown-toggle + {{stateColor}}" id="dropdownBasic1" ngbDropdownToggle>
+                            {{order?.state}}
+                        </button>
+                        <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                            <button ngbDropdownItem (click)="changeState('OPEN')">Open</button>
+                            <button ngbDropdownItem (click)="changeState('OCCUPIED')">Occupied</button>
+                            <button ngbDropdownItem (click)="changeState('CLOSED')">Closed</button>
+                        </div>
+                    </div>
+                    <h2 class="px-4 pb-4 col-8">{{order?.price}}$</h2>
+                    <div class="row">
+                        <div *ngFor="let tag of order?.tags" class="col-2 bg-dark text-white rounded py-1 mx-4 mb-2"
+                            style="text-align: center;">
+                            <p class="my-0 py-0">{{tag.name}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <h5 class="pt-5" style="text-align: start;">Created By:</h5>
+                <div class="bg-secondary rounded-5 text-white p-2" style="text-align: center;">
+                    <img style="width: 75px; border-radius: 50%;" [src]="order?.user?.profilePicture">
+                    <p class="m-0">{{order?.user?.username}}</p>
+                </div>
+            </div>
+            <hr class="m-3" style="border: black solid 2px;">
+        </div>
+        <div class="col-4">
+            <div class="bg-dark text-white rounded-5 my-2 py-2">
+                <div class="row d-flex justify-content-center">
+                    <h2 class="col-12" style="text-align: center;">Admin Tools</h2>
+                </div>
+                <div class="row d-flex justify-content-center">
+                    <button class="btn btn-warning col-4 mx-4" style="font-weight: bold;"
+                        (click)="orderModal(editOrderm)">Edit</button>
+                    <button class="btn btn-danger col-4 mx-4" style="font-weight: bold;"
+                        (click)="orderModal(deleteOrderm)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p class="m-4">{{order?.createdAt}}</p>
+    <div class="col-10 bg-secondary text-white mx-4 mb-4 rounded-3">
+        <h2 class="px-4">Description</h2>
+        <p class="col-10 px-4">{{order?.description}}</p>
+    </div>
+    <hr class="m-3" style="border: black solid 2px;">
+    <h2 class="px-4">Messages</h2>
+    <div class="col-10 bg-secondary text-white mx-4 mb-4 rounded-3">
+        @for (message of order?.messages; track $index) {
+        <div class="bg-light my-5 mx-2 pb-3 text-black rounded-3">
+            <div class="row d-flex justify-content-between">
+                <h3 class="mx-2 col-7">{{message.title}}</h3>
+                <div class="col-3">
+                    <p class="mb-0">{{message.dateTime}}</p>
+                    @if (message.author.username == order!.user.username) {
+                    <p>by: {{message.author.username}} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                            fill="currentColor" class="bi bi-award-fill" viewBox="0 0 16 16">
+                            <path
+                                d="m8 0 1.669.864 1.858.282.842 1.68 1.337 1.32L13.4 6l.306 1.854-1.337 1.32-.842 1.68-1.858.282L8 12l-1.669-.864-1.858-.282-.842-1.68-1.337-1.32L2.6 6l-.306-1.854 1.337-1.32.842-1.68L6.331.864z" />
+                            <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z" />
+                        </svg></p>
+                    }
+                    @if (message.author.username != order!.user.username) {
+                    <p>by: {{message.author.username}}</p>
+                    }
+                </div>
+            </div>
+            <p class="mx-2">{{message.message}}</p>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-danger col-4 mx-4" style="font-weight: bold;"
+                    (click)="deleteMessageModal(deleteMessagem, message.id)">Delete</button>
+            </div>
+        </div>
+        }
+    </div>
+</div>
+
+<ng-template #deleteMessagem let-modal>
+    <div class="modal-header bg-danger">
+        <h4 class="modal-title text-white" id="modal-basic-title">Delete Message</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <p>You are about to permanently delete this message, are you sure?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark" (click)="deleteMessage()">Delete for ever</button>
+    </div>
+</ng-template>
+
+<ng-template #deleteOrderm let-modal>
+    <div class="modal-header bg-danger">
+        <h4 class="modal-title text-white" id="modal-basic-title">Delete Order</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <p>You are about to permanently delete this order, are you sure?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark" (click)="deleteOrder()">Delete for ever</button>
+    </div>
+</ng-template>
+
+<ng-template #editOrderm let-modal>
+    <div class="modal-header bg-warning">
+        <h4 class="modal-title text-black" id="modal-basic-title">Edit Order</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form id="editForm" class="form-editOrder" [formGroup]="editOrderForm" (ngSubmit)="editOrder()">
+            <div class="mb-3 mt-3">
+                <label for="title" class="form-label">Title:</label>
+                <input formControlName="title" type="text" class="form-control" id="title" placeholder="Enter title"
+                    name="title">
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="price" class="form-label">price:</label>
+                <input formControlName="price" type="number" class="form-control" id="price" placeholder="Enter price"
+                    name="title">
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label>
+                <textarea formControlName="description" class="form-control" rows="5" id="description"
+                    name="text"></textarea>
+            </div>
+            <label for="comment">Tags: (must be separated by comas)</label>
+            <textarea formControlName="tags" class="form-control" rows="5" id="comment" name="text"></textarea>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark" form="editForm" (click)="modal.close('save')">Edit</button>
+    </div>
+</ng-template>

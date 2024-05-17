@@ -1,9 +1,7 @@
 package com.triana.salesianos.edu.skillshare.order.service;
 
 import com.triana.salesianos.edu.skillshare.Tag.service.TagService;
-import com.triana.salesianos.edu.skillshare.order.dto.ListOrderResponse;
-import com.triana.salesianos.edu.skillshare.order.dto.NewOrderRequest;
-import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
+import com.triana.salesianos.edu.skillshare.order.dto.*;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.model.OrderState;
@@ -31,16 +29,17 @@ public class OrderService {
     private final TagService tagService;
 
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
+        
         Page<Order> orderPage = orderRepository.findAll(pageable);
 
         return orderPage.map(OrderResponse::of);
     }
 
-    public OrderResponse getOrderById(String id) {
+    public OrderDetailsResponse getOrderById(String id) {
         Order findOrder = orderRepository.findById(UUID.fromString(id))
                 .orElseThrow(NoOrderException::new);
 
-        return OrderResponse.of(findOrder);
+        return OrderDetailsResponse.of(findOrder);
     }
 
     public Page<OrderResponse> getOrderListByTitle(String title, Pageable pageable) {
@@ -55,6 +54,7 @@ public class OrderService {
                 .id(UUID.randomUUID())
                 .title(orderRequest.title())
                 .description(orderRequest.description())
+                .price(orderRequest.price())
                 .tags(tagService.addTags(orderRequest.tags()))
                 .user(user)
                 .build();
@@ -66,10 +66,12 @@ public class OrderService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
         Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        if(findOrder.isPresent() && Objects.equals(user, findOrder.get().getUser())) {
+        if(findOrder.isPresent() && Objects.equals(user, findOrder.get().getUser())
+            || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
             Order response = Order.builder()
                     .id(findOrder.get().getId())
                     .title(orderRequest.title())
+                    .price(orderRequest.price())
                     .description(orderRequest.description())
                     .state(findOrder.get().getState())
                     .createdAt(findOrder.get().getCreatedAt())
@@ -86,21 +88,18 @@ public class OrderService {
 
     }
 
-    public void deleteOrder(String id) {
-        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        findOrder.ifPresent(orderRepository::delete);
-    }
-
-    public OrderResponse changeStatus (String id, String status) {
+    public OrderResponse changeStatus (String id, StatusDto status) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
         Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        if(findOrder.isPresent() && Objects.equals(user.get(), findOrder.get().getUser())) {
+        if(findOrder.isPresent() && Objects.equals(user.get(), findOrder.get().getUser())
+            || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
             Order result = Order.builder()
                     .id(findOrder.get().getId())
                     .tags(findOrder.get().getTags())
                     .orderMessages(findOrder.get().getOrderMessages())
-                    .state(OrderState.valueOf(status))
+                    .price(findOrder.get().getPrice())
+                    .state(OrderState.valueOf(status.status()))
                     .user(findOrder.get().getUser())
                     .lastTimeModified(LocalDateTime.now())
                     .createdAt(findOrder.get().getCreatedAt())
@@ -112,5 +111,19 @@ public class OrderService {
         } else {
             return null;
         }
+    }
+
+    public void deleteOrder(String id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
+        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
+        if(Objects.equals(user.get().getUsername(), findOrder.get().getUser().getUsername())
+                || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
+            findOrder.ifPresent(orderRepository::delete);
+        } else {
+            //throw exception
+        }
+
+
     }
 }

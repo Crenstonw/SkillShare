@@ -18,7 +18,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<Order, UUID> {
-
+    @Query("""
+            SELECT o
+            FROM Order o
+            ORDER BY o.createdAt DESC
+            """)
     Page<Order> findAll(Pageable pageable);
 
     @Query("""
@@ -42,4 +46,12 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             WHERE  t IN ?1
             """)
     List<Order> findOrdersByDate();
+
+    @Query("""
+               SELECT o
+               FROM Order o
+               JOIN o.tags t
+               WHERE ?1 = t
+               """)
+    List<Order> findOrderWithTag(Tag tag);
 }
