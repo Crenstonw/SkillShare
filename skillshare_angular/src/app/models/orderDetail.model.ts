@@ -17,7 +17,7 @@ export interface Message {
     title:       string;
     message:     string;
     isMyMessage: boolean;
-    dateTime:    Date | null;
+    dateTime:    Date;
     author:      Author;
 }
 

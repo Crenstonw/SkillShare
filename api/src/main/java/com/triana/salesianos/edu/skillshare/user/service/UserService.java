@@ -1,5 +1,6 @@
 package com.triana.salesianos.edu.skillshare.user.service;
 
+import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
@@ -9,6 +10,8 @@ import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.model.UserRole;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,13 +52,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public List<AllUserResponse> getAllUsers() {
-        List<User> findAll = userRepository.findAll();
-        List<AllUserResponse> result = new ArrayList<>();
+    public Page<AllUserResponse> getAllUsers(Pageable pageable) {
+        Page<User> userPage = userRepository.findAllUsers(pageable);
 
-        for(User user : findAll) {result.add(AllUserResponse.of(user));}
-
-        return result;
+        return userPage.map(AllUserResponse::of);
     }
 
     public UserDetailsDto getUser(String id) {

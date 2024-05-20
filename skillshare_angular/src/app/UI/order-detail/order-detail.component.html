@@ -54,7 +54,7 @@
             </div>
         </div>
     </div>
-    <p class="m-4">{{order?.createdAt}}</p>
+    <p class="m-4">posted {{dateScaler(order!.createdAt)}}</p>
     <div class="col-10 bg-secondary text-white mx-4 mb-4 rounded-3">
         <h2 class="px-4">Description</h2>
         <p class="col-10 px-4">{{order?.description}}</p>
@@ -67,7 +67,7 @@
             <div class="row d-flex justify-content-between">
                 <h3 class="mx-2 col-7">{{message.title}}</h3>
                 <div class="col-3">
-                    <p class="mb-0">{{message.dateTime}}</p>
+                    <p class="mb-0">posted {{dateScaler(message.dateTime)}}</p>
                     @if (message.author.username == order!.user.username) {
                     <p>by: {{message.author.username}} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                             fill="currentColor" class="bi bi-award-fill" viewBox="0 0 16 16">

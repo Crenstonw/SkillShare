@@ -22,7 +22,7 @@ public class JwtUserResponse extends UserResponse {
     }
 
     public static JwtUserResponse of (User user, String token) {
-        JwtUserResponse result = new JwtUserResponse(UserResponse.fromUser(user));
+        JwtUserResponse result = new JwtUserResponse(UserResponse.of(user));
         result.setToken(token);
         return result;
     }

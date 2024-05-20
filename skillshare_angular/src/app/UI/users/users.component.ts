@@ -1,28 +1,28 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Order } from '../../models/orders.model';
+import { Component, OnInit } from '@angular/core';
+import { User } from '../../models/orders.model';
+import { UserService } from '../../services/user.service';
 
 @Component({
-  selector: 'app-order-cards',
-  templateUrl: './order-cards.component.html',
-  styleUrl: './order-cards.component.css'
+  selector: 'app-users',
+  templateUrl: './users.component.html',
+  styleUrl: './users.component.css'
 })
-export class OrderCardsComponent implements OnInit {
-  
-  @Input() order: Order | undefined;
-  stateColor: String = '';
+export class UsersComponent implements OnInit{
+  items: User[] = [];
+
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
-    this.setState();
+    this.getUsers();
   }
 
-  setState() {
-    if(this.order?.state === 'OPEN') {
-      this.stateColor = 'bg-success text-white'
-    } else if(this.order?.state === 'OCCUPIED') {
-      this.stateColor = 'bg-warning'
-    } else {
-      this.stateColor = 'bg-danger text-white'
-    }
+  isAdmin(role: string) {
+    if(role === '[ADMIN]')
+      return true;
+    else if(role === '[USER]')
+      return false;
+    else
+      return false;
   }
 
   dateScaler(dateTime: Date): string {
@@ -44,4 +44,11 @@ export class OrderCardsComponent implements OnInit {
       return 'just now';
     }
   }
+
+  getUsers() {
+    this.userService.GetUsers().subscribe(p => {
+      this.items = p.content;
+    })
+  }
+
 }

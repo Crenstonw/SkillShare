@@ -5,7 +5,10 @@ import com.triana.salesianos.edu.skillshare.user.dto.*;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -66,8 +69,8 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<AllUserResponse>> getAllUsers() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.getAllUsers());
+    public ResponseEntity<Page<AllUserResponse>> getAllUsers(@PageableDefault Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getAllUsers(pageable));
     }
 
     @GetMapping("/user/{id}")
