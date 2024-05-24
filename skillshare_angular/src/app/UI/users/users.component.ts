@@ -16,6 +16,10 @@ export class UsersComponent implements OnInit{
     this.getUsers();
   }
 
+  details(id: string) {
+    window.location.pathname = `user/${id}`;
+  }
+
   isAdmin(role: string) {
     if(role === '[ADMIN]')
       return true;

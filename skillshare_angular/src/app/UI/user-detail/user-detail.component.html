@@ -1,1 +1,48 @@
-<p>user-detail works!</p>
+<div class="d-flex justify-content-center">
+    <div class="row col-11">
+        <div class="col-8 row">
+            <img class="col-3 rounded-circle" [src]="user?.profilePicture">
+            <h1 class="col-9 text-white align-content-center text-center">{{user?.username}}</h1>
+        </div>
+        <div class="col-4 bg-secondary rounded row">
+            <h1 class="text-center text-white">Admin tools</h1>
+            <button class="btn btn-warning fw-bold col-3">Edit</button>
+            <button class="btn btn-danger fw-bold col-3">Ban</button>
+            <button class="btn btn-danger fw-bold col-3">Borrar</button>
+            <button class="btn btn-warning fw-bold col-3">Give Admin privileges</button>
+        </div>
+        <div class="col-8 row">
+            <div class="col-5 border-bottom text-white mt-3">
+                <h3 class="col-3">Name:</h3>
+                <p>{{user?.name}}</p>
+            </div>
+            <div class="col-2">
+            </div>
+            <div class="col-5 border-bottom text-white mt-3">
+                <h3 class="col-3">Surname:</h3>
+                <p>{{user?.surname}}</p>
+            </div>
+            <div class="col-5 border-bottom text-white mt-3">
+                <h3 class="col-3">Email:</h3>
+                <p>{{user?.email}}</p>
+            </div>
+            <div class="col-2">
+            </div>
+            <div class="col-5 border-bottom text-white mt-3">
+                <h3 class="col-3">Role:</h3>
+                <p>{{user?.role}}</p>
+            </div>
+        </div>
+        <div class="col-8 text-white mt-5">
+            <h1 class="border-bottom">Favorite orders</h1>
+            @if (user?.favoriteOrders!.length > 0) {
+                <div *ngFor="let fo of user?.favoriteOrders">
+                    <p>{{fo.title}}</p>
+                </div>
+            } @else {
+                <p>No favorites yet :)</p>
+            }
+            
+        </div>
+    </div>
+</div>

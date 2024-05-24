@@ -19,6 +19,7 @@ public record UserDetailsDto(
         String name,
         String surname,
         String password,
+        String profilePicture,
         Set<UserRole> role,
         List<OrderResponse> orders,
         List<FavoriteDto> favoriteOrders
@@ -33,6 +34,7 @@ public record UserDetailsDto(
                 .email(user.getEmail())
                 .username(user.getUsername())
                 .name(user.getName())
+                .profilePicture(user.getProfilePicture())
                 .surname(user.getSurname())
                 .password(user.getPassword())
                 .role(user.getUserRole())

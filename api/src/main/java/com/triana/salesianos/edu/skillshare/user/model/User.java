@@ -72,7 +72,7 @@ public class User implements UserDetails {
 
     @OneToMany
     @JoinColumn(name = "user_id")
-    private Collection<Order> favoriteOrders = new ArrayList<>();
+    private List<Order> favoriteOrders = new ArrayList<>();
 
     @Column(name = "profile_picture")
     private String profilePicture;
@@ -81,10 +81,12 @@ public class User implements UserDetails {
     public String getUsername() {
         return username;
     }
+
     @Override
     public String getPassword() {
         return password;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return userRole.stream()
