@@ -87,6 +87,8 @@ public class User implements UserDetails {
         return password;
     }
 
+    public boolean getEnabled(){return isEnabled();}
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return userRole.stream()

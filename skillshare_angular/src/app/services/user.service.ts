@@ -16,7 +16,7 @@ export class UserService {
     return this.http.get<Users>(`http://localhost:8080/user`,
       {
         headers: {
-          acept: 'application/json',
+          Accept: 'application/json',
           'Authorization': `Bearer ${token}`
         }
       });
@@ -27,7 +27,19 @@ export class UserService {
     return this.http.get<UserDetail>(`http://localhost:8080/user/${id}`,
       {
         headers: {
-          acept: 'application/json',
+          Accept: 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  }
+
+  BanUser(id: string): Observable<UserDetail> {
+    let token = localStorage.getItem('TOKEN');
+    return this.http.put<UserDetail>(`http://localhost:8080/user/ban/${id}`,
+      {},
+      {
+        headers: {
+          Accept: 'application/json',
           'Authorization': `Bearer ${token}`
         }
       });

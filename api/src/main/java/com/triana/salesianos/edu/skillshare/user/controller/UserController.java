@@ -103,4 +103,9 @@ public class UserController {
     public ResponseEntity<AllUserResponse> actualUserInfo() {
         return ResponseEntity.status(HttpStatus.OK).body(service.actualUserInfo());
     }
+
+    @PutMapping("/user/ban/{id}")
+    public ResponseEntity<UserDetailsDto> banUser(@PathVariable String id) {
+        return ResponseEntity.ok().body(service.banUser(id));
+    }
 }

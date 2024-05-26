@@ -22,13 +22,14 @@ public record UserDetailsDto(
         String profilePicture,
         Set<UserRole> role,
         List<OrderResponse> orders,
-        List<FavoriteDto> favoriteOrders
+        List<OrderResponse> favoriteOrders,
+        boolean enabled
 ) {
     public static UserDetailsDto of(User user) {
         List<OrderResponse> ordersResult = new ArrayList<>();
         for(Order order : user.getOrders()) {ordersResult.add(OrderResponse.of(order));}
-        List<FavoriteDto> favoriteOrdersResult = new ArrayList<>();
-        for(Order order : user.getFavoriteOrders()){favoriteOrdersResult.add(FavoriteDto.of(order));}
+        List<OrderResponse> favoriteOrdersResult = new ArrayList<>();
+        for(Order order : user.getFavoriteOrders()){favoriteOrdersResult.add(OrderResponse.of(order));}
         return UserDetailsDto.builder()
                 .id(user.getId())
                 .email(user.getEmail())
@@ -40,6 +41,7 @@ public record UserDetailsDto(
                 .role(user.getUserRole())
                 .orders(ordersResult)
                 .favoriteOrders(favoriteOrdersResult)
+                .enabled(user.isEnabled())
                 .build();
     }
 }

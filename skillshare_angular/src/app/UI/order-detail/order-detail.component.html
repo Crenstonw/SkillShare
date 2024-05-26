@@ -33,7 +33,7 @@
             </div>
             <div class="col-2">
                 <h5 class="pt-5" style="text-align: start;">Created By:</h5>
-                <div class="bg-secondary rounded-5 text-white p-2" style="text-align: center;">
+                <div (click)="moveToUser(order!.user.id)" class="bg-secondary text-white p-2 secondary-card" style="text-align: center;">
                     <img style="width: 75px; border-radius: 50%;" [src]="order?.user?.profilePicture">
                     <p class="m-0">{{order?.user?.username}}</p>
                 </div>

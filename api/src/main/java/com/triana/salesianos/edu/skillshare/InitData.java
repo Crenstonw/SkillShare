@@ -59,23 +59,34 @@ public class InitData {
                 .password(passwordEncoder.encode("b"))
                 .userRole(EnumSet.of(UserRole.USER))
                 .build();
-        userRepository.saveAll(List.of(user1, user2));
+        User user3 = User.builder()
+                .id(UUID.randomUUID())
+                .email("adios@adios.com")
+                .profilePicture("https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/e40b6ea6361a1abe28f32e7910f63b66/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg")
+                .name("user3")
+                .surname("suruser3")
+                .username("Athirot")
+                .createdAt(LocalDateTime.now().minusYears(1))
+                .password(passwordEncoder.encode("c"))
+                .userRole(EnumSet.of(UserRole.USER))
+                .build();
+        userRepository.saveAll(List.of(user1, user2, user3));
         /////////////////////////////Direct Messages///////////////////////////////////////
         DirectMessage dm1 = DirectMessage.builder()
                 .id(UUID.randomUUID())
-                .title("titulo del mensaje directo")
-                .message("mensaje del mensaje directo")
+                .title("cortacesped")
+                .message("estoy interesado en tus servicios")
                 .dateTime(LocalDateTime.now())
                 .userFrom(user1)
                 .userTo(user2)
                 .build();
         DirectMessage dm2 = DirectMessage.builder()
                 .id(UUID.randomUUID())
-                .title("titulo del mensaje directo antiguo")
-                .message("mensaje del mensaje directo antiguo")
+                .title("Sobre el cortacesped")
+                .message("me he retirado lo siento :(")
                 .dateTime(LocalDateTime.of(2021, 10, 12, 10, 22, 22))
-                .userFrom(user1)
-                .userTo(user2)
+                .userFrom(user2)
+                .userTo(user1)
                 .build();
         directMessageRepository.saveAll(List.of(dm1, dm2));
 

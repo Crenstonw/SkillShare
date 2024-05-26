@@ -21,7 +21,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let i of items" (click)="details(i.id)">
-                    <td><img style="width: 100%; border-radius: 100%;" [src]="i.profilePicture"></td>
+                    <td class="image-container"><img style="width: 100%; border-radius: 100%;" [src]="i.profilePicture"></td>
                     <td><h1>{{i.username}}</h1></td>
                     <td>{{i.email}}</td>
                     <td>{{dateScaler(i.createdAt)}}</td>

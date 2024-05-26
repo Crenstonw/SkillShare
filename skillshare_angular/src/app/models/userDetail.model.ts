@@ -9,6 +9,7 @@ export interface UserDetail {
     role:           string[];
     orders:         Order[];
     favoriteOrders: Order[];
+    enabled:        boolean;
 }
 
 export interface Order {

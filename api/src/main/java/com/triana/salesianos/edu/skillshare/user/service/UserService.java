@@ -6,6 +6,7 @@ import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
 import com.triana.salesianos.edu.skillshare.security.errorhandling.JwtTokenException;
 import com.triana.salesianos.edu.skillshare.user.dto.*;
+import com.triana.salesianos.edu.skillshare.user.exception.CannotBanYourself;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.model.UserRole;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
@@ -90,7 +91,7 @@ public class UserService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
         Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
-        Collection<Order> newFavoriteList = user.getFavoriteOrders();
+        List<Order> newFavoriteList = user.getFavoriteOrders();
         newFavoriteList.add(order);
         List<FavoriteDto> result = new ArrayList<>();
         user.setFavoriteOrders(newFavoriteList);
@@ -106,7 +107,7 @@ public class UserService {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
         Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
 
-        Collection<Order> newFavoriteList = user.getFavoriteOrders();
+        List<Order> newFavoriteList = user.getFavoriteOrders();
         newFavoriteList.removeIf(forOrder -> Objects.equals(forOrder, order));
 
         user.setFavoriteOrders(newFavoriteList);
@@ -125,5 +126,16 @@ public class UserService {
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
 
         return AllUserResponse.of(user);
+    }
+
+    public UserDetailsDto banUser(String id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
+        if(!Objects.equals(userDetails.getUsername(), user.getUsername())) {
+            user.setEnabled(!user.getEnabled());
+            userRepository.save(user);
+            return UserDetailsDto.of(user);
+        } else throw new CannotBanYourself();
+
     }
 }

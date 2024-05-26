@@ -32,6 +32,10 @@ export class OrderDetailComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  moveToUser(id: string) {
+    window.location.pathname = `user/${id}`
+  }
+
   initForm() {
     this.editOrderForm = new FormGroup({
       title: new FormControl(this.order?.title),
