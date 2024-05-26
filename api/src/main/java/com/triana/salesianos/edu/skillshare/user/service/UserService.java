@@ -7,6 +7,8 @@ import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
 import com.triana.salesianos.edu.skillshare.security.errorhandling.JwtTokenException;
 import com.triana.salesianos.edu.skillshare.user.dto.*;
 import com.triana.salesianos.edu.skillshare.user.exception.CannotBanYourself;
+import com.triana.salesianos.edu.skillshare.user.exception.CannotModifyPrivileges;
+import com.triana.salesianos.edu.skillshare.user.exception.UserNotFound;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.model.UserRole;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
@@ -123,19 +125,45 @@ public class UserService {
     public AllUserResponse actualUserInfo() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
 
         return AllUserResponse.of(user);
     }
 
+    public UserDetailsDto givePrivileges(String id) {
+        UserDetails currentUserDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = userRepository.findByUsername(currentUserDetails.getUsername())
+                .orElseThrow(UserNotFound::new);
+
+        if (!currentUser.getUserRole().contains(UserRole.ADMIN)) {
+            throw new RuntimeException("You do not have permission to change user roles.");
+        }
+
+        User user = userRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
+
+        if (currentUser.getUsername().equals(user.getUsername())) throw new CannotModifyPrivileges();
+
+        Set<UserRole> newRoles = new HashSet<>(user.getUserRole());
+        if (newRoles.contains(UserRole.USER)) {
+            newRoles.clear();
+            newRoles.add(UserRole.ADMIN);
+        } else {
+            newRoles.clear();
+            newRoles.add(UserRole.USER);
+        }
+
+        user.setUserRole(newRoles);
+        userRepository.save(user);
+        return UserDetailsDto.of(user);
+    }
+
     public UserDetailsDto banUser(String id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
+        User user = userRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
         if(!Objects.equals(userDetails.getUsername(), user.getUsername())) {
             user.setEnabled(!user.getEnabled());
             userRepository.save(user);
             return UserDetailsDto.of(user);
         } else throw new CannotBanYourself();
-
     }
 }

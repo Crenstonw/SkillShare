@@ -61,10 +61,10 @@ public class InitData {
                 .build();
         User user3 = User.builder()
                 .id(UUID.randomUUID())
-                .email("adios@adios.com")
+                .email("aitormartinezmorzillo@gmail.com")
                 .profilePicture("https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/e40b6ea6361a1abe28f32e7910f63b66/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg")
-                .name("user3")
-                .surname("suruser3")
+                .name("Aitor")
+                .surname("Martinez Morcillo")
                 .username("Athirot")
                 .createdAt(LocalDateTime.now().minusYears(1))
                 .password(passwordEncoder.encode("c"))

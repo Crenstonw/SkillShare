@@ -104,6 +104,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(service.actualUserInfo());
     }
 
+    @PutMapping("/user/privileges/{id}")
+    public ResponseEntity<UserDetailsDto> givePrivileges(@PathVariable String id) {
+        return ResponseEntity.ok().body(service.givePrivileges(id));
+    }
+
     @PutMapping("/user/ban/{id}")
     public ResponseEntity<UserDetailsDto> banUser(@PathVariable String id) {
         return ResponseEntity.ok().body(service.banUser(id));

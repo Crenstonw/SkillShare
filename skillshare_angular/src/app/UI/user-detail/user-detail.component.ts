@@ -1,8 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, TemplateRef, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { UserDetail } from '../../models/userDetail.model';
 import { Order } from '../../models/orders.model';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+interface Alert {
+	type: string;
+	message: string;
+}
 
 @Component({
   selector: 'app-user-detail',
@@ -11,9 +17,13 @@ import { Order } from '../../models/orders.model';
 })
 export class UserDetailComponent {
 
+  alerts: Alert[] = [];
   user: UserDetail | undefined;
+  private modalService = inject(NgbModal);
+  closeResult = '';
 
   constructor(private route: ActivatedRoute, private userService: UserService) {
+    this.reset();
     this.route.params.subscribe(p => {
       this.userService.GetUser(p['id']).subscribe(p => {
         this.user = p;
@@ -21,6 +31,36 @@ export class UserDetailComponent {
       })
     })
   }
+
+  deleteUserModal(content: TemplateRef<any>) {
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+      (result) => {
+        this.closeResult = `Closed with: ${result}`;
+      },
+      (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      },
+    );
+  }
+
+  private getDismissReason(reason: any): string {
+    switch (reason) {
+      case ModalDismissReasons.ESC:
+        return 'by pressing ESC';
+      case ModalDismissReasons.BACKDROP_CLICK:
+        return 'by clicking on a backdrop';
+      default:
+        return `with: ${reason}`;
+    }
+  }
+
+  close(alert: Alert) {
+		this.alerts.splice(this.alerts.indexOf(alert), 1);
+	}
+
+	reset() {
+		this.alerts = [];
+	}
 
   goBack() {
     window.history.back();
@@ -67,16 +107,38 @@ export class UserDetailComponent {
     }
   }
 
+  deleteUser(id: string) {
+    this.userService.DeleteUser(id).subscribe(() => {
+      window.history.back();
+    })
+  }
+
   banUser(id: string) {
     this.userService.BanUser(id).subscribe({
       next: (p: UserDetail) => {
         this.user = p;
       this.isBanned(p.enabled);
-      console.log(p.role);
+      this.reset();
+      this.alerts.push({type: 'success', message: `This user was successfully ${p.enabled? 'Unbanned' : 'Banned'}`});
       },
       error: (err) => {
-        console.log(err.error.message);
+        this.reset();
+        this.alerts.push({type: 'danger', message: `${err.error.message}`});
       }
     });
+  }
+
+  givePrivileges(id: string) {
+    this.userService.ChangePrivileges(id).subscribe({
+      next: (p: UserDetail) => {
+        this.user = p;
+        this.reset();
+        this.alerts.push({type: 'success', message: `Successfuly changed privileges, now using ${p.role} role`});
+      },
+      error: (err) => {
+        this.reset();
+        this.alerts.push({type: 'danger', message: `${err.error.message}`});
+      }
+    })
   }
 }

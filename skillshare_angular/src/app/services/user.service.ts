@@ -33,9 +33,32 @@ export class UserService {
       });
   }
 
+  DeleteUser(id: string) {
+    let token = localStorage.getItem('TOKEN');
+    return this.http.delete(`http://localhost:8080/user/${id}`,
+      {
+        headers: {
+          Accept: 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  }
+
   BanUser(id: string): Observable<UserDetail> {
     let token = localStorage.getItem('TOKEN');
     return this.http.put<UserDetail>(`http://localhost:8080/user/ban/${id}`,
+      {},
+      {
+        headers: {
+          Accept: 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  }
+
+  ChangePrivileges(id: string): Observable<UserDetail> {
+    let token = localStorage.getItem('TOKEN');
+    return this.http.put<UserDetail>(`http://localhost:8080/user/privileges/${id}`,
       {},
       {
         headers: {
