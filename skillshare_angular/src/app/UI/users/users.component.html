@@ -59,7 +59,7 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <form id="editForm" class="form-editUser" [formGroup]="newUserForm" (ngSubmit)="newUser()">
+        <form id="newUserForm" class="form-editUser" [formGroup]="newUserForm" (ngSubmit)="newUser()">
             <div class="mb-3 mt-3">
                 <label for="username" class="form-label">Username</label>
                 <input formControlName="username" type="text" class="form-control" id="username" placeholder="username"
@@ -88,6 +88,6 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-outline-dark" form="editForm" (click)="modal.close('save')">Create</button>
+        <button type="submit" class="btn btn-outline-dark" form="newUserForm" (click)="modal.close('save')">Create</button>
     </div>
 </ng-template>

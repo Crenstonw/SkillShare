@@ -34,6 +34,17 @@ export class UserService {
       });
   }
 
+  GetMe(): Observable<User> {
+    let token = localStorage.getItem('TOKEN');
+    return this.http.get<User>(`http://localhost:8080/user/me`,
+      {
+        headers: {
+          Accept: 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  }
+
   NewUser(name: string, surname: string, username: string, password: string, email: string): Observable<User> {
     let token = localStorage.getItem('TOKEN');
     return this.http.post<User>(`http://localhost:8080/user`,
