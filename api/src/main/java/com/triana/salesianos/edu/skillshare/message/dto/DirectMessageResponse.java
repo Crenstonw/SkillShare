@@ -28,10 +28,10 @@ public record DirectMessageResponse(
                 .dateTime(directMessage.getDateTime())
                 .isMyMessage(isMyMessage)
                 .userFrom(
-                        UserResponse.fromUser(directMessage.getUserFrom())
+                        UserResponse.of(directMessage.getUserFrom())
                 )
                 .userTo(
-                        UserResponse.fromUser(directMessage.getUserTo())
+                        UserResponse.of(directMessage.getUserTo())
                 )
                 .build();
     }

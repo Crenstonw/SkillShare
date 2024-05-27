@@ -3,7 +3,7 @@
         <div class="row d-flex align-items-center justify-content-start">
             <img class="col-1" style="width: 75px; border-radius: 50%;" [src]="order?.user?.profilePicture">
             <p class="col-8 mt-3 text-start">{{order?.user?.username}}</p>
-            <p class="col-2 m-0 p-0">{{order?.createdAt}}</p>
+            <p class="col-2 m-0 p-0">posted {{dateScaler(order!.createdAt)}}</p>
             <div class="col-1 visible rounded py-1 + {{stateColor}}">
                 <p class="m-0 p-0" style="font-weight: bold;">{{order?.state}}</p>
             </div>
