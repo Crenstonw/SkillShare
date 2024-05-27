@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = {"*"})
 public class UserController {
     private final UserService service;
     private final AuthenticationManager authenticationManager;
@@ -68,6 +68,11 @@ public class UserController {
 
     }
 
+    @PostMapping("/user")
+    public ResponseEntity<AllUserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(AllUserResponse.of(service.createUserWithUserRole(createUserRequest)));
+    }
+
     @GetMapping("/user")
     public ResponseEntity<Page<AllUserResponse>> getAllUsers(@PageableDefault Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getAllUsers(pageable));
@@ -79,7 +84,7 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<AllUserResponse> editUser(@PathVariable String id, @RequestBody EditUserRequest editUserRequest) {
+    public ResponseEntity<UserDetailsDto> editUser(@PathVariable String id, @RequestBody EditUserRequest editUserRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(service.editUser(id, editUserRequest));
     }
 

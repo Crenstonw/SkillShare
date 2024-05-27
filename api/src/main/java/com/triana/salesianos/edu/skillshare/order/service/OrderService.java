@@ -29,7 +29,6 @@ public class OrderService {
     private final TagService tagService;
 
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
-        
         Page<Order> orderPage = orderRepository.findAll(pageable);
 
         return orderPage.map(OrderResponse::of);
@@ -82,9 +81,7 @@ public class OrderService {
                     .build();
             orderRepository.save(response);
             return OrderResponse.of(response);
-        } else {
-            return null; //throw error
-        }
+        } else throw new NoOrderException();
 
     }
 

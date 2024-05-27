@@ -19,8 +19,8 @@
         </div>
         <div class="col-4 bg-secondary rounded row">
             <h1 class="text-center text-white">Admin tools</h1>
-            <p class="text-white + {{isBanned(user!.enabled)}}">This user is actually banned</p>
-            <button class="btn btn-primary fw-bold col-5 m-2">Edit</button>
+            <p class="text-white + {{isBanned(user!.enabled)}}">This user is banned at the moment</p>
+            <button class="btn btn-primary fw-bold col-5 m-2" (click)="userModal(editUserm)">Edit</button>
             <button class="btn btn-danger fw-bold col-5 m-2" (click)="banUser(user!.id)">{{user?.enabled ? 'Ban' : 'Unban'}} user</button>
             <button class="btn btn-primary fw-bold col-5 m-2" (click)="deleteUserModal(deleteUserm)">Delete</button>
             <button class="btn btn-primary fw-bold col-5 m-2" (click)="givePrivileges(user!.id)">{{user!.role[0] == 'USER' ? 'Give' : 'Remove'}} privileges</button>
@@ -93,9 +93,48 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <p>You are about to permanently delete this message, are you sure?</p>
+        <p>You are about to permanently delete this user, are you sure?</p>
     </div>
     <div class="modal-footer">
         <button type="submit" class="btn btn-outline-dark" (click)="deleteUser(user!.id)">Delete for ever</button>
+    </div>
+</ng-template>
+
+<ng-template #editUserm let-modal>
+    <div class="modal-header bg-warning">
+        <h4 class="modal-title text-black" id="modal-basic-title">Edit User</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form id="editForm" class="form-editUser" [formGroup]="editUserForm" (ngSubmit)="editUser()">
+            <div class="mb-3 mt-3">
+                <label for="profilePicture" class="form-label">Profile Picture</label>
+                <input formControlName="profilePicture" type="text" class="form-control" id="profilePicture" placeholder="profile picture"
+                    name="profilePicture">
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="username" class="form-label">Username</label>
+                <input formControlName="username" type="text" class="form-control" id="username" placeholder="username"
+                    name="username">
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="name" class="form-label">Name</label>
+                <input formControlName="name" type="text" class="form-control" id="name" placeholder="Enter name"
+                    name="name">
+            </div>
+            <div class="mb-3">
+                <label for="surname" class="form-label">Surname</label>
+                <input formControlName="surname" type="text" class="form-control" id="surname"
+                    name="surname">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input formControlName="email" type="email" class="form-control" id="email"
+                    name="email">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark" form="editForm" (click)="modal.close('save')">Edit</button>
     </div>
 </ng-template>

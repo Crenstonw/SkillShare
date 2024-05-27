@@ -4,7 +4,7 @@
             <h1 class="text-white" style="text-align: start;">Users</h1>
         </div>
         <div class="col-6" style="text-align: end;">
-            <button class="btn btn-success">New User</button>
+            <button class="btn btn-success" (click)="newUserModal(newUserm)">New User</button>
         </div>
     </div>
     <div class="container mt-3">
@@ -52,3 +52,42 @@
         </table>
     </div>
 </div>
+
+<ng-template #newUserm let-modal>
+    <div class="modal-header bg-primary">
+        <h4 class="modal-title text-white" id="modal-basic-title">New User</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <form id="editForm" class="form-editUser" [formGroup]="newUserForm" (ngSubmit)="newUser()">
+            <div class="mb-3 mt-3">
+                <label for="username" class="form-label">Username</label>
+                <input formControlName="username" type="text" class="form-control" id="username" placeholder="username"
+                    name="username">
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="name" class="form-label">Name</label>
+                <input formControlName="name" type="text" class="form-control" id="name" placeholder="Enter name"
+                    name="name">
+            </div>
+            <div class="mb-3">
+                <label for="surname" class="form-label">Surname</label>
+                <input formControlName="surname" type="text" class="form-control" id="surname" placeholder="Enter surname"
+                    name="surname">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input formControlName="email" type="email" class="form-control" id="email" placeholder="Enter email"
+                    name="email">
+            </div>
+            <div class="mb-3 mt-3">
+                <label for="password" class="form-label">Password</label>
+                <input formControlName="password" type="password" class="form-control" id="password" placeholder="password"
+                    name="password">
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark" form="editForm" (click)="modal.close('save')">Create</button>
+    </div>
+</ng-template>

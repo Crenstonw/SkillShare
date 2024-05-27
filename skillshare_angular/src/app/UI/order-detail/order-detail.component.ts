@@ -74,7 +74,7 @@ export class OrderDetailComponent implements OnInit {
     } else if(parseInt(date[2]) != today.getDate()) {
       return today.getDate() - parseInt(date[3]) + ' day/s ago';
     } else if(parseInt(time[0]) != today.getHours()) {
-      return today.getHours() - parseInt(time[0]) + ' hour/s ago';
+      return today.getHours() - parseInt(time[0]) + ` hour${(today.getHours() - parseInt(time[0])) != 1 ? 's' : ''} ago`;
     } else if(parseInt(time[1]) != today.getMinutes()) {
       return today.getMinutes() - parseInt(time[1]) + ' minute/s ago';
     } else {
@@ -139,7 +139,6 @@ export class OrderDetailComponent implements OnInit {
   }
 
   editOrder() {
-    console.log(this.tagUnString(this.editOrderForm.value.tags))
     this.orderService.EditOrder(
       this.order!.id, 
       this.editOrderForm.value.title,
