@@ -104,7 +104,7 @@ public class InitData {
         /////////////////////////////Orders///////////////////////////////////////
         Order order1 = Order.builder()
                 .id(UUID.fromString("e438c08c-4e3b-48dc-9b35-95e5ddbdff81"))
-                .title("titulo")
+                .title("Enseño a comer caracoles")
                 .user(user1)
                 .state(OrderState.OPEN)
                 .price(23.34)
@@ -176,6 +176,22 @@ public class InitData {
                 .author(user1)
                 .order(order1)
                 .build();
-        orderMessageRepository.saveAll(List.of(om1, om2));
+        OrderMessage om3 = OrderMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Me encantó el servicio")
+                .message("muy buen servicio y fué un trato muy amable")
+                .dateTime(LocalDateTime.of(2024, 4, 14, 12,34,54))
+                .author(user2)
+                .order(order3)
+                .build();
+        OrderMessage om4 = OrderMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Sacaron lo mejor de mi")
+                .message("Nunca supe lo bien que sentía una actividad como esta!")
+                .dateTime(LocalDateTime.of(2024, 4, 14, 12,34,54))
+                .author(user2)
+                .order(order4)
+                .build();
+        orderMessageRepository.saveAll(List.of(om1, om2, om3, om4));
     }
 }

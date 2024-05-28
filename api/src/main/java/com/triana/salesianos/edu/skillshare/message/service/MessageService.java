@@ -2,15 +2,17 @@ package com.triana.salesianos.edu.skillshare.message.service;
 
 import com.triana.salesianos.edu.skillshare.message.dto.*;
 import com.triana.salesianos.edu.skillshare.message.model.DirectMessage;
-import com.triana.salesianos.edu.skillshare.message.model.Message;
 import com.triana.salesianos.edu.skillshare.message.model.OrderMessage;
 import com.triana.salesianos.edu.skillshare.message.repository.DirectMessageRepository;
 import com.triana.salesianos.edu.skillshare.message.repository.OrderMessageRepository;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
+import com.triana.salesianos.edu.skillshare.user.exception.UserNotFound;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -28,15 +30,11 @@ public class MessageService {
     private final UserRepository userRepository;
 
     //////////////////////////////Direct Messages///////////////////////////////////
-    public ListDirectMessageResponse getMyDirectMessages() {
+    public Page<DirectMessageResponse> getMyDirectMessages(Pageable pageable) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
-        List<DirectMessage> findMessages = directMessageRepository.findDirectMessagesByUserFrom(user.get());
-        List<DirectMessageResponse> result = new ArrayList<>();
-        for(DirectMessage dm : findMessages) {
-            result.add(DirectMessageResponse.of(dm));
-        }
-        return ListDirectMessageResponse.of(result);
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        Page<DirectMessage> directMessagePage = directMessageRepository.findDirectMessagesByUserFrom(user, pageable);
+        return directMessagePage.map(DirectMessageResponse::of);
     }
 
     public DirectMessageResponse getDirectMessageById(String id) {
@@ -96,6 +94,12 @@ public class MessageService {
         } else {
             return null; //throw error
         }
+    }
+
+    public Page<OrderMessageDetailResponse> getOrdersMessageByUser(Pageable pageable, String id) {
+        User user = userRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
+        Page<OrderMessage> messages = orderMessageRepository.getMessagesOfAnUser(pageable, user);
+        return messages.map(OrderMessageDetailResponse::of);
     }
 
     public OrderMessageResponse newOrderMessage(NewOrderMessageRequest messageRequest) {

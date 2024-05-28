@@ -3,6 +3,9 @@ package com.triana.salesianos.edu.skillshare.message.controller;
 import com.triana.salesianos.edu.skillshare.message.dto.*;
 import com.triana.salesianos.edu.skillshare.message.service.MessageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +20,8 @@ public class MessageController {
 
     //////////////////////////////Direct Messages///////////////////////////////////
     @GetMapping("/direct")
-    public ResponseEntity<ListDirectMessageResponse> getMyDirectMessages() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.getMyDirectMessages());
+    public ResponseEntity<Page<DirectMessageResponse>> getMyDirectMessages(@PageableDefault Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getMyDirectMessages(pageable));
     }
     @GetMapping("/direct/{id}")
     public ResponseEntity<DirectMessageResponse> getMessageById(@PathVariable String id){
@@ -51,6 +54,13 @@ public class MessageController {
 
         return ResponseEntity.status(HttpStatus.OK).body(service
                 .getOrderMessages(orderId));
+    }
+
+    @GetMapping("/order/user/{userId}")
+    public ResponseEntity<Page<OrderMessageDetailResponse>> getOrderMessagesByUserId(
+            @PageableDefault Pageable pageable,
+            @PathVariable String userId) {
+        return ResponseEntity.ok().body(service.getOrdersMessageByUser(pageable, userId));
     }
 
     @PostMapping("/order")

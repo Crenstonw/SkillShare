@@ -1,0 +1,27 @@
+<div class="ui col-10 d-flex flex-column justify-content-between" style="margin-left: 8.33%;">
+    <div class="row d-flex justify-content-between">
+        <div class="col-6">
+            <h1 class="text-white" style="text-align: start;">Messages from</h1>
+        </div>
+    </div>
+    <div class="container mt-3">
+        <table class="table table-dark table-hover rounded-3">
+            <thead>
+                <tr>
+                    <th class="col-1">Username</th>
+                    <th class="col-3"></th>
+                    <th class="col-2">Email</th>
+                    <th class="col-2">Created at</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let i of items" (click)="details(i.id)">
+                    <td class="image-container"><img style="width: 125px; height: 125px; border-radius: 100%;" [src]="i.profilePicture"></td>
+                    <td><h1 class="pt-4">{{i.username}}</h1></td>
+                    <td>{{i.email}}</td>
+                    <td>{{dateScaler(i.createdAt)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
