@@ -5,6 +5,8 @@ import { UserService } from '../../services/user.service';
 import { UserDetail } from '../../models/userDetail.model';
 import { Message } from '../../models/orderMessages.model';
 import { ModalDismissReasons, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { User } from '../../models/users.model';
+import { DirectMessage } from '../../models/directChat.model';
 
 @Component({
   selector: 'app-messages-details',
@@ -13,6 +15,8 @@ import { ModalDismissReasons, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-boo
 })
 export class MessagesDetailsComponent implements OnInit{
   user: UserDetail | undefined;
+  chat: DirectMessage[] | undefined;
+  usersWhoTalkedWith: User[] | undefined;
   orderMessages: Message[] = [];
   private modalService = inject(NgbModal);
   closeResult = '';
@@ -59,6 +63,10 @@ export class MessagesDetailsComponent implements OnInit{
     window.location.pathname = `order/${id}`;
   }
 
+  gotToUser(id: string) {
+    window.location.pathname = `user/${id}`
+  }
+
   dateScaler(dateTime: Date): string {
     const today = new Date();
     let date = dateTime.toString().split('T')[0].split('-');
@@ -81,6 +89,18 @@ export class MessagesDetailsComponent implements OnInit{
   modalDeleteOrderMessage(id: string) {
     this.deleteOrderMessage(id);
     this.modalService.dismissAll('borrado');
+  }
+
+  getDirectMessageUserWhoTalkedWith(id: string) {
+    this.messageService.GetDirectMessagesUserWhoTalkedWith(id).subscribe(p => {
+      this.usersWhoTalkedWith = p;
+    })
+  }
+
+  getChat(userTo: string) {
+    this.messageService.GetChat(this.user!.id, userTo).subscribe(p => {
+      this.chat = p;
+    })
   }
 
   getUserOrderMessages() {

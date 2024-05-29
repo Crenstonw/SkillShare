@@ -7,6 +7,7 @@ import com.triana.salesianos.edu.skillshare.message.repository.DirectMessageRepo
 import com.triana.salesianos.edu.skillshare.message.repository.OrderMessageRepository;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
+import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
 import com.triana.salesianos.edu.skillshare.user.exception.UserNotFound;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
@@ -37,18 +38,26 @@ public class MessageService {
         return directMessagePage.map(DirectMessageResponse::of);
     }
 
-    public DirectMessageResponse getDirectMessageById(String id) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<DirectMessage> findMessage = directMessageRepository.findById(UUID.fromString(id));
-        if (findMessage.isPresent()) {
-            if(Objects.equals(findMessage.get().getUserFrom().getUsername(), userDetails.getUsername())) {
-                return DirectMessageResponse.of(findMessage.get());
-            } else {
-                return null; //throw error
-            }
-        } else {
-            return null; //throw error
+    public List<AllUserResponse> getUsersWhoTalkedWith(String id) {
+        User user = userRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
+        List<User> findUsers = directMessageRepository.findUniqueUsersMessagedBy(user);
+        findUsers.removeIf(u -> Objects.equals(u, user));
+        List<AllUserResponse> result = new ArrayList<>();
+        for(User u : findUsers) {
+            result.add(AllUserResponse.of(u));
         }
+        return result;
+    }
+
+    public List<DirectMessageResponse> getDirectMessageById(String userFromId, String userToId) {
+        User userFrom = userRepository.findById(UUID.fromString(userFromId)).orElseThrow(UserNotFound::new);
+        User userTo = userRepository.findById(UUID.fromString(userToId)).orElseThrow(UserNotFound::new);
+        List<DirectMessage> messages = directMessageRepository.findDirectMessagesByUserFromUser(userFrom, userTo);
+        List<DirectMessageResponse> response = new ArrayList<>();
+        for(DirectMessage message : messages) {
+            response.add(DirectMessageResponse.of(message));
+        }
+        return response;
     }
 
     public DirectMessageResponse postDirectMessage(NewDirectMessageRequest request) {

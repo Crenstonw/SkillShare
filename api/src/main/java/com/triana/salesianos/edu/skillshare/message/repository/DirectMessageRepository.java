@@ -31,8 +31,10 @@ public interface DirectMessageRepository extends JpaRepository<DirectMessage, UU
             SELECT dm
             FROM DirectMessage dm
             WHERE dm.userFrom = ?1
+            OR dm.userFrom = ?2
             AND dm.userTo = ?2
-            ORDER BY dm.dateTime ASC
+            OR dm.userTo = ?1
+            ORDER BY dm.dateTime DESC
             """)
     List<DirectMessage> findDirectMessagesByUserFromUser(User from, User to);
 
@@ -41,6 +43,7 @@ public interface DirectMessageRepository extends JpaRepository<DirectMessage, UU
            FROM DirectMessage dm
            JOIN User u ON dm.userTo = u
            WHERE dm.userFrom = ?1
+           OR dm.userTo = ?1
            """)
     List<User> findUniqueUsersMessagedBy(User from);
 }

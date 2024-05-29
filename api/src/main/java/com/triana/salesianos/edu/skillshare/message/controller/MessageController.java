@@ -2,6 +2,7 @@ package com.triana.salesianos.edu.skillshare.message.controller;
 
 import com.triana.salesianos.edu.skillshare.message.dto.*;
 import com.triana.salesianos.edu.skillshare.message.service.MessageService;
+import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,9 +26,14 @@ public class MessageController {
     public ResponseEntity<Page<DirectMessageResponse>> getMyDirectMessages(@PageableDefault Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getMyDirectMessages(pageable));
     }
-    @GetMapping("/direct/{id}")
-    public ResponseEntity<DirectMessageResponse> getMessageById(@PathVariable String id){
-        return ResponseEntity.status(HttpStatus.OK).body(service.getDirectMessageById(id));
+    @GetMapping("/direct/chat")
+    public ResponseEntity<List<DirectMessageResponse>> getMessageById(@RequestParam String userFrom, @RequestParam String userTo){
+        return ResponseEntity.status(HttpStatus.OK).body(service.getDirectMessageById(userFrom, userTo));
+    }
+
+    @GetMapping("direct/users/{fromId}")
+    public ResponseEntity<List<AllUserResponse>> getUserWhoTalkedWith(@PathVariable String fromId) {
+        return ResponseEntity.ok().body(service.getUsersWhoTalkedWith(fromId));
     }
 
     @PostMapping("/direct")
