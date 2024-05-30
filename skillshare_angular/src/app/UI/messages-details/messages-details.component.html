@@ -35,7 +35,7 @@
                                         </button></p>
                                 </div>
                                 <button class="col-1 m-3 btn bg-danger btn-danger"
-                                    (click)="deleteOrderMessageModal(deleteOrderMessagem)">Delete</button>
+                                    (click)="deleteMessageModal(deleteOrderMessagem)">Delete</button>
                                 <div class="row col-10 pt-2">
                                     <h4 class="col-6">{{message.title}}</h4>
                                     <p class="col-6 d-flex justify-content-end">{{dateScaler(message.dateTime)}}</p>
@@ -80,6 +80,7 @@
                 <div ngbAccordionCollapse>
                     <div ngbAccordionBody class="body-black">
                         <ng-template>
+                            <h3>Chats</h3>
                             <div ngbAccordion [closeOthers]="true" class="accordion-dark">
                                 @for (u of usersWhoTalkedWith; track $index) {
                                 <div ngbAccordionItem>
@@ -97,17 +98,18 @@
                                                     class="row border border-info border-end-0 border-top-0 ps-2 bg-info bg-opacity-10 rounded-start m-2">
                                                     <div class="border-bottom col-10">
                                                         <p class="mt-3"><button type="button"
-                                                                class="btn btn-outline-secondary me-2" (click)="gotToUser(message.userFrom.id)">
+                                                                class="btn btn-outline-secondary me-2"
+                                                                (click)="gotToUser(message.userFrom.id)">
                                                                 {{message.userFrom.username}}
-                                                                
+
                                                             </button></p>
                                                         <ng-template #popContent>
                                                             <h5 class="text-black">{{message.title}}</h5>
                                                             <p>{{message.message}}</p>
                                                         </ng-template>
                                                     </div>
-                                                    <!--<button class="col-1 m-3 btn bg-danger btn-danger"
-                                                        (click)="deleteOrderMessageModal(deleteOrderMessagem)">Delete</button>-->
+                                                    <button class="col-1 m-3 btn bg-danger btn-danger"
+                                                        (click)="deleteMessageModal(deleteDirectMessagem)">Delete</button>
                                                     <div class="row col-10 pt-2">
                                                         <h4 class="col-6">{{message.title}}</h4>
                                                         <p class="col-6 d-flex justify-content-end">
@@ -115,6 +117,20 @@
                                                     </div>
                                                     <p class="ps-5">{{message.message}}</p>
                                                 </div>
+                                                <ng-template #deleteDirectMessagem let-modal>
+                                                    <div class="modal-header bg-danger">
+                                                        <h4 class="modal-title text-white" id="modal-basic-title">Delete Message</h4>
+                                                        <button type="button" class="btn-close" aria-label="Close"
+                                                            (click)="modal.dismiss('Cross click')"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>You are about to permanently delete this message, are you sure?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-outline-dark"
+                                                            (click)="modalDeleteDirectMessage(message.id, message.userTo.id)">Delete for ever</button>
+                                                    </div>
+                                                </ng-template>
                                                 }
                                             </ng-template>
                                         </div>
@@ -122,7 +138,6 @@
                                 </div>
                                 }
                             </div>
-
                         </ng-template>
                     </div>
                 </div>

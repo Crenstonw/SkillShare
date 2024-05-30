@@ -27,8 +27,8 @@ public class MessageController {
         return ResponseEntity.status(HttpStatus.OK).body(service.getMyDirectMessages(pageable));
     }
     @GetMapping("/direct/chat")
-    public ResponseEntity<List<DirectMessageResponse>> getMessageById(@RequestParam String userFrom, @RequestParam String userTo){
-        return ResponseEntity.status(HttpStatus.OK).body(service.getDirectMessageById(userFrom, userTo));
+    public ResponseEntity<List<DirectMessageResponse>> getMessageById(@RequestParam String userFrom, @RequestParam String userTo, @RequestParam(required = false) boolean asc){
+        return ResponseEntity.status(HttpStatus.OK).body(service.getDirectMessageById(asc, userFrom, userTo));
     }
 
     @GetMapping("direct/users/{fromId}")

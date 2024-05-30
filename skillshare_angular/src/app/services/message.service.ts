@@ -59,4 +59,16 @@ export class MessageService {
       }
     );
   }
+
+  DeleteDirectMessage(id: string) {
+    let token = localStorage.getItem('TOKEN');
+    return this.http.delete(`http://localhost:8080/message/direct/${id}`,
+      {
+        headers: {
+          acept: 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+  }
 }

@@ -23,7 +23,6 @@ public class UserResponse {
 
     public static UserResponse of(User user) {
         boolean isAdmin = Objects.equals(user.getUserRole().toString(), "[ADMIN]");
-        System.out.println(user.getUserRole().toString());
         return UserResponse.builder()
                 .id(user.getId().toString())
                 .username(user.getUsername())

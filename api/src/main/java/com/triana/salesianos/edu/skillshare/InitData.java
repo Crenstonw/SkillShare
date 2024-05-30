@@ -88,7 +88,31 @@ public class InitData {
                 .userFrom(user2)
                 .userTo(user1)
                 .build();
-        directMessageRepository.saveAll(List.of(dm1, dm2));
+        DirectMessage dm3 = DirectMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Hola Aitor")
+                .message("He visto que finalmente te has descargado la aplicación")
+                .dateTime(LocalDateTime.now().minusDays(3L))
+                .userFrom(user2)
+                .userTo(user3)
+                .build();
+        DirectMessage dm4 = DirectMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Que tal Rafael")
+                .message("Siiii estaba viendo de impartir clases de inglés :)")
+                .dateTime(LocalDateTime.now().minusDays(2L))
+                .userFrom(user3)
+                .userTo(user2)
+                .build();
+        DirectMessage dm5 = DirectMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Guay")
+                .message("Me alegro tio a ver si nos vemos algún día :D")
+                .dateTime(LocalDateTime.now().minusDays(1L))
+                .userFrom(user2)
+                .userTo(user3)
+                .build();
+        directMessageRepository.saveAll(List.of(dm1, dm2, dm3, dm4, dm5));
 
         /////////////////////////////Tags///////////////////////////////////////
         Tag tag1 = Tag.builder()

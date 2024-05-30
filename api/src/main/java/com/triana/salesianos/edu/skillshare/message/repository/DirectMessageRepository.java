@@ -30,10 +30,10 @@ public interface DirectMessageRepository extends JpaRepository<DirectMessage, UU
     @Query("""
             SELECT dm
             FROM DirectMessage dm
-            WHERE dm.userFrom = ?1
-            OR dm.userFrom = ?2
-            AND dm.userTo = ?2
-            OR dm.userTo = ?1
+            WHERE (dm.userFrom = ?1
+                AND dm.userTo = ?2)
+            OR (dm.userFrom = ?2
+                AND dm.userTo = ?1)
             ORDER BY dm.dateTime DESC
             """)
     List<DirectMessage> findDirectMessagesByUserFromUser(User from, User to);

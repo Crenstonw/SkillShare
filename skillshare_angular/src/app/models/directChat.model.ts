@@ -1,4 +1,5 @@
 export interface DirectMessage {
+    id:          string;
     title:       string;
     message:     string;
     dateTime:    Date;

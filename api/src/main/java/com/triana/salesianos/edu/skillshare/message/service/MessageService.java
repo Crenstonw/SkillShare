@@ -49,13 +49,16 @@ public class MessageService {
         return result;
     }
 
-    public List<DirectMessageResponse> getDirectMessageById(String userFromId, String userToId) {
+    public List<DirectMessageResponse> getDirectMessageById(Boolean asc, String userFromId, String userToId) {
         User userFrom = userRepository.findById(UUID.fromString(userFromId)).orElseThrow(UserNotFound::new);
         User userTo = userRepository.findById(UUID.fromString(userToId)).orElseThrow(UserNotFound::new);
         List<DirectMessage> messages = directMessageRepository.findDirectMessagesByUserFromUser(userFrom, userTo);
         List<DirectMessageResponse> response = new ArrayList<>();
         for(DirectMessage message : messages) {
             response.add(DirectMessageResponse.of(message));
+        }
+        if(asc) {
+            Collections.reverse(response);
         }
         return response;
     }
@@ -83,7 +86,9 @@ public class MessageService {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Optional<User> userFrom = userRepository.findByUsername(userDetails.getUsername());
         Optional<DirectMessage> findMessage = directMessageRepository.findById(UUID.fromString(id));
-        if(findMessage.isPresent() && Objects.equals(findMessage.get().getUserFrom(), userFrom.get())) {
+        if(findMessage.isPresent()
+                && Objects.equals(findMessage.get().getUserFrom(), userFrom.get())
+                || Objects.equals(userFrom.get().getUserRole().toString(), "[ADMIN]")) {
             directMessageRepository.delete(findMessage.get());
         } else {
             //throw error
