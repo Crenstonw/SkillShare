@@ -7,10 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
 
 @Data
 @SuperBuilder
@@ -23,9 +21,8 @@ public class UserResponse {
     protected LocalDateTime createdAt;
     protected boolean isAdmin;
 
-    public static UserResponse fromUser(User user) {
+    public static UserResponse of(User user) {
         boolean isAdmin = Objects.equals(user.getUserRole().toString(), "[ADMIN]");
-        System.out.println(user.getUserRole().toString());
         return UserResponse.builder()
                 .id(user.getId().toString())
                 .username(user.getUsername())

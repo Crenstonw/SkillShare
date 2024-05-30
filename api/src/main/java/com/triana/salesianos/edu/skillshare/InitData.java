@@ -39,45 +39,80 @@ public class InitData {
         /////////////////////////////Users///////////////////////////////////////
         User user1 = User.builder()
                 .id(UUID.randomUUID())
-                .email("a")
+                .email("hola@hola.com")
                 .profilePicture("https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg")
                 .name("user1")
                 .surname("suruser1")
-                .username("ManoloOlo23")
+                .username("Antonioo23")
                 .createdAt(LocalDateTime.now())
                 .password(passwordEncoder.encode("a"))
                 .userRole(EnumSet.of(UserRole.ADMIN))
                 .build();
         User user2 = User.builder()
                 .id(UUID.randomUUID())
-                .email("b")
+                .email("adios@hola.com")
                 .profilePicture("https://imgs.search.brave.com/R8p7rPuOhYh7POJU6sNypX7SHBJ1yKcf5rWrbPQwydQ/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93d3cu/cHVibGljZG9tYWlu/cGljdHVyZXMubmV0/L3BpY3R1cmVzLzE2/MDAwMC92ZWxrYS9i/YW5hbmEtbWFuLmpw/Zw")
                 .name("user2")
                 .surname("suruser2")
-                .username("MiAbeja39")
-                .createdAt(LocalDateTime.now())
+                .username("SuMorenito23")
+                .createdAt(LocalDateTime.now().minusYears(2))
                 .password(passwordEncoder.encode("b"))
                 .userRole(EnumSet.of(UserRole.USER))
                 .build();
-        userRepository.saveAll(List.of(user1, user2));
+        User user3 = User.builder()
+                .id(UUID.randomUUID())
+                .email("aitormartinezmorzillo@gmail.com")
+                .profilePicture("https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/e40b6ea6361a1abe28f32e7910f63b66/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg")
+                .name("Aitor")
+                .surname("Martinez Morcillo")
+                .username("Athirot")
+                .createdAt(LocalDateTime.now().minusYears(1))
+                .password(passwordEncoder.encode("c"))
+                .userRole(EnumSet.of(UserRole.USER))
+                .build();
+        userRepository.saveAll(List.of(user1, user2, user3));
         /////////////////////////////Direct Messages///////////////////////////////////////
         DirectMessage dm1 = DirectMessage.builder()
                 .id(UUID.randomUUID())
-                .title("titulo del mensaje directo")
-                .message("mensaje del mensaje directo")
+                .title("cortacesped")
+                .message("estoy interesado en tus servicios")
                 .dateTime(LocalDateTime.now())
                 .userFrom(user1)
                 .userTo(user2)
                 .build();
         DirectMessage dm2 = DirectMessage.builder()
                 .id(UUID.randomUUID())
-                .title("titulo del mensaje directo antiguo")
-                .message("mensaje del mensaje directo antiguo")
+                .title("Sobre el cortacesped")
+                .message("me he retirado lo siento :(")
                 .dateTime(LocalDateTime.of(2021, 10, 12, 10, 22, 22))
-                .userFrom(user1)
+                .userFrom(user2)
+                .userTo(user1)
+                .build();
+        DirectMessage dm3 = DirectMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Hola Aitor")
+                .message("He visto que finalmente te has descargado la aplicación")
+                .dateTime(LocalDateTime.now().minusDays(3L))
+                .userFrom(user2)
+                .userTo(user3)
+                .build();
+        DirectMessage dm4 = DirectMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Que tal Rafael")
+                .message("Siiii estaba viendo de impartir clases de inglés :)")
+                .dateTime(LocalDateTime.now().minusDays(2L))
+                .userFrom(user3)
                 .userTo(user2)
                 .build();
-        directMessageRepository.saveAll(List.of(dm1, dm2));
+        DirectMessage dm5 = DirectMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Guay")
+                .message("Me alegro tio a ver si nos vemos algún día :D")
+                .dateTime(LocalDateTime.now().minusDays(1L))
+                .userFrom(user2)
+                .userTo(user3)
+                .build();
+        directMessageRepository.saveAll(List.of(dm1, dm2, dm3, dm4, dm5));
 
         /////////////////////////////Tags///////////////////////////////////////
         Tag tag1 = Tag.builder()
@@ -93,7 +128,7 @@ public class InitData {
         /////////////////////////////Orders///////////////////////////////////////
         Order order1 = Order.builder()
                 .id(UUID.fromString("e438c08c-4e3b-48dc-9b35-95e5ddbdff81"))
-                .title("titulo")
+                .title("Enseño a comer caracoles")
                 .user(user1)
                 .state(OrderState.OPEN)
                 .price(23.34)
@@ -165,6 +200,22 @@ public class InitData {
                 .author(user1)
                 .order(order1)
                 .build();
-        orderMessageRepository.saveAll(List.of(om1, om2));
+        OrderMessage om3 = OrderMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Me encantó el servicio")
+                .message("muy buen servicio y fué un trato muy amable")
+                .dateTime(LocalDateTime.of(2024, 4, 14, 12,34,54))
+                .author(user2)
+                .order(order3)
+                .build();
+        OrderMessage om4 = OrderMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Sacaron lo mejor de mi")
+                .message("Nunca supe lo bien que sentía una actividad como esta!")
+                .dateTime(LocalDateTime.of(2024, 4, 14, 12,34,54))
+                .author(user2)
+                .order(order4)
+                .build();
+        orderMessageRepository.saveAll(List.of(om1, om2, om3, om4));
     }
 }

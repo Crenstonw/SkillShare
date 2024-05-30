@@ -5,7 +5,10 @@ import com.triana.salesianos.edu.skillshare.user.dto.*;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
+import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,7 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = {"*"})
 public class UserController {
     private final UserService service;
     private final AuthenticationManager authenticationManager;
@@ -65,9 +68,14 @@ public class UserController {
 
     }
 
+    @PostMapping("/user")
+    public ResponseEntity<AllUserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(AllUserResponse.of(service.createUserWithUserRole(createUserRequest)));
+    }
+
     @GetMapping("/user")
-    public ResponseEntity<List<AllUserResponse>> getAllUsers() {
-        return ResponseEntity.status(HttpStatus.OK).body(service.getAllUsers());
+    public ResponseEntity<Page<AllUserResponse>> getAllUsers(@PageableDefault Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(service.getAllUsers(pageable));
     }
 
     @GetMapping("/user/{id}")
@@ -76,7 +84,7 @@ public class UserController {
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<AllUserResponse> editUser(@PathVariable String id, @RequestBody EditUserRequest editUserRequest) {
+    public ResponseEntity<UserDetailsDto> editUser(@PathVariable String id, @RequestBody EditUserRequest editUserRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(service.editUser(id, editUserRequest));
     }
 
@@ -99,5 +107,15 @@ public class UserController {
     @GetMapping("/user/me")
     public ResponseEntity<AllUserResponse> actualUserInfo() {
         return ResponseEntity.status(HttpStatus.OK).body(service.actualUserInfo());
+    }
+
+    @PutMapping("/user/privileges/{id}")
+    public ResponseEntity<UserDetailsDto> givePrivileges(@PathVariable String id) {
+        return ResponseEntity.ok().body(service.givePrivileges(id));
+    }
+
+    @PutMapping("/user/ban/{id}")
+    public ResponseEntity<UserDetailsDto> banUser(@PathVariable String id) {
+        return ResponseEntity.ok().body(service.banUser(id));
     }
 }

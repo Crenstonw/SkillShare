@@ -7,9 +7,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Builder
 public record DirectMessageResponse(
+        UUID id,
         String title,
         String message,
         LocalDateTime dateTime,
@@ -23,15 +25,16 @@ public record DirectMessageResponse(
         boolean isMyMessage = directMessage.getUserFrom().getUsername().equals(userDetails.getUsername());
 
         return DirectMessageResponse.builder()
+                .id(directMessage.getId())
                 .title(directMessage.getTitle())
                 .message(directMessage.getMessage())
                 .dateTime(directMessage.getDateTime())
                 .isMyMessage(isMyMessage)
                 .userFrom(
-                        UserResponse.fromUser(directMessage.getUserFrom())
+                        UserResponse.of(directMessage.getUserFrom())
                 )
                 .userTo(
-                        UserResponse.fromUser(directMessage.getUserTo())
+                        UserResponse.of(directMessage.getUserTo())
                 )
                 .build();
     }

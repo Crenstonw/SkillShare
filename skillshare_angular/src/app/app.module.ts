@@ -15,6 +15,10 @@ import { OrdersComponent } from './UI/orders/orders.component';
 import { OrderCardsComponent } from './components/order-cards/order-cards.component';
 import { OrderDetailComponent } from './UI/order-detail/order-detail.component';
 import { TagsComponent } from './UI/tags/tags.component';
+import { UsersComponent } from './UI/users/users.component';
+import { UserDetailComponent } from './UI/user-detail/user-detail.component';
+import { MessagesComponent } from './UI/messages/messages.component';
+import { MessagesDetailsComponent } from './UI/messages-details/messages-details.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +32,10 @@ import { TagsComponent } from './UI/tags/tags.component';
     OrderCardsComponent,
     OrderDetailComponent,
     TagsComponent,
+    UsersComponent,
+    UserDetailComponent,
+    MessagesComponent,
+    MessagesDetailsComponent,
   ],
   imports: [
     BrowserModule,

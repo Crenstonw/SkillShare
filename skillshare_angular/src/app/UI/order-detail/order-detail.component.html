@@ -1,10 +1,10 @@
 <div class="col-10 row" style="margin-left: 8%;">
-<button class="btn col-1 my-2" (click)="goBack()"><svg style="color: white" xmlns="http://www.w3.org/2000/svg" width="30" height="30"
-        fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
-        <path fill-rule="evenodd"
-            d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
-    </svg>
-</button>
+    <button class="btn col-1 my-2" (click)="goBack()"><svg style="color: white" xmlns="http://www.w3.org/2000/svg"
+            width="30" height="30" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5" />
+        </svg>
+    </button>
 </div>
 <div class="ui col-10 d-flex flex-column justify-content-between bg-white rounded-5 row" style="margin-left: 8.33%;">
     <div class="row">
@@ -33,7 +33,7 @@
             </div>
             <div class="col-2">
                 <h5 class="pt-5" style="text-align: start;">Created By:</h5>
-                <div class="bg-secondary rounded-5 text-white p-2" style="text-align: center;">
+                <div (click)="moveToUser(order!.user.id)" class="bg-secondary text-white p-2 secondary-card" style="text-align: center;">
                     <img style="width: 75px; border-radius: 50%;" [src]="order?.user?.profilePicture">
                     <p class="m-0">{{order?.user?.username}}</p>
                 </div>
@@ -54,7 +54,7 @@
             </div>
         </div>
     </div>
-    <p class="m-4">{{order?.createdAt}}</p>
+    <p class="m-4">posted {{dateScaler(order!.createdAt)}}</p>
     <div class="col-10 bg-secondary text-white mx-4 mb-4 rounded-3">
         <h2 class="px-4">Description</h2>
         <p class="col-10 px-4">{{order?.description}}</p>
@@ -67,7 +67,7 @@
             <div class="row d-flex justify-content-between">
                 <h3 class="mx-2 col-7">{{message.title}}</h3>
                 <div class="col-3">
-                    <p class="mb-0">{{message.dateTime}}</p>
+                    <p class="mb-0">posted {{dateScaler(message.dateTime)}}</p>
                     @if (message.author.username == order!.user.username) {
                     <p>by: {{message.author.username}} <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                             fill="currentColor" class="bi bi-award-fill" viewBox="0 0 16 16">

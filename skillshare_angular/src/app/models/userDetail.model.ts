@@ -1,4 +1,18 @@
-export interface OrderDetail {
+export interface UserDetail {
+    id:             string;
+    email:          string;
+    username:       string;
+    name:           string;
+    surname:        string;
+    password:       string;
+    profilePicture: string;
+    role:           string[];
+    orders:         Order[];
+    favoriteOrders: Order[];
+    enabled:        boolean;
+}
+
+export interface Order {
     id:               string;
     title:            string;
     description:      string;
@@ -9,24 +23,6 @@ export interface OrderDetail {
     isAboutToExpire:  boolean;
     user:             User;
     tags:             Tag[];
-    messages:         Message[];
-}
-
-export interface Message {
-    id:          string;
-    title:       string;
-    message:     string;
-    isMyMessage: boolean;
-    dateTime:    Date;
-    author:      Author;
-}
-
-export interface Author {
-    id:        string;
-    email:     string;
-    username:  string;
-    createdAt: string;
-    admin:     boolean;
 }
 
 export interface Tag {

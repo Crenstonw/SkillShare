@@ -1,14 +1,20 @@
 package com.triana.salesianos.edu.skillshare.user.service;
 
+import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
 import com.triana.salesianos.edu.skillshare.security.errorhandling.JwtTokenException;
 import com.triana.salesianos.edu.skillshare.user.dto.*;
+import com.triana.salesianos.edu.skillshare.user.exception.CannotBanYourself;
+import com.triana.salesianos.edu.skillshare.user.exception.CannotModifyPrivileges;
+import com.triana.salesianos.edu.skillshare.user.exception.UserNotFound;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.model.UserRole;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +39,7 @@ public class UserService {
                 .name(createUserRequest.name())
                 .surname(createUserRequest.surname())
                 .password(passwordEncoder.encode(createUserRequest.password()))
-                .username(createUserRequest.name() + createUserRequest.surname())
+                .username(createUserRequest.username())
                 .profilePicture("https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg")
                 .userRole(roles)
                 .createdAt(LocalDateTime.now())
@@ -49,13 +55,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public List<AllUserResponse> getAllUsers() {
-        List<User> findAll = userRepository.findAll();
-        List<AllUserResponse> result = new ArrayList<>();
+    public Page<AllUserResponse> getAllUsers(Pageable pageable) {
+        Page<User> userPage = userRepository.findAllUsers(pageable);
 
-        for(User user : findAll) {result.add(AllUserResponse.of(user));}
-
-        return result;
+        return userPage.map(AllUserResponse::of);
     }
 
     public UserDetailsDto getUser(String id) {
@@ -65,20 +68,23 @@ public class UserService {
         } else throw new JwtTokenException("User not found");
     }
 
-    public AllUserResponse editUser(String id, EditUserRequest editUserRequest) {
-        Optional<User> findUser = userRepository.findById(UUID.fromString(id));
-        if(findUser.isPresent()) {
-            findUser.get().setName(editUserRequest.name());
-            findUser.get().setSurname(editUserRequest.surname());
-            findUser.get().setPassword(passwordEncoder.encode(editUserRequest.password()));
-            findUser.get().setProfilePicture(editUserRequest.profilePicture());
-
-            userRepository.save(findUser.get());
-
-            return AllUserResponse.of(findUser.get());
-        } else {
-            return null;
-        }
+    public UserDetailsDto editUser(String id, EditUserRequest editUserRequest) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User authenticatedUser = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        User user = userRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
+        Optional<User> checkEmail = userRepository.findByEmail(editUserRequest.email());
+        Optional<User> checkUsername = userRepository.findByUsername(editUserRequest.username());
+        if(checkEmail.isPresent() && !Objects.equals(checkEmail.get().getEmail(), user.getEmail())) throw new RuntimeException("Email is being used");
+        if(checkUsername.isPresent() && !Objects.equals(checkUsername.get().getUsername(), user.getUsername())) throw new RuntimeException("Username is being used");
+        if(Objects.equals(authenticatedUser.getUserRole().toString(), "[ADMIN]") || user.getId() == UUID.fromString(id)) {
+            user.setEmail(editUserRequest.email());
+            user.setName(editUserRequest.name());
+            user.setSurname(editUserRequest.surname());
+            user.setProfilePicture(editUserRequest.profilePicture());
+            user.setUsername(editUserRequest.username());
+            userRepository.save(user);
+            return UserDetailsDto.of(user);
+        } else throw new RuntimeException("Not allowed to edit user");
     }
 
     public void deleteUser(String id) {
@@ -88,9 +94,9 @@ public class UserService {
 
     public List<FavoriteDto> newFavoriteOrder(String id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
-        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
-        Collection<Order> newFavoriteList = user.getFavoriteOrders();
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
+        List<Order> newFavoriteList = user.getFavoriteOrders();
         newFavoriteList.add(order);
         List<FavoriteDto> result = new ArrayList<>();
         user.setFavoriteOrders(newFavoriteList);
@@ -103,10 +109,10 @@ public class UserService {
 
     public List<FavoriteDto> deleteFavoriteOrder(String id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
-        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
 
-        Collection<Order> newFavoriteList = user.getFavoriteOrders();
+        List<Order> newFavoriteList = user.getFavoriteOrders();
         newFavoriteList.removeIf(forOrder -> Objects.equals(forOrder, order));
 
         user.setFavoriteOrders(newFavoriteList);
@@ -122,8 +128,45 @@ public class UserService {
     public AllUserResponse actualUserInfo() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
 
         return AllUserResponse.of(user);
+    }
+
+    public UserDetailsDto givePrivileges(String id) {
+        UserDetails currentUserDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = userRepository.findByUsername(currentUserDetails.getUsername())
+                .orElseThrow(UserNotFound::new);
+
+        if (!currentUser.getUserRole().contains(UserRole.ADMIN)) {
+            throw new RuntimeException("You do not have permission to change user roles.");
+        }
+
+        User user = userRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
+
+        if (currentUser.getUsername().equals(user.getUsername())) throw new CannotModifyPrivileges();
+
+        Set<UserRole> newRoles = new HashSet<>(user.getUserRole());
+        if (newRoles.contains(UserRole.USER)) {
+            newRoles.clear();
+            newRoles.add(UserRole.ADMIN);
+        } else {
+            newRoles.clear();
+            newRoles.add(UserRole.USER);
+        }
+
+        user.setUserRole(newRoles);
+        userRepository.save(user);
+        return UserDetailsDto.of(user);
+    }
+
+    public UserDetailsDto banUser(String id) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
+        if(!Objects.equals(userDetails.getUsername(), user.getUsername())) {
+            user.setEnabled(!user.getEnabled());
+            userRepository.save(user);
+            return UserDetailsDto.of(user);
+        } else throw new CannotBanYourself();
     }
 }
