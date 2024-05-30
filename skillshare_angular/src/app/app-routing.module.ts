@@ -8,6 +8,8 @@ import { OrderDetailComponent } from './UI/order-detail/order-detail.component';
 import { TagsComponent } from './UI/tags/tags.component';
 import { UsersComponent } from './UI/users/users.component';
 import { UserDetailComponent } from './UI/user-detail/user-detail.component';
+import { MessagesComponent } from './UI/messages/messages.component';
+import { MessagesDetailsComponent } from './UI/messages-details/messages-details.component';
 
 const routes: Routes = [
   { path: 'auth', component: LoginComponent },
@@ -17,6 +19,8 @@ const routes: Routes = [
   { path: 'tag', component: TagsComponent },
   { path: 'user', component: UsersComponent },
   { path: 'user/:id', component: UserDetailComponent },
+  { path: 'message', component: MessagesComponent },
+  { path: 'message/:id', component: MessagesDetailsComponent },
   { path: '', pathMatch: 'full', redirectTo: '/home' },
   { path: '**', component: PageNotFoundComponent }
 

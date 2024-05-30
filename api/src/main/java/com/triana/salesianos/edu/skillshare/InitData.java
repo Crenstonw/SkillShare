@@ -88,7 +88,31 @@ public class InitData {
                 .userFrom(user2)
                 .userTo(user1)
                 .build();
-        directMessageRepository.saveAll(List.of(dm1, dm2));
+        DirectMessage dm3 = DirectMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Hola Aitor")
+                .message("He visto que finalmente te has descargado la aplicación")
+                .dateTime(LocalDateTime.now().minusDays(3L))
+                .userFrom(user2)
+                .userTo(user3)
+                .build();
+        DirectMessage dm4 = DirectMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Que tal Rafael")
+                .message("Siiii estaba viendo de impartir clases de inglés :)")
+                .dateTime(LocalDateTime.now().minusDays(2L))
+                .userFrom(user3)
+                .userTo(user2)
+                .build();
+        DirectMessage dm5 = DirectMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Guay")
+                .message("Me alegro tio a ver si nos vemos algún día :D")
+                .dateTime(LocalDateTime.now().minusDays(1L))
+                .userFrom(user2)
+                .userTo(user3)
+                .build();
+        directMessageRepository.saveAll(List.of(dm1, dm2, dm3, dm4, dm5));
 
         /////////////////////////////Tags///////////////////////////////////////
         Tag tag1 = Tag.builder()
@@ -104,7 +128,7 @@ public class InitData {
         /////////////////////////////Orders///////////////////////////////////////
         Order order1 = Order.builder()
                 .id(UUID.fromString("e438c08c-4e3b-48dc-9b35-95e5ddbdff81"))
-                .title("titulo")
+                .title("Enseño a comer caracoles")
                 .user(user1)
                 .state(OrderState.OPEN)
                 .price(23.34)
@@ -176,6 +200,22 @@ public class InitData {
                 .author(user1)
                 .order(order1)
                 .build();
-        orderMessageRepository.saveAll(List.of(om1, om2));
+        OrderMessage om3 = OrderMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Me encantó el servicio")
+                .message("muy buen servicio y fué un trato muy amable")
+                .dateTime(LocalDateTime.of(2024, 4, 14, 12,34,54))
+                .author(user2)
+                .order(order3)
+                .build();
+        OrderMessage om4 = OrderMessage.builder()
+                .id(UUID.randomUUID())
+                .title("Sacaron lo mejor de mi")
+                .message("Nunca supe lo bien que sentía una actividad como esta!")
+                .dateTime(LocalDateTime.of(2024, 4, 14, 12,34,54))
+                .author(user2)
+                .order(order4)
+                .build();
+        orderMessageRepository.saveAll(List.of(om1, om2, om3, om4));
     }
 }
