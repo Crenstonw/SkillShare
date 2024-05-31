@@ -30,14 +30,12 @@ public class OrderService {
 
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
         Page<Order> orderPage = orderRepository.findAll(pageable);
-
         return orderPage.map(OrderResponse::of);
     }
 
     public OrderDetailsResponse getOrderById(String id) {
         Order findOrder = orderRepository.findById(UUID.fromString(id))
                 .orElseThrow(NoOrderException::new);
-
         return OrderDetailsResponse.of(findOrder);
     }
 
@@ -105,9 +103,7 @@ public class OrderService {
                     .build();
             orderRepository.save(result);
             return OrderResponse.of(result);
-        } else {
-            return null;
-        }
+        } else throw new NoOrderException();
     }
 
     public void deleteOrder(String id) {
@@ -117,9 +113,7 @@ public class OrderService {
         if(Objects.equals(user.get().getUsername(), findOrder.get().getUser().getUsername())
                 || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
             findOrder.ifPresent(orderRepository::delete);
-        } else {
-            //throw exception
-        }
+        } else throw new NoOrderException();
 
 
     }

@@ -51,7 +51,7 @@ public class InitData {
         User user2 = User.builder()
                 .id(UUID.randomUUID())
                 .email("adios@hola.com")
-                .profilePicture("https://imgs.search.brave.com/R8p7rPuOhYh7POJU6sNypX7SHBJ1yKcf5rWrbPQwydQ/rs:fit:860:0:0/g:ce/aHR0cHM6Ly93d3cu/cHVibGljZG9tYWlu/cGljdHVyZXMubmV0/L3BpY3R1cmVzLzE2/MDAwMC92ZWxrYS9i/YW5hbmEtbWFuLmpw/Zw")
+                .profilePicture("https://b2472105.smushcdn.com/2472105/wp-content/uploads/2023/01/Perfil-Profesional-_63-819x1024.jpg?lossy=1&strip=1&webp=1")
                 .name("user2")
                 .surname("suruser2")
                 .username("SuMorenito23")

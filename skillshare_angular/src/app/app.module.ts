@@ -19,6 +19,7 @@ import { UsersComponent } from './UI/users/users.component';
 import { UserDetailComponent } from './UI/user-detail/user-detail.component';
 import { MessagesComponent } from './UI/messages/messages.component';
 import { MessagesDetailsComponent } from './UI/messages-details/messages-details.component';
+import { ImATeaPotComponent } from './UI/im-atea-pot/im-atea-pot.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { MessagesDetailsComponent } from './UI/messages-details/messages-details
     UserDetailComponent,
     MessagesComponent,
     MessagesDetailsComponent,
+    ImATeaPotComponent,
   ],
   imports: [
     BrowserModule,

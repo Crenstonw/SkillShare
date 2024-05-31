@@ -7,8 +7,8 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup } from '@angular/forms';
 
 interface Alert {
-	type: string;
-	message: string;
+  type: string;
+  message: string;
 }
 
 @Component({
@@ -79,12 +79,12 @@ export class UserDetailComponent {
   }
 
   close(alert: Alert) {
-		this.alerts.splice(this.alerts.indexOf(alert), 1);
-	}
+    this.alerts.splice(this.alerts.indexOf(alert), 1);
+  }
 
-	reset() {
-		this.alerts = [];
-	}
+  reset() {
+    this.alerts = [];
+  }
 
   goBack() {
     window.history.back();
@@ -94,15 +94,15 @@ export class UserDetailComponent {
     const today = new Date();
     let date = dateTime.toString().split('T')[0].split('-');
     let time = dateTime.toString().split('T')[1].split(':');
-    if(parseInt(date[0]) != today.getFullYear()) {
+    if (parseInt(date[0]) != today.getFullYear()) {
       return today.getFullYear() - parseInt(date[0]) + ` year${today.getFullYear() - parseInt(date[0]) != 1 ? 's' : ''} ago`;
-    }else if(parseInt(date[1]) != (today.getMonth()+1)) {
-      return ((today.getMonth()+1) - parseInt(date[1])) + ` month${((today.getMonth()+1) - parseInt(date[1])) != 1 ? 's' : ''} ago`;
-    } else if(parseInt(date[2]) != today.getDate()) {
+    } else if (parseInt(date[1]) != (today.getMonth() + 1)) {
+      return ((today.getMonth() + 1) - parseInt(date[1])) + ` month${((today.getMonth() + 1) - parseInt(date[1])) != 1 ? 's' : ''} ago`;
+    } else if (parseInt(date[2]) != today.getDate()) {
       return today.getDate() - parseInt(date[3]) + ` day${today.getDate() - parseInt(date[3]) != 1 ? 's' : ''} ago`;
-    } else if(parseInt(time[0]) != today.getHours()) {
+    } else if (parseInt(time[0]) != today.getHours()) {
       return today.getHours() - parseInt(time[0]) + ` hour${(today.getHours() - parseInt(time[0])) != 1 ? 's' : ''} ago`;
-    } else if(parseInt(time[1]) != today.getMinutes()) {
+    } else if (parseInt(time[1]) != today.getMinutes()) {
       return today.getMinutes() - parseInt(time[1]) + ` minute${today.getMinutes() - parseInt(time[1]) != 1 ? 's' : ''} ago`;
     } else {
       return 'just now';
@@ -110,7 +110,7 @@ export class UserDetailComponent {
   }
 
   isBanned(enabled: boolean) {
-    if(enabled)
+    if (enabled)
       return 'hide';
     else {
       return '';
@@ -122,9 +122,9 @@ export class UserDetailComponent {
   }
 
   setState(order: Order) {
-    if(order.state === 'OPEN') {
+    if (order.state === 'OPEN') {
       return 'bg-success text-white'
-    } else if(order.state === 'OCCUPIED') {
+    } else if (order.state === 'OCCUPIED') {
       return 'bg-warning'
     } else {
       return 'bg-danger text-white'
@@ -143,11 +143,11 @@ export class UserDetailComponent {
       next: (p: UserDetail) => {
         this.user = p;
         this.reset();
-      this.alerts.push({type: 'success', message: `User edited succesfully`});
+        this.alerts.push({ type: 'success', message: `User edited succesfully` });
       },
       error: (err) => {
         this.reset();
-        this.alerts.push({type: 'warning', message: `${err.error.message}`});
+        this.alerts.push({ type: 'warning', message: `${err.error.message}` });
       }
     });
   }
@@ -162,13 +162,13 @@ export class UserDetailComponent {
     this.userService.BanUser(id).subscribe({
       next: (p: UserDetail) => {
         this.user = p;
-      this.isBanned(p.enabled);
-      this.reset();
-      this.alerts.push({type: 'success', message: `This user was successfully ${p.enabled? 'Unbanned' : 'Banned'}`});
+        this.isBanned(p.enabled);
+        this.reset();
+        this.alerts.push({ type: 'success', message: `This user was successfully ${p.enabled ? 'Unbanned' : 'Banned'}` });
       },
       error: (err) => {
         this.reset();
-        this.alerts.push({type: 'danger', message: `${err.error.message}`});
+        this.alerts.push({ type: 'danger', message: `${err.error.message}` });
       }
     });
   }
@@ -178,12 +178,12 @@ export class UserDetailComponent {
       next: (p: UserDetail) => {
         this.user = p;
         this.reset();
-        this.alerts.push({type: 'success', message: `Successfuly changed privileges, now using ${p.role} role`});
+        this.alerts.push({ type: 'success', message: `Successfuly changed privileges, now using ${p.role} role` });
       },
       error: (err) => {
         this.reset();
-        this.alerts.push({type: 'danger', message: `${err.error.message}`});
+        this.alerts.push({ type: 'danger', message: `${err.error.message}` });
       }
-    })
+    });
   }
 }
