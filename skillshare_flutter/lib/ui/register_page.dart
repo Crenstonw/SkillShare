@@ -22,6 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   late RegisterBloc _registerBloc;
 
   late String email;
+  late String username;
   late String name;
   late String surname;
   late String password;
@@ -115,6 +116,17 @@ class _RegisterPageState extends State<RegisterPage> {
                 padding: const EdgeInsets.all(16),
                 child: TextFormField(
                   decoration: const InputDecoration(
+                    labelText: 'username',
+                  ),
+                  onChanged: (value) => username = value,
+                ),
+              ),
+            ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: TextFormField(
+                  decoration: const InputDecoration(
                     labelText: 'name',
                   ),
                   onChanged: (value) => name = value,
@@ -170,7 +182,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ElevatedButton(
               onPressed: () {
                 _registerBloc
-                    .add(RegisterFetch(email, name, surname, password));
+                    .add(RegisterFetch(email, username, name, surname, password));
               },
               child: const Text(
                 'Get Started',

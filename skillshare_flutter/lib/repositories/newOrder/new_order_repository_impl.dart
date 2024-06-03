@@ -20,7 +20,7 @@ class NewOrderRepositoryImpl extends NewOrderRepository {
             },
             body: jsonBody);
     if (response.statusCode == 201) {
-      final finalResponse = Order.fromJson(response.body);
+      final finalResponse = Order.fromJson(response.body as Map<String, dynamic>);
 
       return finalResponse;
     } else {

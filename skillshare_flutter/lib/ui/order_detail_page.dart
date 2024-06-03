@@ -33,13 +33,13 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(50),
                   child: Image.network(
-                    widget.order.user!.profilePicture!,
+                    widget.order.user.profilePicture,
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
               Text(
-                widget.order.title!,
+                widget.order.title,
                 style: const TextStyle(fontSize: 40),
               )
             ]),
@@ -55,7 +55,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('JOB DESCRIPTION', style: TextStyle(fontSize: 20)),
-                Text(widget.order.description!)
+                Text(widget.order.description)
               ],
             ),
           ),
@@ -70,14 +70,14 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('TAGS', style: TextStyle(fontSize: 20)),
-                if (widget.order.tags!.isNotEmpty)
-                  for (int i = 0; i < widget.order.tags!.length; i++)
+                if (widget.order.tags.isNotEmpty)
+                  for (int i = 0; i < widget.order.tags.length; i++)
                     Container(
                         color: Colors.amber,
                         decoration: const BoxDecoration(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(25))),
-                        child: Text(widget.order.description!))
+                        child: Text(widget.order.description))
                 else
                   const Text('No tags avaiable')
               ],

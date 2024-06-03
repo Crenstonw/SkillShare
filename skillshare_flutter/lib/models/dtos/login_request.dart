@@ -1,10 +1,10 @@
-class LoginDto {
+class LoginRequest {
   String? email;
   String? password;
 
-  LoginDto({this.email, this.password});
+  LoginRequest({this.email, this.password});
 
-  LoginDto.fromJson(Map<String, dynamic> json) {
+  LoginRequest.fromJson(Map<String, dynamic> json) {
     email = json['email'];
     password = json['password'];
   }

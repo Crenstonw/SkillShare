@@ -16,8 +16,8 @@ class OrderListRepositoryImpl extends OrderListRepository {
             'Authorization': 'Bearer ${Localstorage.prefs.getString('token')}'
           });
       if (response.statusCode == 200) {
-        final finalResponse = OrderListResponse.fromJson(response.body);
-        return finalResponse.orders!;
+        final finalResponse = OrderListResponse.fromJson(response.body as Map<String, dynamic>);
+        return finalResponse.orders;
       } else {
         throw Exception('Failed to load the list');
       }
@@ -29,8 +29,8 @@ class OrderListRepositoryImpl extends OrderListRepository {
             'Authorization': 'Bearer ${Localstorage.prefs.getString('token')}'
           });
       if (response.statusCode == 200) {
-        final finalResponse = OrderListResponse.fromJson(response.body);
-        return finalResponse.orders!;
+        final finalResponse = OrderListResponse.fromJson(response.body as Map<String, dynamic>);
+        return finalResponse.orders;
       } else {
         throw Exception('Failed to load the list');
       }

@@ -92,7 +92,7 @@ class _OrderListWidgetState extends State<OrderListWidget> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(25),
                                 child: Image.network(
-                                  orderList[index].user!.profilePicture!,
+                                  orderList[index].user.profilePicture,
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -105,7 +105,7 @@ class _OrderListWidgetState extends State<OrderListWidget> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      orderList[index].title!,
+                                      orderList[index].title,
                                       style: const TextStyle(fontSize: 20),
                                     ),
                                   ),
@@ -114,7 +114,7 @@ class _OrderListWidgetState extends State<OrderListWidget> {
                                   padding:
                                       const EdgeInsets.fromLTRB(8, 0, 0, 0),
                                   child: Text(
-                                      'By: ${orderList[index].user!.username!}'),
+                                      'By: ${orderList[index].user.username}'),
                                 )
                               ],
                             ),

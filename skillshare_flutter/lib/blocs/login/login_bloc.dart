@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:skillshare_flutter/models/dtos/login_dto.dart';
+import 'package:skillshare_flutter/models/dtos/login_request.dart';
 import 'package:skillshare_flutter/models/login_response.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository.dart';
 
@@ -10,7 +9,7 @@ part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginRepository loginRepository;
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  //final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   LoginBloc(this.loginRepository) : super(LoginInitial()) {
     on<DoLoginEvent>(_doLogin);
@@ -20,9 +19,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emit(DoLoginLoading());
 
     try {
-      final LoginDto loginDto =
-          LoginDto(email: event.email, password: event.password);
-      final response = await loginRepository.login(loginDto);
+      final LoginRequest loginRequest =
+          LoginRequest(email: event.email, password: event.password);
+      final response = await loginRepository.login(loginRequest);
       emit(DoLoginSuccess(response));
       return;
     } on Exception catch (e) {
