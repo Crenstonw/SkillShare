@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skillshare_flutter/blocs/orderList/order_list_bloc.dart';
-import 'package:skillshare_flutter/models/order_list_response.dart';
+import 'package:skillshare_flutter/models/responses/all_order_response.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository_impl.dart';
 import 'package:skillshare_flutter/ui/order_detail_page.dart';
@@ -57,15 +57,15 @@ class _OrderListWidgetState extends State<OrderListWidget> {
     );
   }
 
-  _buildOrderListWidget(List<Order> orderList) {
+  _buildOrderListWidget(AllOrderResponse orderList) {
     return ListView.builder(
-      itemCount: orderList.length,
+      itemCount: orderList.content.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.fromLTRB(2, 10, 2, 10),
           child: InkWell(
             onTap: () {
-              Order order = orderList[index];
+              Content order = orderList.content[index];
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -92,7 +92,7 @@ class _OrderListWidgetState extends State<OrderListWidget> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(25),
                                 child: Image.network(
-                                  orderList[index].user.profilePicture,
+                                  orderList.content[index].user.profilePicture,
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -105,7 +105,7 @@ class _OrderListWidgetState extends State<OrderListWidget> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      orderList[index].title,
+                                      orderList.content[index].title,
                                       style: const TextStyle(fontSize: 20),
                                     ),
                                   ),
@@ -114,7 +114,7 @@ class _OrderListWidgetState extends State<OrderListWidget> {
                                   padding:
                                       const EdgeInsets.fromLTRB(8, 0, 0, 0),
                                   child: Text(
-                                      'By: ${orderList[index].user.username}'),
+                                      'By: ${orderList.content[index].user.username}'),
                                 )
                               ],
                             ),

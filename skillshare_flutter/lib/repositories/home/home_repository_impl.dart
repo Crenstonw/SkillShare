@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:skillshare_flutter/environments/local_storage.dart';
-import 'package:skillshare_flutter/models/order_list_response.dart';
+import 'package:skillshare_flutter/models/responses/all_order_response.dart';
 import 'package:skillshare_flutter/repositories/home/home_repository.dart';
 
 class HomeRepositoryImpl extends HomeRepository {
@@ -26,7 +26,7 @@ class HomeRepositoryImpl extends HomeRepository {
   }
 
   @override
-  Future<List<Order>> orderList() async {
+  Future<AllOrderResponse> orderList() async {
     final response = await _httpClient
         .get(Uri.parse('http://10.0.2.2:8080/order'), headers: <String, String>{
       'Content-Type': 'application/json',
@@ -34,15 +34,15 @@ class HomeRepositoryImpl extends HomeRepository {
     });
     if (response.statusCode == 200) {
       final finalResponse =
-          OrderListResponse.fromJson(json.decode(response.body));
-      return finalResponse.orders;
+          AllOrderResponse.fromJson(json.decode(response.body));
+      return finalResponse;
     } else {
       throw Exception('Failed to load the list');
     }
   }
 
   @override
-  Future<List<Order>> searchOrderList(String title) async {
+  Future<AllOrderResponse> searchOrderList(String title) async {
     final response = await _httpClient.get(
         Uri.parse('http://10.0.2.2:8080/order/find/$title'),
         headers: <String, String>{
@@ -51,8 +51,8 @@ class HomeRepositoryImpl extends HomeRepository {
         });
     if (response.statusCode == 200) {
       final finalResponse =
-          OrderListResponse.fromJson(json.decode(response.body));
-      return finalResponse.orders;
+          AllOrderResponse.fromJson(json.decode(response.body));
+      return finalResponse;
     } else {
       throw Exception('Failed to load the list');
     }

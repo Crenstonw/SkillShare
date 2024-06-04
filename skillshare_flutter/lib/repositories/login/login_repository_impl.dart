@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:skillshare_flutter/environments/local_storage.dart';
 import 'package:skillshare_flutter/models/dtos/login_request.dart';
-import 'package:skillshare_flutter/models/login_response.dart';
+import 'package:skillshare_flutter/models/responses/login_response.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository.dart';
 
 class LoginRepositoryImpl extends LoginRepository {

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:skillshare_flutter/environments/local_storage.dart';
 import 'package:skillshare_flutter/models/dtos/register_request.dart';
-import 'package:skillshare_flutter/models/register_response.dart';
+import 'package:skillshare_flutter/models/responses/register_response.dart';
 import 'package:skillshare_flutter/repositories/register/register_repository.dart';
 
 class RegisterRepositoryImpl extends RegisterRepository {

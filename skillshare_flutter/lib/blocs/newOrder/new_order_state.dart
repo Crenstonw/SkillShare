@@ -8,7 +8,7 @@ final class NewOrderInitial extends NewOrderState {}
 final class DoNewOrderLoading extends NewOrderState {}
 
 final class DoNewOrderSuccess extends NewOrderState {
-  final Order newOrder;
+  final Content newOrder;
   DoNewOrderSuccess(this.newOrder);
 }
 

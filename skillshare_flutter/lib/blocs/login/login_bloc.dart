@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:skillshare_flutter/models/dtos/login_request.dart';
-import 'package:skillshare_flutter/models/login_response.dart';
+import 'package:skillshare_flutter/models/responses/login_response.dart';
 import 'package:skillshare_flutter/repositories/login/login_repository.dart';
 
 part 'login_event.dart';

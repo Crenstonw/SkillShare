@@ -47,46 +47,46 @@ class _RegisterPageState extends State<RegisterPage> {
       value: _registerBloc,
       child: Scaffold(
         backgroundColor: const Color.fromARGB(1000, 191, 218, 208),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: BlocConsumer<RegisterBloc, RegisterState>(
-            buildWhen: (context, state) {
-              return state is RegisterInitial ||
-                  state is RegisterFetchSuccess ||
-                  state is RegisterFetchError ||
-                  state is RegisterLoading;
-            },
-            builder: (context, state) {
-              if (state is RegisterFetchSuccess) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  Navigator.pushAndRemoveUntil(
-                    (context),
-                    MaterialPageRoute(
-                      builder: (BuildContext context) => const HomePage(),
-                    ),
-                    (route) => false,);});
-              } else if (state is RegisterFetchError) {
-                return const Text('something went wrong');
-              } else if (state is RegisterLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              return Center(child: _buildRegisterForm());
-            },
-            /*listenWhen: (context, state) {
-              return state is GetRequestTokenSuccess;
-            },*/
-            listener: (BuildContext context, RegisterState state) {},
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: BlocConsumer<RegisterBloc, RegisterState>(
+              buildWhen: (context, state) {
+                return state is RegisterInitial ||
+                    state is RegisterFetchSuccess ||
+                    state is RegisterFetchError ||
+                    state is RegisterLoading;
+              },
+              builder: (context, state) {
+                if (state is RegisterFetchSuccess) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    Navigator.pushAndRemoveUntil(
+                      (context),
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => const HomePage(),
+                      ),
+                      (route) => false,
+                    );
+                  });
+                } else if (state is RegisterFetchError) {
+                  return const Center(child: Text('Something went wrong'));
+                } else if (state is RegisterLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return Center(child: _buildRegisterForm());
+              },
+              listener: (BuildContext context, RegisterState state) {},
+            ),
           ),
         ),
       ),
     );
   }
 
-  _buildRegisterForm() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 70),
-      child: SizedBox(
-        height: 2000,
+  Widget _buildRegisterForm() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 70),
         child: Column(
           children: [
             const Text(
@@ -150,23 +150,29 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'password',
-                    
                   ),
                   onChanged: (value) => password = value,
+                  obscureText: true,
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: EdgeInsets.only(
+                  top: 16,
+                  bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
               child: RichText(
-                text: TextSpan(children: [
-                  const TextSpan(
+                text: TextSpan(
+                  children: [
+                    const TextSpan(
                       text: 'Already have an account? ',
-                      style: TextStyle(color: Colors.black)),
-                  TextSpan(
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    TextSpan(
                       text: 'Sign in',
                       style: const TextStyle(
-                          color: Color.fromARGB(1000, 18, 170, 115)),
+                        color: Color.fromARGB(1000, 18, 170, 115),
+                      ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           Navigator.pushAndRemoveUntil(
@@ -175,14 +181,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                 builder: (context) => const LoginPage()),
                             (route) => false,
                           );
-                        })
-                ]),
+                        },
+                    ),
+                  ],
+                ),
               ),
             ),
             ElevatedButton(
               onPressed: () {
-                _registerBloc
-                    .add(RegisterFetch(email, username, name, surname, password));
+                _registerBloc.add(
+                  RegisterFetch(
+                    email,
+                    username,
+                    name,
+                    surname,
+                    password,
+                  ),
+                );
               },
               child: const Text(
                 'Get Started',

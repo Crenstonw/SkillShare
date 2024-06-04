@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:skillshare_flutter/models/order_list_response.dart';
+import 'package:skillshare_flutter/models/responses/all_order_response.dart';
 
 class OrderDetailPage extends StatefulWidget {
-  final Order order;
+  final Content order;
   const OrderDetailPage({super.key, required this.order});
 
   @override

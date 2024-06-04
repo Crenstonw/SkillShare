@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:skillshare_flutter/models/order_list_response.dart';
+import 'package:skillshare_flutter/models/responses/all_order_response.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository.dart';
 
 part 'order_list_event.dart';
@@ -18,7 +18,7 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
     emit(DoOrderListLoading());
 
     try {
-      final response = await orderListRepository.orderList(event.title);
+      final response = await orderListRepository.orderList();
       emit(DoOrderListSuccess(response));
       return;
     } on Exception catch (e) {

@@ -8,7 +8,7 @@ final class OrderListInitial extends OrderListState {}
 final class DoOrderListLoading extends OrderListState {}
 
 final class DoOrderListSuccess extends OrderListState {
-  final List<Order> orderListResponse;
+  final AllOrderResponse orderListResponse;
   DoOrderListSuccess(this.orderListResponse);
 }
 

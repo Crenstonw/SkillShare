@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:skillshare_flutter/models/dtos/register_request.dart';
-import 'package:skillshare_flutter/models/register_response.dart';
+import 'package:skillshare_flutter/models/responses/register_response.dart';
 import 'package:skillshare_flutter/repositories/register/register_repository.dart';
 
 part 'register_event.dart';
