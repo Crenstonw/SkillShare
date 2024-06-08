@@ -1,6 +1,6 @@
-import 'package:skillshare_flutter/models/dtos/login_dto.dart';
-import 'package:skillshare_flutter/models/login_response.dart';
+import 'package:skillshare_flutter/models/dtos/login_request.dart';
+import 'package:skillshare_flutter/models/responses/login_response.dart';
 
 abstract class LoginRepository {
-  Future<LoginResponse> login(LoginDto loginDto);
+  Future<LoginResponse> login(LoginRequest loginRequest);
 }

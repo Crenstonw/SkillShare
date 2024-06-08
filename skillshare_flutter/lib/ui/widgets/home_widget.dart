@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skillshare_flutter/blocs/home/home_bloc.dart';
+import 'package:skillshare_flutter/models/responses/user_response.dart';
 import 'package:skillshare_flutter/repositories/home/home_repository.dart';
 import 'package:skillshare_flutter/repositories/home/home_repository_impl.dart';
+import 'package:skillshare_flutter/repositories/user/user_repository.dart';
+import 'package:skillshare_flutter/repositories/user/user_repository_impl.dart';
 import 'package:skillshare_flutter/ui/widgets/order_list_widget.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -17,6 +20,8 @@ class _HomeWidgetState extends State<HomeWidget> {
   final passTextController = TextEditingController();
 
   late HomeRepository homeRepository;
+  late UserRepository userRepository;
+  late UserResponse me;
   late HomeBloc _homeBloc;
 
   late String profilePicture =
@@ -24,9 +29,12 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   late String searchTitle = '';
 
+  
+
   @override
   void initState() {
     homeRepository = HomeRepositoryImpl();
+    userRepository = UserRepositoryImpl();
     _homeBloc = HomeBloc(homeRepository);
     _homeBloc.add(DoHomeEvent());
     super.initState();

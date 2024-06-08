@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skillshare_flutter/blocs/orderList/order_list_bloc.dart';
-import 'package:skillshare_flutter/models/order_list_response.dart';
+import 'package:skillshare_flutter/models/responses/all_order_response.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository_impl.dart';
 import 'package:skillshare_flutter/ui/order_detail_page.dart';
@@ -57,84 +57,122 @@ class _OrderListWidgetState extends State<OrderListWidget> {
     );
   }
 
-  _buildOrderListWidget(List<Order> orderList) {
+  _buildOrderListWidget(AllOrderResponse orderList) {
     return ListView.builder(
-      itemCount: orderList.length,
+      itemCount: orderList.content.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.fromLTRB(2, 10, 2, 10),
           child: InkWell(
-            onTap: () {
-              Order order = orderList[index];
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => OrderDetailPage(order: order)));
-            },
-            child: Card(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
+              onTap: () {
+                Content order = orderList.content[index];
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => OrderDetailPage(orderId: order.id)));
+              },
+              child: Card(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 45,
+                                height: 45,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: Colors.black),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(25),
+                                  child: Image.network(
+                                    orderList
+                                        .content[index].user.profilePicture,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 180,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    orderList.content[index].user.username,
+                                    overflow: TextOverflow
+                                        .ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              if (orderList.content[index].state == 'OPEN')
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.green,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(25)),
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text('Open',
+                                        style: TextStyle(color: Colors.white)),
+                                  ),
+                                ),
+                              if (orderList.content[index].state == 'OCCUPIED')
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.yellow,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(25)),
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text('Occupied'),
+                                  ),
+                                ),
+                              if (orderList.content[index].state == 'CLOSED')
+                                Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(25)),
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Text('Closed',
+                                    style: TextStyle(color: Colors.white)),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(padding: const EdgeInsets.all(8.0), 
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 45,
-                              height: 45,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(color: Colors.black),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(25),
-                                child: Image.network(
-                                  orderList[index].user!.profilePicture!,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  width: 220,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      orderList[index].title!,
-                                      style: const TextStyle(fontSize: 20),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                                  child: Text(
-                                      'By: ${orderList[index].user!.username!}'),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.favorite_border,
-                            color: Colors.red,
-                            size: 35,
-                          ),
-                        )
+                        Text(orderList.content[index].title, style: const TextStyle(fontSize: 20),),
+                        Text('${orderList.content[index].price}\$')
                       ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+                    ))
+                  ],
+                ),
+              )),
         );
       },
     );
