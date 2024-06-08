@@ -6,6 +6,7 @@ import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.model.OrderState;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
+import com.triana.salesianos.edu.skillshare.user.exception.UserNotFound;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -29,7 +30,14 @@ public class OrderService {
     private final TagService tagService;
 
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
-        Page<Order> orderPage = orderRepository.findAll(pageable);
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        Page<Order> orderPage;
+        if(Objects.equals(user.getUserRole().toString(), "[ADMIN]"))
+            orderPage = orderRepository.findAll(pageable);
+        else {
+            orderPage = orderRepository.findAllForUsers(pageable);
+        }
         return orderPage.map(OrderResponse::of);
     }
 
@@ -46,7 +54,7 @@ public class OrderService {
 
     public OrderResponse newOrder(NewOrderRequest orderRequest){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
         Order newOrder = Order.builder()
                 .id(UUID.randomUUID())
                 .title(orderRequest.title())

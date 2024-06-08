@@ -23,6 +23,14 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("""
             SELECT o
             FROM Order o
+            WHERE o.state <> 2
+            ORDER BY o.createdAt DESC
+            """)
+    Page<Order> findAllForUsers(Pageable pageable);
+
+    @Query("""
+            SELECT o
+            FROM Order o
             WHERE o.title LIKE %:title%
             """)
     Page<Order> findOrderListByTitle(String title, Pageable pageable);

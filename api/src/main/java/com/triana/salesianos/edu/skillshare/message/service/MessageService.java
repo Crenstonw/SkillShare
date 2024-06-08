@@ -5,6 +5,7 @@ import com.triana.salesianos.edu.skillshare.message.model.DirectMessage;
 import com.triana.salesianos.edu.skillshare.message.model.OrderMessage;
 import com.triana.salesianos.edu.skillshare.message.repository.DirectMessageRepository;
 import com.triana.salesianos.edu.skillshare.message.repository.OrderMessageRepository;
+import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
 import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -118,21 +120,18 @@ public class MessageService {
 
     public OrderMessageResponse newOrderMessage(NewOrderMessageRequest messageRequest) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
-        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(messageRequest.orderId()));
-        if(findOrder.isPresent()) {
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        Order findOrder = orderRepository.findById(UUID.fromString(messageRequest.orderId())).orElseThrow(NoOrderException::new);
             OrderMessage result = OrderMessage.builder()
+                    .id(UUID.randomUUID())
                     .title(messageRequest.title())
                     .message(messageRequest.message())
                     .dateTime(LocalDateTime.now())
-                    .order(findOrder.get())
-                    .author(user.get())
+                    .order(findOrder)
+                    .author(user)
                     .build();
             orderMessageRepository.save(result);
             return OrderMessageResponse.of(result);
-        } else {
-            return null; //throw error
-        }
 
     }
 

@@ -7,6 +7,7 @@ import 'package:skillshare_flutter/repositories/orderList/order_list_repository.
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository_impl.dart';
 import 'package:skillshare_flutter/repositories/user/user_repository.dart';
 import 'package:skillshare_flutter/repositories/user/user_repository_impl.dart';
+import 'package:skillshare_flutter/ui/widgets/new_comment.dart';
 
 class OrderDetailPage extends StatefulWidget {
   final String orderId;
@@ -17,13 +18,19 @@ class OrderDetailPage extends StatefulWidget {
 }
 
 class _OrderDetailPageState extends State<OrderDetailPage> {
+  late UserResponse me;
   late OrderListRepository orderListRepository;
   late UserRepository userRepository;
   late OrderDetailBloc _orderDetailBloc;
 
+  _addFavorite() {
+    
+  }
+
   String date(DateTime dateTime, bool justDate) {
     List<String> date = dateTime.toString().split(' ')[0].split('-');
     List<String> time = dateTime.toString().split(' ')[1].split(':');
+    print(dateTime);
     num response;
     if(justDate) {
       return dateTime.toString().split(' ')[0];
@@ -31,16 +38,16 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     if (date[0] != DateTime.now().year.toString()) {
       response = DateTime.now().year - int.parse(date[0]);
       return '${response} year${response != 1 ? 's' : ''} ago';
-    } else if (date[1] != DateTime.now().month.toString()) {
-      response = DateTime.now().month - int.parse(date[1]);
+    } else if ((int.parse(date[1])) != DateTime.now().month) {
+      response = DateTime.now().month - (int.parse(date[1]));
       return '${response} month${response != 1 ? 's' : ''} ago';
-    } else if (date[2] != DateTime.now().day.toString()) {
+    } else if (int.parse(date[2]) != DateTime.now().day) {
       response = DateTime.now().day - int.parse(date[2]);
       return '${response} day${response != 1 ? 's' : ''} ago';
-    } else if (time[0] != DateTime.now().hour.toString()) {
-      response = DateTime.now().hour - int.parse(time[0]);
+    } else if (int.parse(time[0]) != (DateTime.now().hour+2)) {
+      response = (DateTime.now().hour+2) - int.parse(time[0]);
       return '${response} hour${response != 1 ? 's' : ''} ago';
-    } else if (time[1] != DateTime.now().minute.toString()) {
+    } else if (int.parse(time[1]) != DateTime.now().minute) {
       response = DateTime.now().minute - int.parse(time[1]);
       return '${response} minute${response != 1 ? 's' : ''} ago';
     } else {
@@ -48,11 +55,27 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     }
   }
 
+  Future<void> _userInitialize() async {
+    UserResponse me = await userRepository.me();
+    setState(() {
+      me = me;
+    });
+  }
+
+   void _showModal(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return NewComment(orderId: widget.orderId);
+      },
+    );
+  }
+
   @override
   void initState() {
     orderListRepository = OrderListRepositoryImpl();
     userRepository = UserRepositoryImpl();
-    UserResponse me = await userRepository.me();
+    _userInitialize();
     _orderDetailBloc = OrderDetailBloc(orderListRepository)
       ..add(DoOrderDetailEvent(widget.orderId));
     super.initState();
@@ -188,6 +211,10 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   ),
                 ],
               ),
+              /*TextButton(onPressed: () {
+                _addFavorite();
+              }, child: 
+              const Text('Add Favorite'))*/
             ]),
           ),
         ),
@@ -253,7 +280,15 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('COMMENTS', style: TextStyle(fontSize: 20)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                     const Text('COMMENTS', style: TextStyle(fontSize: 20)),
+                     ElevatedButton(onPressed: () {
+                      _showModal(context);
+                     },child: const Text('Leave a comment'))
+                  ],
+                ),
                 if (order.messages.isEmpty)
                   const Text('No comments')
                 else
@@ -266,7 +301,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                             bottom: BorderSide(
                                 width: 1.0,
                                 color: Colors
-                                    .grey), // Configura el ancho y color del borde
+                                    .grey),
                           ),
                         ),
                         child: Column(
