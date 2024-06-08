@@ -128,8 +128,8 @@ public class InitData {
         /////////////////////////////Orders///////////////////////////////////////
         Order order1 = Order.builder()
                 .id(UUID.fromString("e438c08c-4e3b-48dc-9b35-95e5ddbdff81"))
-                .title("Enseño a comer caracoles")
-                .user(user1)
+                .title("Ensenio a comer caracoles")
+                .user(user3)
                 .state(OrderState.OPEN)
                 .price(23.34)
                 .description("descripcion de la ordenanza lorem ipsum amet")
