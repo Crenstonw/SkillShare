@@ -163,6 +163,6 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   _orderListWidget() {
-    return Expanded(child: OrderListWidget(title: searchTitle));
+    return Expanded(child: OrderListWidget(title: searchTitle, listType: 0,));
   }
 }

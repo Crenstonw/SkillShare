@@ -3,6 +3,7 @@ package com.triana.salesianos.edu.skillshare.order.repository;
 import com.triana.salesianos.edu.skillshare.Tag.model.Tag;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.model.OrderState;
+import com.triana.salesianos.edu.skillshare.user.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -34,6 +35,13 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             WHERE o.title LIKE %:title%
             """)
     Page<Order> findOrderListByTitle(String title, Pageable pageable);
+
+    @Query("""
+            SELECT o
+            FROM Order o
+            WHERE o.user = ?1
+            """)
+    Page<Order> findMyOrders(User user, Pageable pageable);
 
     @Query("""
             SELECT o

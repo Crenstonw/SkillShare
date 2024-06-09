@@ -1,67 +1,57 @@
 import 'dart:convert';
 
+UserResponse userResponseFromJson(String str) => UserResponse.fromJson(json.decode(str));
+
+String userResponseToJson(UserResponse data) => json.encode(data.toJson());
+
 class UserResponse {
-  String? id;
-  String? email;
-  String? username;
-  String? name;
-  String? surname;
-  String? password;
-  dynamic profilePicture;
-  String? userRole;
-  DateTime? createdAt;
-  bool? enabled;
+    String id;
+    String email;
+    String username;
+    String name;
+    String surname;
+    String password;
+    String profilePicture;
+    String userRole;
+    DateTime createdAt;
+    bool enabled;
 
-  UserResponse({
-    this.id,
-    this.email,
-    this.username,
-    this.name,
-    this.surname,
-    this.password,
-    this.profilePicture,
-    this.userRole,
-    this.createdAt,
-    this.enabled,
-  });
+    UserResponse({
+        required this.id,
+        required this.email,
+        required this.username,
+        required this.name,
+        required this.surname,
+        required this.password,
+        required this.profilePicture,
+        required this.userRole,
+        required this.createdAt,
+        required this.enabled,
+    });
 
-  factory UserResponse.fromMap(Map<String, dynamic> data) => UserResponse(
-        id: data['id'] as String?,
-        email: data['email'] as String?,
-        username: data['username'] as String?,
-        name: data['name'] as String?,
-        surname: data['surname'] as String?,
-        password: data['password'] as String?,
-        profilePicture: data['profilePicture'] as dynamic,
-        userRole: data['userRole'] as String?,
-        createdAt: data['createdAt'] == null
-            ? null
-            : DateTime.parse(data['createdAt'] as String),
-        enabled: data['enabled'] as bool?,
-      );
+    factory UserResponse.fromJson(Map<String, dynamic> json) => UserResponse(
+        id: json["id"],
+        email: json["email"],
+        username: json["username"],
+        name: json["name"],
+        surname: json["surname"],
+        password: json["password"],
+        profilePicture: json["profilePicture"],
+        userRole: json["userRole"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        enabled: json["enabled"],
+    );
 
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'email': email,
-        'username': username,
-        'name': name,
-        'surname': surname,
-        'password': password,
-        'profilePicture': profilePicture,
-        'userRole': userRole,
-        'createdAt': createdAt?.toIso8601String(),
-        'enabled': enabled,
-      };
-
-  /// `dart:convert`
-  ///
-  /// Parses the string and returns the resulting Json object as [UserResponse].
-  factory UserResponse.fromJson(String data) {
-    return UserResponse.fromMap(json.decode(data) as Map<String, dynamic>);
-  }
-
-  /// `dart:convert`
-  ///
-  /// Converts [UserResponse] to a JSON string.
-  String toJson() => json.encode(toMap());
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "email": email,
+        "username": username,
+        "name": name,
+        "surname": surname,
+        "password": password,
+        "profilePicture": profilePicture,
+        "userRole": userRole,
+        "createdAt": createdAt.toIso8601String(),
+        "enabled": enabled,
+    };
 }

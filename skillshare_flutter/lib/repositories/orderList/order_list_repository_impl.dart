@@ -27,6 +27,23 @@ class OrderListRepositoryImpl extends OrderListRepository {
   }
 
   @override
+  Future<AllOrderResponse> myOrderList() async {
+    final response = await _httpClient.get(
+        Uri.parse('http://10.0.2.2:8080/order/myOrders'),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ${Localstorage.prefs.getString('token')}'
+        });
+    if (response.statusCode == 200) {
+      final finalResponse =
+          AllOrderResponse.fromJson(json.decode(response.body));
+      return finalResponse;
+    } else {
+      throw Exception('Failed to load the list');
+    }
+  }
+
+  @override
   Future<AllOrderResponse> orderListSearch(String title) async {
     final response = await _httpClient
         .get(Uri.parse('http://10.0.2.2:8080/order'), headers: <String, String>{
