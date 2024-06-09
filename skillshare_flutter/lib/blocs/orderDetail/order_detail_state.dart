@@ -9,7 +9,8 @@ final class OrderDetailsLoading extends OrderDetailState {}
 
 final class  OrderDetailsSuccess extends OrderDetailState {
   final OrderDetailResponse orderDetailResponse;
-   OrderDetailsSuccess(this.orderDetailResponse);
+  final UserResponse me;
+   OrderDetailsSuccess(this.orderDetailResponse, this.me);
 }
 
 final class DoOrderListError extends OrderDetailState {

@@ -52,6 +52,14 @@ public class OrderService {
         return findOrders.map(OrderResponse::of);
     }
 
+    public Page<OrderResponse> getMyOrders(Pageable pageable) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        Page<Order> orderPage = orderRepository.findMyOrders(user, pageable);
+
+        return orderPage.map(OrderResponse::of);
+    }
+
     public OrderResponse newOrder(NewOrderRequest orderRequest){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);

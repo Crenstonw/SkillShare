@@ -39,6 +39,12 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(service.getOrderListByTitle(title, pageable));
     }
 
+    @GetMapping("/myOrders")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<Page<OrderResponse>> getMyOrderList(@PageableDefault Pageable pageable) {
+        return ResponseEntity.ok().body(service.getMyOrders(pageable));
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<OrderResponse> newOrder(@RequestBody NewOrderRequest order) {
