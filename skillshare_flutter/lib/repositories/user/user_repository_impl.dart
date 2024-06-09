@@ -11,12 +11,12 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<UserResponse> me() async {
     final response =
-        await _httpClient.post(Uri.parse('http://10.0.2.2:8080/user/me'),
+        await _httpClient.get(Uri.parse('http://10.0.2.2:8080/user/me'),
             headers: <String, String>{
               'Content-Type': 'application/json',
               'Authorization': 'Bearer ${Localstorage.prefs.getString('token')}'
             });
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       final finalResponse = UserResponse.fromJson(json.decode(response.body));
       return finalResponse;
     } else {

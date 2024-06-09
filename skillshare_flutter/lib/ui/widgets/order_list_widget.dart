@@ -8,7 +8,8 @@ import 'package:skillshare_flutter/ui/order_detail_page.dart';
 
 class OrderListWidget extends StatefulWidget {
   final String title;
-  const OrderListWidget({super.key, required this.title});
+  final int listType;
+  const OrderListWidget({super.key, required this.title, required this.listType});
 
   @override
   State<OrderListWidget> createState() => _OrderListWidgetState();
@@ -21,14 +22,14 @@ class _OrderListWidgetState extends State<OrderListWidget> {
   @override
   void initState() {
     orderListRepository = OrderListRepositoryImpl();
-    _orderListBloc = OrderListBloc(orderListRepository)
+    _orderListBloc = OrderListBloc(orderListRepository, widget.listType)
       ..add(DoOrderListEvent(widget.title));
     super.initState();
   }
 
   void reload() {
     orderListRepository = OrderListRepositoryImpl();
-    _orderListBloc = OrderListBloc(orderListRepository)
+    _orderListBloc = OrderListBloc(orderListRepository, widget.listType)
       ..add(DoOrderListEvent(widget.title));
   }
 
