@@ -8,8 +8,9 @@ final class MyOrdersInitial extends MyOrdersState {}
 final class MyOrdersLoading extends MyOrdersState {}
 
 final class MyOrdersSuccess extends MyOrdersState {
-  final AllOrderResponse response;
-  MyOrdersSuccess(this.response);
+  final AllOrderResponse orderResponse;
+  final UserResponse userResponse;
+  MyOrdersSuccess(this.orderResponse, this.userResponse);
 }
 
 final class MyOrdersError extends MyOrdersState {

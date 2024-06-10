@@ -16,6 +16,7 @@ class MyOrdersWidget extends StatefulWidget {
 }
 
 class _MyOrdersWidgetState extends State<MyOrdersWidget> {
+  late UserResponse me;
   late OrderListRepository orderListRespository;
   late UserRepository userRepository;
   late MyOrdersBloc _myOrdersBloc;
@@ -24,7 +25,7 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
   void initState() {
     orderListRespository = OrderListRepositoryImpl();
     userRepository = UserRepositoryImpl();
-    _myOrdersBloc = MyOrdersBloc(orderListRespository);
+    _myOrdersBloc = MyOrdersBloc(orderListRespository, userRepository);
     _myOrdersBloc.add(DoMyOrdersEvent());
     super.initState();
   }
@@ -51,22 +52,13 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
             },
             builder: (context, state) {
               if (state is MyOrdersSuccess) {
-                return Center(child: _buildHomeWidget());
+                return Center(child: _buildHomeWidget(state.userResponse));
               } else if (state is MyOrdersError) {
-                return Center(
-                    child: Column(
-                  children: [
-                    const Text(
-                      'An error ocurred, page didn\'t load correctly',
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    _buildHomeWidget()
-                  ],
-                ));
+                return const Text('error');
               } else if (state is MyOrdersLoading) {
                 return const Center(child: CircularProgressIndicator());
               }
-              return Center(child: _buildHomeWidget());
+              return const Center(child: Text('data'));
             },
             listener: (BuildContext context, MyOrdersState state) {},
           ),
@@ -75,7 +67,7 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
     );
   }
 
-  _buildHomeWidget() {
+  _buildHomeWidget(UserResponse me) {
     return Column(
       children: [
         Padding(
@@ -93,7 +85,7 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(25),
                   child: Image.network(
-                    'https://imgs.search.brave.com/UtmBRE2uMVKCGvYr-Ufs4f8GMP99aA1DFMJhnfoSefM/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9lMDAt/ZWxtdW5kby51ZWNk/bi5lcy9hc3NldHMv/bXVsdGltZWRpYS9p/bWFnZW5lcy8yMDIz/LzA0LzEyLzE2ODEz/MTE1NTQwMDA1Lmpw/Zw',
+                    me.profilePicture,
                     fit: BoxFit.cover,
                   ),
                 ),
