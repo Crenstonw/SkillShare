@@ -7,10 +7,10 @@ import { User } from '../../models/orders.model';
   templateUrl: './header.component.html',
   styleUrl: './header.component.css'
 })
-export class HeaderComponent implements OnInit{
+export class HeaderComponent implements OnInit {
   user: User | undefined;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
 
   ngOnInit(): void {
     this.getMe();
@@ -23,6 +23,10 @@ export class HeaderComponent implements OnInit{
 
   myProfile() {
     window.location.pathname = `user/${this.user!.id}`
+  }
+
+  teapot() {
+    window.location.pathname = `teapot`
   }
 
   getMe() {

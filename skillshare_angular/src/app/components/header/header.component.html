@@ -21,9 +21,9 @@
       <div ngbDropdown class="row">
         <img id="dropdownBasic1" ngbDropdownToggle [src]='user?.profilePicture' alt="mdo" width="32" height="55"
           class="rounded-circle col-5">
-          <p class="text-white col-6">{{user?.username}}</p>
+        <p class="text-white col-6">{{user?.username}}</p>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-          <button ngbDropdownItem>I'm a teapot</button>
+          <button ngbDropdownItem (click)="teapot()">I'm a teapot</button>
           <button ngbDropdownItem (click)="myProfile()">My profile</button>
           <div class="dropdown-divider"></div>
           <button ngbDropdownItem (click)="signOut()">Sign out</button>

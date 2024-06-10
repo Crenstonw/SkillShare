@@ -11,12 +11,12 @@ public class NoOrderException extends ErrorResponseException {
 
     public NoOrderException() {
 
-        super(HttpStatus.NOT_FOUND, of("Order not found"), null);
+        super(HttpStatus.NOT_FOUND, of("Order not found or not enough privileges"), null);
     }
 
     public static ProblemDetail of(String message) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, message);
-        problemDetail.setTitle("Order not found");
+        problemDetail.setTitle("Order not found or not enough privileges");
         problemDetail.setType(URI.create("https://api.midominio.com/errors/user-not-found"));
         problemDetail.setProperty("entityType", "Note");
         problemDetail.setProperty("timestamp", Instant.now());

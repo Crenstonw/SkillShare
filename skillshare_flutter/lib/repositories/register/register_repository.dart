@@ -1,6 +1,6 @@
-import 'package:skillshare_flutter/models/dtos/register_dto.dart';
-import 'package:skillshare_flutter/models/register_response.dart';
+import 'package:skillshare_flutter/models/dtos/register_request.dart';
+import 'package:skillshare_flutter/models/responses/register_response.dart';
 
 abstract class RegisterRepository {
-  Future<RegisterResponse> register(RegisterDto registerDto);
+  Future<RegisterResponse> register(RegisterRequest registerDto);
 }
