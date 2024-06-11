@@ -413,6 +413,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         ),
                       ],
                     ),
+                    Text('Created at: ${date(order.createdAt, true)}'),
+                    Text('Last time modified at: ${date(order.lastTimeModified, true)}'),
                     IconButton(
                               style: TextButton.styleFrom(
                                   backgroundColor: Colors.grey),
@@ -665,33 +667,50 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         ),
                       ],
                     ),
+                    Text('Created at: ${date(order.createdAt, true)}'),
+                    Text('Last time modified at: ${date(order.lastTimeModified, true)}'),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
                               style: TextButton.styleFrom(
-                                  backgroundColor: Colors.black),
+                                  backgroundColor: Colors.grey),
                               onPressed: () {
-                                _showEditModal(context, order);
+                                _addFavorite();
                                 reload();
                               },
                               icon: const Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                              )),
-                          IconButton(
-                              style: TextButton.styleFrom(
-                                  backgroundColor: Colors.black),
-                              onPressed: () {
-                                _showDeleteModal(context, order.id);
-                                reload();
-                              },
-                              icon: const Icon(
-                                Icons.delete,
+                                Icons.favorite,
                                 color: Colors.pink,
                               )),
+                          Row(
+                            children: [
+                              IconButton(
+                                  style: TextButton.styleFrom(
+                                      backgroundColor: Colors.black),
+                                  onPressed: () {
+                                    _showEditModal(context, order);
+                                    reload();
+                                  },
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                  )),
+                              IconButton(
+                                  style: TextButton.styleFrom(
+                                      backgroundColor: Colors.black),
+                                  onPressed: () {
+                                    _showDeleteModal(context, order.id);
+                                    reload();
+                                  },
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.pink,
+                                  )),
+                            ],
+                          ),
                         ],
                       ),
                     )
