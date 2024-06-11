@@ -1,6 +1,6 @@
-import 'package:skillshare_flutter/models/dtos/new_order_dto.dart';
-import 'package:skillshare_flutter/models/order_list_response.dart';
+import 'package:skillshare_flutter/models/dtos/order_edit_request.dart';
+import 'package:skillshare_flutter/models/responses/order_edit_response.dart';
 
 abstract class NewOrderRepository {
-  Future<Order> newOrder(NewOrderDto newOrderDto);
+  Future<OrderEditResponse> newOrder(OrderEditRequest orderEditRequest);
 }

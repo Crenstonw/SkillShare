@@ -17,6 +17,8 @@ dependencies:
   flip_card: ^0.7.0
   webview_flutter: ^4.5.0
   shared_preferences: ^2.2.2
+  meta: ^1.10.0
+  bloc: ^8.1.4
 
 dev_dependencies:
   flutter_test:

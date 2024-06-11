@@ -6,6 +6,7 @@ import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.model.OrderState;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
+import com.triana.salesianos.edu.skillshare.user.exception.UserNotFound;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
 import io.swagger.v3.oas.annotations.tags.Tags;
@@ -29,15 +30,20 @@ public class OrderService {
     private final TagService tagService;
 
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
-        Page<Order> orderPage = orderRepository.findAll(pageable);
-
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        Page<Order> orderPage;
+        if(Objects.equals(user.getUserRole().toString(), "[ADMIN]"))
+            orderPage = orderRepository.findAll(pageable);
+        else {
+            orderPage = orderRepository.findAllForUsers(pageable);
+        }
         return orderPage.map(OrderResponse::of);
     }
 
     public OrderDetailsResponse getOrderById(String id) {
         Order findOrder = orderRepository.findById(UUID.fromString(id))
                 .orElseThrow(NoOrderException::new);
-
         return OrderDetailsResponse.of(findOrder);
     }
 
@@ -46,9 +52,17 @@ public class OrderService {
         return findOrders.map(OrderResponse::of);
     }
 
+    public Page<OrderResponse> getMyOrders(Pageable pageable) {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        Page<Order> orderPage = orderRepository.findMyOrders(user, pageable);
+
+        return orderPage.map(OrderResponse::of);
+    }
+
     public OrderResponse newOrder(NewOrderRequest orderRequest){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(NoOrderException::new);
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
         Order newOrder = Order.builder()
                 .id(UUID.randomUUID())
                 .title(orderRequest.title())
@@ -105,9 +119,7 @@ public class OrderService {
                     .build();
             orderRepository.save(result);
             return OrderResponse.of(result);
-        } else {
-            return null;
-        }
+        } else throw new NoOrderException();
     }
 
     public void deleteOrder(String id) {
@@ -117,9 +129,7 @@ public class OrderService {
         if(Objects.equals(user.get().getUsername(), findOrder.get().getUser().getUsername())
                 || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
             findOrder.ifPresent(orderRepository::delete);
-        } else {
-            //throw exception
-        }
+        } else throw new NoOrderException();
 
 
     }

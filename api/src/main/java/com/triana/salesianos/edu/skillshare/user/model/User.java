@@ -71,7 +71,11 @@ public class User implements UserDetails {
     private Set<Order> orders = new LinkedHashSet<>();
 
     @OneToMany
-    @JoinColumn(name = "user_id")
+    @JoinTable(
+            name = "favorite_orders",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "order_id")
+    )
     private List<Order> favoriteOrders = new ArrayList<>();
 
     @Column(name = "profile_picture")

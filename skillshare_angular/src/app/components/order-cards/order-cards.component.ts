@@ -7,7 +7,7 @@ import { Order } from '../../models/orders.model';
   styleUrl: './order-cards.component.css'
 })
 export class OrderCardsComponent implements OnInit {
-  
+
   @Input() order: Order | undefined;
   stateColor: String = '';
 
@@ -16,9 +16,9 @@ export class OrderCardsComponent implements OnInit {
   }
 
   setState() {
-    if(this.order?.state === 'OPEN') {
+    if (this.order?.state === 'OPEN') {
       this.stateColor = 'bg-success text-white'
-    } else if(this.order?.state === 'OCCUPIED') {
+    } else if (this.order?.state === 'OCCUPIED') {
       this.stateColor = 'bg-warning'
     } else {
       this.stateColor = 'bg-danger text-white'
@@ -29,17 +29,16 @@ export class OrderCardsComponent implements OnInit {
     const today = new Date();
     let date = dateTime.toString().split('T')[0].split('-');
     let time = dateTime.toString().split('T')[1].split(':');
-    console.log((today.getMonth()+1) + ' ' + parseInt(date[1]));
-    if(parseInt(date[0]) != today.getFullYear()) {
-      return today.getFullYear() - parseInt(date[0]) + ' year/s ago';
-    }else if(parseInt(date[1]) != (today.getMonth()+1)) {
-      return ((today.getMonth()+1) - parseInt(date[1])) + ' month/s ago';
-    } else if(parseInt(date[2]) != today.getDate()) {
-      return today.getDate() - parseInt(date[3]) + ' day/s ago';
-    } else if(parseInt(time[0]) != today.getHours()) {
-      return today.getHours() - parseInt(time[0]) + ' hour/s ago';
-    } else if(parseInt(time[1]) != today.getMinutes()) {
-      return today.getMinutes() - parseInt(time[1]) + ' minute/s ago';
+    if (parseInt(date[0]) != today.getFullYear()) {
+      return today.getFullYear() - parseInt(date[0]) + ` year${today.getFullYear() - parseInt(date[0]) != 1 ? 's' : ''} ago`;
+    } else if (parseInt(date[1]) != (today.getMonth() + 1)) {
+      return ((today.getMonth() + 1) - parseInt(date[1])) + ` month${((today.getMonth() + 1) - parseInt(date[1])) != 1 ? 's' : ''} ago`;
+    } else if (parseInt(date[2]) != today.getDate()) {
+      return today.getDate() - parseInt(date[2]) + ` day${today.getDate() - parseInt(date[3]) != 1 ? 's' : ''} ago`;
+    } else if (parseInt(time[0]) != today.getHours()) {
+      return today.getHours() - parseInt(time[0]) + ` hour${(today.getHours() - parseInt(time[0])) != 1 ? 's' : ''} ago`;
+    } else if (parseInt(time[1]) != today.getMinutes()) {
+      return today.getMinutes() - parseInt(time[1]) + ` minute${today.getMinutes() - parseInt(time[1]) != 1 ? 's' : ''} ago`;
     } else {
       return 'just now';
     }

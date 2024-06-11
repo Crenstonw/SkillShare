@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:skillshare_flutter/ui/new_order_page.dart';
 import 'package:skillshare_flutter/ui/widgets/favorite_widget.dart';
 import 'package:skillshare_flutter/ui/widgets/home_widget.dart';
+import 'package:skillshare_flutter/ui/widgets/my_orders_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -15,8 +15,8 @@ class _HomePageState extends State<HomePage> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeWidget(),
     FavoriteWidget(),
-    NewOrderPage(),
-    Text('data'),
+    Text('Data'),
+    MyOrdersWidget(),
     Text('data')
   ];
   void _onItemTapped(int index) {
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Favorite',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add),
+            icon: Icon(Icons.message),
             label: 'New Order',
           ),
           BottomNavigationBarItem(

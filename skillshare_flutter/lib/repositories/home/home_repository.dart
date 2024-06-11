@@ -1,7 +1,7 @@
-import 'package:skillshare_flutter/models/order_list_response.dart';
+import 'package:skillshare_flutter/models/responses/all_order_response.dart';
 
 abstract class HomeRepository {
   Future<String>profilePicture();
-  Future<List<Order>> orderList();
-  Future<List<Order>> searchOrderList(String title);
+  Future<AllOrderResponse> orderList();
+  Future<AllOrderResponse> searchOrderList(String title);
 }

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:skillshare_flutter/models/order_list_response.dart';
+import 'package:skillshare_flutter/models/responses/all_order_response.dart';
 import 'package:skillshare_flutter/repositories/home/home_repository.dart';
 
 part 'home_event.dart';
@@ -28,7 +28,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  /*void _doOrderList(
+  void _doOrderList(
       DoOrderListEvent event, Emitter<HomeState> emit) async {
     emit(DoHomeLoading());
 
@@ -42,7 +42,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  void _doSearchOrderList(
+  /*void _doSearchOrderList(
       DoOrderListEvent event, Emitter<HomeState> emit) async {
     emit(DoHomeLoading());
     try {

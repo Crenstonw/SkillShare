@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './footer.component.css'
 })
 export class FooterComponent {
-
+  IFunny() {
+    window.location.href = 'https://ifunny.co/';
+  }
 }
