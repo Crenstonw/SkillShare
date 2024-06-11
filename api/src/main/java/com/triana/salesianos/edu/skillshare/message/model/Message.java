@@ -14,7 +14,6 @@ import java.util.UUID;
 @Setter
 @SuperBuilder
 @MappedSuperclass
-//@Table(name = "message_entity")
 @EntityListeners(AuditingEntityListener.class)
 public class Message {
     @Id

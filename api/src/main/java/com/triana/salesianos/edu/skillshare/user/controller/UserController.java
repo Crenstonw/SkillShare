@@ -1,5 +1,6 @@
 package com.triana.salesianos.edu.skillshare.user.controller;
 
+import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.security.jwt.JwtProvider;
 import com.triana.salesianos.edu.skillshare.user.dto.*;
 import com.triana.salesianos.edu.skillshare.user.model.User;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -69,52 +71,68 @@ public class UserController {
     }
 
     @PostMapping("/user")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AllUserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(AllUserResponse.of(service.createUserWithUserRole(createUserRequest)));
     }
 
     @GetMapping("/user")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<AllUserResponse>> getAllUsers(@PageableDefault Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getAllUsers(pageable));
     }
 
     @GetMapping("/user/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<UserDetailsDto> getUser(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.getUser(id));
     }
 
     @PutMapping("/user/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<UserDetailsDto> editUser(@PathVariable String id, @RequestBody EditUserRequest editUserRequest) {
         return ResponseEntity.status(HttpStatus.OK).body(service.editUser(id, editUserRequest));
     }
 
     @DeleteMapping("user/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUser(@PathVariable String id) {
         service.deleteUser(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping("/user/favorite")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<List<OrderResponse>> getMyFavorites() {
+        return ResponseEntity.ok().body(service.myFavorites());
+    }
+
     @PutMapping("/user/favorite/{id}")
-    public ResponseEntity<List<FavoriteDto>> newFavoriteOrder(@PathVariable String id) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<FavoriteDto> newFavoriteOrder(@PathVariable String id) {
         return ResponseEntity.ok().body(service.newFavoriteOrder(id));
     }
 
     @PutMapping("/user/unfavorite/{id}")
-    public ResponseEntity<List<FavoriteDto>> deleteFavoriteOrder(@PathVariable String id) {
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<FavoriteDto> deleteFavoriteOrder(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteFavoriteOrder(id));
     }
 
     @GetMapping("/user/me")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public ResponseEntity<AllUserResponse> actualUserInfo() {
         return ResponseEntity.status(HttpStatus.OK).body(service.actualUserInfo());
     }
 
     @PutMapping("/user/privileges/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDetailsDto> givePrivileges(@PathVariable String id) {
         return ResponseEntity.ok().body(service.givePrivileges(id));
     }
 
     @PutMapping("/user/ban/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDetailsDto> banUser(@PathVariable String id) {
         return ResponseEntity.ok().body(service.banUser(id));
     }

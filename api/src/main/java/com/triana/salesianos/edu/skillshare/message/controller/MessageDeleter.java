@@ -17,6 +17,7 @@ public class MessageDeleter {
     @Scheduled(cron = "0 0 0 * * *")
     public void deleteDirectMessages() {
         LocalDateTime expireDate = LocalDateTime.now().minusYears(2);
+
         List<DirectMessage> ExpiredMessages = repository.findDirectMessagesExpired(expireDate);
         repository.deleteAll(ExpiredMessages);
     }

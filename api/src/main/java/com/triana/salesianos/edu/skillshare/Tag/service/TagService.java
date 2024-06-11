@@ -26,7 +26,7 @@ public class TagService {
             Optional<Tag> findTag = tagRepository.findTagByName(tag);
             if(findTag.isPresent()) {
                 result.add(findTag.get());
-            } else {
+            } else if(tag != "" || tag != " "){
                 Tag newTag = Tag.builder()
                         .id(UUID.randomUUID())
                         .name(tag)
