@@ -13,7 +13,7 @@ final class  OrderDetailsSuccess extends OrderDetailState {
    OrderDetailsSuccess(this.orderDetailResponse, this.me);
 }
 
-final class DoOrderListError extends OrderDetailState {
+final class OrderDetailsError extends OrderDetailState {
   final String errorMensaje;
-  DoOrderListError(this.errorMensaje);
+  OrderDetailsError(this.errorMensaje);
 }

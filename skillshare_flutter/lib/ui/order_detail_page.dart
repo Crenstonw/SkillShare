@@ -71,7 +71,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   String date(DateTime dateTime, bool justDate) {
     List<String> date = dateTime.toString().split(' ')[0].split('-');
     List<String> time = dateTime.toString().split(' ')[1].split(':');
-    print(dateTime);
+    time[2] = time[2].split('.')[0];
     num response;
     if (justDate) {
       return dateTime.toString().split(' ')[0];
@@ -298,7 +298,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   child: _buildOrderDetailWidgetAdministrable(
                       state.orderDetailResponse));
             }
-          } else if (state is DoOrderListError) {
+          } else if (state is OrderDetailsError) {
             return const Text('error');
           } else if (state is OrderDetailsLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -413,8 +413,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         ),
                       ],
                     ),
-                    Text('Created at: ${date(order.createdAt, true)}'),
-                    Text('Last time modified at: ${date(order.lastTimeModified, true)}'),
+                    Text('Created: ${date(order.createdAt, false)}'),
                     IconButton(
                               style: TextButton.styleFrom(
                                   backgroundColor: Colors.grey),
@@ -498,6 +497,9 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                     children: [
                       const Text('COMMENTS', style: TextStyle(fontSize: 20)),
                       ElevatedButton(
+                        style: TextButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              foregroundColor: Colors.white),
                           onPressed: () {
                             _showModal(context);
                           },
@@ -524,7 +526,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(order.messages[i].author.username),
+                                  Text(order.messages[i].author.username + ' (${order.messages[i].author.id == order.user.id ? 'creator' : 'user'})'),
                                   Text(date(order.messages[i].dateTime, false)),
                                 ],
                               ),
@@ -667,8 +669,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         ),
                       ],
                     ),
-                    Text('Created at: ${date(order.createdAt, true)}'),
-                    Text('Last time modified at: ${date(order.lastTimeModified, true)}'),
+                    Text('Created: ${date(order.createdAt, false)}'),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Row(
@@ -815,7 +816,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(order.messages[i].author.username),
+                                  Text(order.messages[i].author.username  + ' (${order.messages[i].author.id == order.user.id ? 'creator' : 'user'})'),
                                   Text(date(order.messages[i].dateTime, false)),
                                 ],
                               ),

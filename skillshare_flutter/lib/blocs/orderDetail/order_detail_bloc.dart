@@ -25,7 +25,7 @@ class OrderDetailBloc extends Bloc<OrderDetailEvent, OrderDetailState> {
       emit(OrderDetailsSuccess(response, me));
     } on Exception catch (e) {
       print('Error en el bloc: $e');
-      emit(DoOrderListError(e.toString()));
+      emit(OrderDetailsError(e.toString()));
     }
   }
 }

@@ -9,10 +9,7 @@ import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Builder
 public record OrderDetailsResponse(
@@ -37,6 +34,7 @@ public record OrderDetailsResponse(
         for(OrderMessage orderMessage: order.getOrderMessages()) {
             messages.add(OrderMessageResponse.of(orderMessage));
         }
+        Collections.reverse(messages);
 
         return OrderDetailsResponse.builder()
                 .id(order.getId())
