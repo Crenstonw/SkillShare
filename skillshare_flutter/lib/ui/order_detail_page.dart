@@ -24,7 +24,38 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   late OrderDetailBloc _orderDetailBloc;
   final List<String> _dropdownOptions = ['Open', 'Occupied', 'Closed'];
 
-  _addFavorite() {}
+  void _showFavoriteModal(BuildContext context, String msg) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Favorite'),
+          content: Text(msg),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cool'),
+            )
+          ],
+        );
+      },
+    );
+  }
+  Future<String> _favoriteCall() async{
+    final result = await orderListRepository.addFavorite(widget.orderId);
+    return result.values.first.toString();
+  }
+
+  _addFavorite() async{ 
+    try {
+    final msg = await _favoriteCall();
+    _showFavoriteModal(context, msg);
+  } catch (e) {
+    _showFavoriteModal(context, 'Failed to add favorite');
+  }
+  }
 
   void statusChanger(String id, String state) {
     if (state == 'Open') {
@@ -34,6 +65,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     } else if (state == 'Closed') {
       orderListRepository.changeStatus(id, StatusRequest(status: 'CLOSED'));
     }
+    reload();
   }
 
   String date(DateTime dateTime, bool justDate) {
@@ -113,6 +145,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   backgroundColor: Colors.red, primary: Colors.white),
               onPressed: () {
                 orderListRepository.deleteOrder(idOrder);
+                reload();
                 Navigator.of(context).pop();
               },
               child: const Text('Delete'),
@@ -217,7 +250,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         tags: tagUnString(tagsController.text));
                     orderListRepository.orderEdit(response, order.id);
                     Navigator.of(context)
-                        .pop(OrderDetailPage(orderId: order.id));
+                        .pop();
+                        reload();
                   }
                 },
                 child: const Text('Send'),
@@ -379,10 +413,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         ),
                       ],
                     ),
-                    /*TextButton(onPressed: () {
-                  _addFavorite();
-                }, child: 
-                const Text('Add Favorite'))*/
+                    IconButton(
+                              style: TextButton.styleFrom(
+                                  backgroundColor: Colors.grey),
+                              onPressed: () {
+                                _addFavorite();
+                                reload();
+                              },
+                              icon: const Icon(
+                                Icons.favorite,
+                                color: Colors.pink,
+                              )),
                   ]),
             ),
           ),
@@ -634,6 +675,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                   backgroundColor: Colors.black),
                               onPressed: () {
                                 _showEditModal(context, order);
+                                reload();
                               },
                               icon: const Icon(
                                 Icons.edit,
@@ -644,6 +686,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                   backgroundColor: Colors.black),
                               onPressed: () {
                                 _showDeleteModal(context, order.id);
+                                reload();
                               },
                               icon: const Icon(
                                 Icons.delete,

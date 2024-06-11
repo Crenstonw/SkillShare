@@ -104,6 +104,6 @@ class _MyOrdersWidgetState extends State<MyOrdersWidget> {
   }
 
   _orderListWidget() {
-    return const Expanded(child: OrderListWidget(title: 'searchTitle', listType: 1,));
+    return const Expanded(child: OrderListWidget(title: 'searchTitle', listType: 1));
   }
 }

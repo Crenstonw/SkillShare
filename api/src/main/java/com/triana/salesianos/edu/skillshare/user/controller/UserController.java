@@ -1,5 +1,6 @@
 package com.triana.salesianos.edu.skillshare.user.controller;
 
+import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.security.jwt.JwtProvider;
 import com.triana.salesianos.edu.skillshare.user.dto.*;
 import com.triana.salesianos.edu.skillshare.user.model.User;
@@ -100,15 +101,21 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping("/user/favorite")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<List<OrderResponse>> getMyFavorites() {
+        return ResponseEntity.ok().body(service.myFavorites());
+    }
+
     @PutMapping("/user/favorite/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<List<FavoriteDto>> newFavoriteOrder(@PathVariable String id) {
+    public ResponseEntity<FavoriteDto> newFavoriteOrder(@PathVariable String id) {
         return ResponseEntity.ok().body(service.newFavoriteOrder(id));
     }
 
     @PutMapping("/user/unfavorite/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<List<FavoriteDto>> deleteFavoriteOrder(@PathVariable String id) {
+    public ResponseEntity<FavoriteDto> deleteFavoriteOrder(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteFavoriteOrder(id));
     }
 
