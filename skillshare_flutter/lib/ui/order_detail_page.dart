@@ -34,6 +34,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     } else if (state == 'Closed') {
       orderListRepository.changeStatus(id, StatusRequest(status: 'CLOSED'));
     }
+    reload();
   }
 
   String date(DateTime dateTime, bool justDate) {
@@ -113,6 +114,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   backgroundColor: Colors.red, primary: Colors.white),
               onPressed: () {
                 orderListRepository.deleteOrder(idOrder);
+                reload();
                 Navigator.of(context).pop();
               },
               child: const Text('Delete'),
@@ -217,7 +219,8 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         tags: tagUnString(tagsController.text));
                     orderListRepository.orderEdit(response, order.id);
                     Navigator.of(context)
-                        .pop(OrderDetailPage(orderId: order.id));
+                        .pop();
+                        reload();
                   }
                 },
                 child: const Text('Send'),
@@ -634,6 +637,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                   backgroundColor: Colors.black),
                               onPressed: () {
                                 _showEditModal(context, order);
+                                reload();
                               },
                               icon: const Icon(
                                 Icons.edit,
@@ -644,6 +648,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                                   backgroundColor: Colors.black),
                               onPressed: () {
                                 _showDeleteModal(context, order.id);
+                                reload();
                               },
                               icon: const Icon(
                                 Icons.delete,

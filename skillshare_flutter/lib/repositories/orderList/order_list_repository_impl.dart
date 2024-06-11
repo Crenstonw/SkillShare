@@ -4,7 +4,8 @@ import 'package:http/http.dart';
 import 'package:skillshare_flutter/environments/local_storage.dart';
 import 'package:skillshare_flutter/models/dtos/order_edit_request.dart';
 import 'package:skillshare_flutter/models/dtos/status_request.dart';
-import 'package:skillshare_flutter/models/order_edit_response.dart';
+import 'package:skillshare_flutter/models/responses/favorite_orders_response.dart';
+import 'package:skillshare_flutter/models/responses/order_edit_response.dart';
 import 'package:skillshare_flutter/models/responses/all_order_response.dart';
 import 'package:skillshare_flutter/models/responses/order_detail_response.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository.dart';
@@ -127,5 +128,33 @@ class OrderListRepositoryImpl extends OrderListRepository {
     } else {
       throw Exception('Failed to login');
     }
+  }
+
+  @override
+  Future<Content> addFavorite(String id) {
+    // TODO: implement addFavorite
+    throw UnimplementedError();
+  }
+
+  Future<List<FavoriteOrdersResponse>> favoriteOrders() async {
+  final response = await _httpClient.get(
+    Uri.parse('http://10.0.2.2:8080/user/favorite'),
+    headers: <String, String>{
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${Localstorage.prefs.getString('token')}'
+    },
+  );
+
+  if (response.statusCode == 200) {
+    return favoriteOrdersResponseFromJson(response.body);
+  } else {
+    throw Exception('Failed to load the orders');
+  }
+}
+
+  @override
+  Future<Content> removeFavorite(String id) {
+    // TODO: implement removeFavorite
+    throw UnimplementedError();
   }
 }

@@ -1,5 +1,6 @@
 package com.triana.salesianos.edu.skillshare.user.controller;
 
+import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.security.jwt.JwtProvider;
 import com.triana.salesianos.edu.skillshare.user.dto.*;
 import com.triana.salesianos.edu.skillshare.user.model.User;
@@ -98,6 +99,12 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable String id) {
         service.deleteUser(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/user/favorite")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<List<OrderResponse>> getMyFavorites() {
+        return ResponseEntity.ok().body(service.myFavorites());
     }
 
     @PutMapping("/user/favorite/{id}")

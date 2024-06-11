@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -90,6 +91,12 @@ public class UserService {
     public void deleteUser(String id) {
         Optional<User> findUser = userRepository.findById(UUID.fromString(id));
         findUser.ifPresent(userRepository::delete);
+    }
+
+    public List<OrderResponse> myFavorites() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        return user.getFavoriteOrders().stream().map(OrderResponse::of).toList();
     }
 
     public List<FavoriteDto> newFavoriteOrder(String id) {
