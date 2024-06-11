@@ -19,6 +19,34 @@ class _OrderListWidgetState extends State<OrderListWidget> {
   late OrderListRepository orderListRepository;
   late OrderListBloc _orderListBloc;
 
+  String date(DateTime dateTime, bool justDate) {
+    List<String> date = dateTime.toString().split(' ')[0].split('-');
+    List<String> time = dateTime.toString().split(' ')[1].split(':');
+    time[2] = time[2].split('.')[0];
+    num response;
+    if (justDate) {
+      return dateTime.toString().split(' ')[0];
+    }
+    if (date[0] != DateTime.now().year.toString()) {
+      response = DateTime.now().year - int.parse(date[0]);
+      return '${response} year${response != 1 ? 's' : ''} ago';
+    } else if ((int.parse(date[1])) != DateTime.now().month) {
+      response = DateTime.now().month - (int.parse(date[1]));
+      return '${response} month${response != 1 ? 's' : ''} ago';
+    } else if (int.parse(date[2]) != DateTime.now().day) {
+      response = DateTime.now().day - int.parse(date[2]);
+      return '${response} day${response != 1 ? 's' : ''} ago';
+    } else if (int.parse(time[0]) != (DateTime.now().hour + 2)) {
+      response = (DateTime.now().hour + 2) - int.parse(time[0]);
+      return '${response} hour${response != 1 ? 's' : ''} ago';
+    } else if (int.parse(time[1]) != DateTime.now().minute) {
+      response = DateTime.now().minute - int.parse(time[1]);
+      return '${response} minute${response != 1 ? 's' : ''} ago';
+    } else {
+      return 'Just now';
+    }
+  }
+
   @override
   void initState() {
     orderListRepository = OrderListRepositoryImpl();
@@ -74,8 +102,12 @@ class _OrderListWidgetState extends State<OrderListWidget> {
               },
               child: Card(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
+                      child: Text('Created: ${date(orderList.content[index].createdAt, false)}'),
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
