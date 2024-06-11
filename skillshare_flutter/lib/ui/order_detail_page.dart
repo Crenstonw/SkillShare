@@ -24,7 +24,38 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   late OrderDetailBloc _orderDetailBloc;
   final List<String> _dropdownOptions = ['Open', 'Occupied', 'Closed'];
 
-  _addFavorite() {}
+  void _showFavoriteModal(BuildContext context, String msg) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Favorite'),
+          content: Text(msg),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cool'),
+            )
+          ],
+        );
+      },
+    );
+  }
+  Future<String> _favoriteCall() async{
+    final result = await orderListRepository.addFavorite(widget.orderId);
+    return result.values.first.toString();
+  }
+
+  _addFavorite() async{ 
+    try {
+    final msg = await _favoriteCall();
+    _showFavoriteModal(context, msg);
+  } catch (e) {
+    _showFavoriteModal(context, 'Failed to add favorite');
+  }
+  }
 
   void statusChanger(String id, String state) {
     if (state == 'Open') {
@@ -382,10 +413,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                         ),
                       ],
                     ),
-                    /*TextButton(onPressed: () {
-                  _addFavorite();
-                }, child: 
-                const Text('Add Favorite'))*/
+                    IconButton(
+                              style: TextButton.styleFrom(
+                                  backgroundColor: Colors.grey),
+                              onPressed: () {
+                                _addFavorite();
+                                reload();
+                              },
+                              icon: const Icon(
+                                Icons.favorite,
+                                color: Colors.pink,
+                              )),
                   ]),
             ),
           ),

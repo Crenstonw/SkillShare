@@ -109,13 +109,13 @@ public class UserController {
 
     @PutMapping("/user/favorite/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<List<FavoriteDto>> newFavoriteOrder(@PathVariable String id) {
+    public ResponseEntity<FavoriteDto> newFavoriteOrder(@PathVariable String id) {
         return ResponseEntity.ok().body(service.newFavoriteOrder(id));
     }
 
     @PutMapping("/user/unfavorite/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<List<FavoriteDto>> deleteFavoriteOrder(@PathVariable String id) {
+    public ResponseEntity<FavoriteDto> deleteFavoriteOrder(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.OK).body(service.deleteFavoriteOrder(id));
     }
 

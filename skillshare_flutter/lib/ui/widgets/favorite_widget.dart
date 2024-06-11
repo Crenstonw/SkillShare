@@ -6,6 +6,7 @@ import 'package:skillshare_flutter/models/responses/user_response.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository_impl.dart';
 import 'package:skillshare_flutter/repositories/user/user_repository.dart';
+import 'package:skillshare_flutter/repositories/user/user_repository_impl.dart';
 import 'package:skillshare_flutter/ui/order_detail_page.dart';
 
 class FavoriteWidget extends StatefulWidget {
@@ -23,6 +24,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
   @override
   void initState() {
     orderListRepository = OrderListRepositoryImpl();
+    userRepository = UserRepositoryImpl();
     _orderFavoriteBloc = OrderFavoriteBloc(orderListRepository, userRepository)
       ..add(DoOrderFavoriteEvent());
     super.initState();
@@ -56,8 +58,8 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
             },
             builder: (context, state) {
               if (state is OrderFavoriteSuccess) {
-                return const Center(
-                    child: Text('jiji'));//_buildFavoriteWidget(state.favorites, state.me));
+                return Center(
+                    child: _buildFavoriteWidget(state.favorites, state.me));
               } else if (state is OrderFavoriteError) {
                 return const Text('error');
               } else if (state is OrderFavoriteLoading) {
@@ -101,14 +103,24 @@ _buildFavoriteWidget(List<FavoriteOrdersResponse> orders, UserResponse me) {
         ),
       ),
       Container(
+
           margin: const EdgeInsets.all(12),
-          padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 210, 0),
-          child: const Text('Your posts')),
+          //padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 210, 0),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text('Your favorites posts'),
+            ],
+          )),
+          _orderList(orders)
     ],
   );
 }
 
 _orderList(List<FavoriteOrdersResponse> orders) {
+  if(orders.isEmpty) {
+    return const Text('You don\'t have any favorites yet :(');
+  } else {
   return Expanded(
     child: ListView.builder(
       itemCount: orders.length,
@@ -232,4 +244,5 @@ _orderList(List<FavoriteOrdersResponse> orders) {
       },
     ),
   );
+  }
 }

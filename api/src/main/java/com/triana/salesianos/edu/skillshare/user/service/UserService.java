@@ -8,6 +8,7 @@ import com.triana.salesianos.edu.skillshare.security.errorhandling.JwtTokenExcep
 import com.triana.salesianos.edu.skillshare.user.dto.*;
 import com.triana.salesianos.edu.skillshare.user.exception.CannotBanYourself;
 import com.triana.salesianos.edu.skillshare.user.exception.CannotModifyPrivileges;
+import com.triana.salesianos.edu.skillshare.user.exception.FavoriteInterpolationNotPosibleException;
 import com.triana.salesianos.edu.skillshare.user.exception.UserNotFound;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.model.UserRole;
@@ -99,37 +100,33 @@ public class UserService {
         return user.getFavoriteOrders().stream().map(OrderResponse::of).toList();
     }
 
-    public List<FavoriteDto> newFavoriteOrder(String id) {
+    public FavoriteDto newFavoriteOrder(String id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
-        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
+        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
         List<Order> newFavoriteList = user.getFavoriteOrders();
+        for(Order forOrder : newFavoriteList) {
+            if(forOrder == order) {
+                throw new FavoriteInterpolationNotPosibleException();
+            }
+        }
         newFavoriteList.add(order);
-        List<FavoriteDto> result = new ArrayList<>();
         user.setFavoriteOrders(newFavoriteList);
         userRepository.save(user);
-        for(Order forOrder : newFavoriteList) {
-            result.add(FavoriteDto.of(forOrder));
-        }
-        return result;
+        return FavoriteDto.of(order);
     }
 
-    public List<FavoriteDto> deleteFavoriteOrder(String id) {
+    public FavoriteDto deleteFavoriteOrder(String id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
-        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
+        Order order = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
 
         List<Order> newFavoriteList = user.getFavoriteOrders();
         newFavoriteList.removeIf(forOrder -> Objects.equals(forOrder, order));
 
         user.setFavoriteOrders(newFavoriteList);
         userRepository.save(user);
-
-        List<FavoriteDto> result = new ArrayList<>();
-        for(Order forOrder : newFavoriteList) {
-            result.add(FavoriteDto.of(forOrder));
-        }
-        return result;
+        return FavoriteDto.of(order);
     }
 
     public AllUserResponse actualUserInfo() {
