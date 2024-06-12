@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skillshare_flutter/blocs/orderList/order_list_bloc.dart';
-import 'package:skillshare_flutter/models/responses/all_order_response.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository.dart';
 import 'package:skillshare_flutter/repositories/orderList/order_list_repository_impl.dart';
 import 'package:skillshare_flutter/ui/order_detail_page.dart';
@@ -18,6 +17,7 @@ class OrderListWidget extends StatefulWidget {
 class _OrderListWidgetState extends State<OrderListWidget> {
   late OrderListRepository orderListRepository;
   late OrderListBloc _orderListBloc;
+  final ScrollController _scrollController = ScrollController();
 
   String date(DateTime dateTime, bool justDate) {
     List<String> date = dateTime.toString().split(' ')[0].split('-');
@@ -49,21 +49,24 @@ class _OrderListWidgetState extends State<OrderListWidget> {
 
   @override
   void initState() {
-    orderListRepository = OrderListRepositoryImpl();
-    _orderListBloc = OrderListBloc(orderListRepository, widget.listType)
-      ..add(DoOrderListEvent(widget.title));
     super.initState();
-  }
-
-  void reload() {
     orderListRepository = OrderListRepositoryImpl();
     _orderListBloc = OrderListBloc(orderListRepository, widget.listType)
       ..add(DoOrderListEvent(widget.title));
+    _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      _orderListBloc.add(DoOrderListEvent(widget.title, loadMore: true));
+    }
   }
 
   @override
@@ -73,141 +76,135 @@ class _OrderListWidgetState extends State<OrderListWidget> {
       child: BlocBuilder<OrderListBloc, OrderListState>(
         builder: (context, state) {
           if (state is DoOrderListSuccess) {
-            return Center(
-                child: _buildOrderListWidget(state.orderListResponse));
-          } else if (state is DoOrderListError) {
-            return const Text('error');
-          } else if (state is DoOrderListLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return const Text('data');
-        },
-      ),
-    );
-  }
-
-  _buildOrderListWidget(AllOrderResponse orderList) {
-    return ListView.builder(
-      itemCount: orderList.content.length,
-      itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(2, 10, 2, 10),
-          child: InkWell(
-              onTap: () {
-                Content order = orderList.content[index];
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => OrderDetailPage(orderId: order.id)));
-              },
-              child: Card(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
-                      child: Text('Created: ${date(orderList.content[index].createdAt, false)}'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            return ListView.builder(
+              controller: _scrollController,
+              itemCount: state.orderListResponse.content.length + 1,
+              itemBuilder: (context, index) {
+                if (index == state.orderListResponse.content.length) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final order = state.orderListResponse.content[index];
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(2, 10, 2, 10),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OrderDetailPage(orderId: order.id),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 45,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.black),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(25),
-                                  child: Image.network(
-                                    orderList
-                                        .content[index].user.profilePicture,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 180,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    orderList.content[index].user.username,
-                                    overflow: TextOverflow
-                                        .ellipsis,
-                                  ),
-                                ),
-                              ),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
+                            child: Text('Created: ${date(order.createdAt, false)}'),
                           ),
-                          Row(
-                            children: [
-                              if (orderList.content[index].state == 'OPEN')
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(25)),
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text('Open',
-                                        style: TextStyle(color: Colors.white)),
-                                  ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      width: 45,
+                                      height: 45,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(color: Colors.black),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(25),
+                                        child: Image.network(
+                                          order.user.profilePicture,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 180,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          order.user.username,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              if (orderList.content[index].state == 'OCCUPIED')
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.yellow,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(25)),
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text('Occupied'),
-                                  ),
+                                Row(
+                                  children: [
+                                    if (order.state == 'OPEN')
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.green,
+                                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                                        ),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text('Open', style: TextStyle(color: Colors.white)),
+                                        ),
+                                      ),
+                                    if (order.state == 'OCCUPIED')
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.yellow,
+                                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                                        ),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text('Occupied'),
+                                        ),
+                                      ),
+                                    if (order.state == 'CLOSED')
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                                        ),
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text('Closed', style: TextStyle(color: Colors.white)),
+                                        ),
+                                      ),
+                                  ],
                                 ),
-                              if (orderList.content[index].state == 'CLOSED')
-                                Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 4.0),
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(25)),
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text('Closed',
-                                    style: TextStyle(color: Colors.white)),
-                                  ),
-                                ),
-                            ],
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(order.title, style: const TextStyle(fontSize: 20)),
+                                Text('${order.price}\$'),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Padding(padding: const EdgeInsets.all(8.0), 
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(orderList.content[index].title, style: const TextStyle(fontSize: 20),),
-                        Text('${orderList.content[index].price}\$')
-                      ],
-                    ))
-                  ],
-                ),
-              )),
-        );
-      },
+                  ),
+                );
+              },
+            );
+          } else if (state is DoOrderListError) {
+            return const Center(child: Text('Error'));
+          } else if (state is DoOrderListLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return const Center(child: Text('No data'));
+        },
+      ),
     );
   }
 }

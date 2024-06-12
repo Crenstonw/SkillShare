@@ -13,12 +13,20 @@ export class OrdersComponent implements OnInit {
 
   items: Order[] = [];
   newOrderForm!: FormGroup;
+  totalItems = 0;
+  page = 0;
+  pageSize = 10;
   private modalService = inject(NgbModal);
   closeResult = '';
 
   constructor (private orderService: OrdersService) {}
 
   ngOnInit(): void {
+    this.getOrders();
+  }
+
+  onPageChange(page: number) {
+    this.page = page;
     this.getOrders();
   }
 
@@ -63,8 +71,9 @@ export class OrdersComponent implements OnInit {
   }
 
   getOrders(): void {
-    this.orderService.GetOrders().subscribe(p => {
+    this.orderService.GetOrders(this.page-1).subscribe(p => {
      this.items = p.content;
+     this.totalItems = p.totalElements;
     })
   }
 

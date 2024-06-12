@@ -15,9 +15,9 @@ class OrderListRepositoryImpl extends OrderListRepository {
   final Client _httpClient = Client();
 
   @override
-  Future<AllOrderResponse> orderList() async {
+  Future<AllOrderResponse> orderList(int page) async {
     final response = await _httpClient
-        .get(Uri.parse('http://10.0.2.2:8080/order'), headers: <String, String>{
+        .get(Uri.parse('http://10.0.2.2:8080/order?page=$page'), headers: <String, String>{
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${Localstorage.prefs.getString('token')}'
     });

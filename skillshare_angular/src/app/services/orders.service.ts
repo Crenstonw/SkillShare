@@ -11,9 +11,9 @@ export class OrdersService {
 
   constructor(private http: HttpClient) { }
 
-  GetOrders(): Observable<OrdersResponse> {
+  GetOrders(page: number): Observable<OrdersResponse> {
     let token = localStorage.getItem('TOKEN');
-    return this.http.get<OrdersResponse>(`http://localhost:8080/order`,
+    return this.http.get<OrdersResponse>(`http://localhost:8080/order?page=${page}`,
       {
         headers: {
           acept: 'application/json',

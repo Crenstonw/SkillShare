@@ -9,29 +9,50 @@ part 'order_list_state.dart';
 class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
   final OrderListRepository orderListRepository;
   final int listType;
+  int currentPage = 0;
+  bool isFetching = false;
 
-  OrderListBloc(this.orderListRepository, this.listType) : super(OrderListInitial()) {
+  OrderListBloc(this.orderListRepository, this.listType)
+      : super(OrderListInitial()) {
     on<DoOrderListEvent>(_doOrderList);
   }
 
   void _doOrderList(
       DoOrderListEvent event, Emitter<OrderListState> emit) async {
-    emit(DoOrderListLoading());
+    if (isFetching) return;
+    isFetching = true;
 
     try {
-      final response;
-      if(listType == 0) {
-        response = await orderListRepository.orderList();
-      } else if(listType == 1) {
-        response = await orderListRepository.myOrderList();
+      currentPage = event.loadMore ? currentPage + 1 : 0;
+      final response = await orderListRepository.orderList(currentPage);
+      if (event.loadMore) {
+        final currentState = state;
+        if (currentState is DoOrderListSuccess) {
+          final updatedContent =
+              List<Content>.from(currentState.orderListResponse.content)
+                ..addAll(response.content);
+          final updatedResponse = AllOrderResponse(
+            content: updatedContent,
+            pageable: response.pageable,
+            totalPages: response.totalPages,
+            totalElements: response.totalElements,
+            last: response.last,
+            number: response.number,
+            size: response.size,
+            numberOfElements: response.numberOfElements,
+            sort: response.sort,
+            first: response.first,
+            empty: response.empty,
+          );
+          emit(DoOrderListSuccess(updatedResponse));
+        }
       } else {
-        response = await orderListRepository.orderList();
+        emit(DoOrderListSuccess(response));
       }
-      emit(DoOrderListSuccess(response));
-      return;
-    } on Exception catch (e) {
-      print('Error en el bloc: $e');
+    } catch (e) {
       emit(DoOrderListError(e.toString()));
+    } finally {
+      isFetching = false;
     }
   }
 }
