@@ -1,5 +1,8 @@
 package com.triana.salesianos.edu.skillshare.order.service;
 
+import com.triana.salesianos.edu.skillshare.Tag.exceptions.TagNotFoundException;
+import com.triana.salesianos.edu.skillshare.Tag.model.Tag;
+import com.triana.salesianos.edu.skillshare.Tag.repository.TagRepository;
 import com.triana.salesianos.edu.skillshare.Tag.service.TagService;
 import com.triana.salesianos.edu.skillshare.order.dto.*;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
@@ -27,6 +30,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final TagRepository tagRepository;
     private final TagService tagService;
 
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
@@ -39,6 +43,23 @@ public class OrderService {
             orderPage = orderRepository.findAllForUsers(pageable);
         }
         return orderPage.map(OrderResponse::of);
+    }
+
+    public Page<OrderResponse> getAllOrdersOrderByStatus(Pageable pageable, int status) {
+        OrderState state = OrderState.values()[status];
+        Page<Order> result = orderRepository.findByState(state, pageable);
+        return result.map(OrderResponse::of);
+    }
+
+    public Page<OrderResponse> getAllOrdersOrderByPrice(Pageable pageable, boolean asc) {
+        Page<Order> result = orderRepository.findOrderByPrice(asc, pageable);
+        return result.map(OrderResponse::of);
+    }
+
+    public Page<OrderResponse> getAllOrdersOrderByTag(Pageable pageable, String tag) {
+        Tag findTag = tagRepository.findTagByName(tag).orElseThrow(TagNotFoundException::new);
+        Page<Order> result = orderRepository.findOrdersWithTag(findTag, pageable);
+        return result.map(OrderResponse::of);
     }
 
     public OrderDetailsResponse getOrderById(String id) {

@@ -24,6 +24,33 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query("""
             SELECT o
             FROM Order o
+            WHERE o.state = ?1
+            ORDER BY o.createdAt DESC
+            """)
+    Page<Order> findByState(OrderState state, Pageable pageable);
+
+
+    @Query("""
+            SELECT o
+            FROM Order o
+            ORDER BY
+                CASE WHEN ?1 = true THEN o.price END ASC,
+                CASE WHEN ?1 = false THEN o.price END DESC,
+            o.createdAt DESC
+            """)
+    Page<Order> findOrderByPrice(boolean asc, Pageable pageable);
+
+    @Query("""
+            SELECT o
+            FROM Order o
+            WHERE ?1 MEMBER OF o.tags
+            ORDER BY o.createdAt DESC
+            """)
+    Page<Order> findOrdersWithTag(Tag tag, Pageable pageable);
+
+    @Query("""
+            SELECT o
+            FROM Order o
             WHERE o.state <> 2
             ORDER BY o.createdAt DESC
             """)
@@ -50,19 +77,4 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             AND o.state = ?2
             """)
     List<Order> findDeleteableOrders(LocalDateTime expiredDate, OrderState state);
-
-    @Query("""
-            SELECT DISTINCT o
-            FROM Order o JOIN o.tags t
-            WHERE  t IN ?1
-            """)
-    List<Order> findOrdersByDate();
-
-    @Query("""
-               SELECT o
-               FROM Order o
-               JOIN o.tags t
-               WHERE ?1 = t
-               """)
-    List<Order> findOrderWithTag(Tag tag);
 }
