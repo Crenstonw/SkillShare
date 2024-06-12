@@ -1,6 +1,7 @@
 package com.triana.salesianos.edu.skillshare.order.controller;
 
 import com.triana.salesianos.edu.skillshare.order.dto.*;
+import com.triana.salesianos.edu.skillshare.order.exception.TooManyParametersException;
 import com.triana.salesianos.edu.skillshare.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,8 +24,27 @@ public class OrderController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
-    public ResponseEntity<Page<OrderResponse>> getAllOrders(@PageableDefault Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(service.getAllOrders(pageable));
+    public ResponseEntity<Page<OrderResponse>> getAllOrders(
+            @PageableDefault Pageable pageable,
+            @RequestParam(required = false) Optional<Integer> status,
+            @RequestParam(required = false) Optional<Boolean> price,
+            @RequestParam(required = false) Optional<String> tag) {
+        if(status.isEmpty() && price.isEmpty() && tag.isEmpty())
+            return ResponseEntity.status(HttpStatus.OK).body(service.getAllOrders(pageable));
+        else if(status.isPresent() && price.isEmpty() && tag.isEmpty())
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(service.getAllOrdersOrderByStatus(pageable, status.get()));
+        else if(status.isEmpty() && price.isPresent() && tag.isEmpty())
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(service.getAllOrdersOrderByPrice(pageable, price.get()));
+        else if(status.isEmpty() && price.isEmpty() && tag.isPresent())
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(service.getAllOrdersOrderByTag(pageable, tag.get()));
+        else
+            throw new TooManyParametersException();
     }
 
     @GetMapping("/{id}")

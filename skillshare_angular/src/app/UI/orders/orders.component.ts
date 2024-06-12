@@ -1,8 +1,14 @@
 import { Component, OnInit, TemplateRef, inject } from '@angular/core';
 import { OrdersService } from '../../services/orders.service';
-import { Order } from '../../models/orders.model';
+import { Order, OrdersResponse } from '../../models/orders.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
+interface Alert {
+  type: string;
+  message: string;
+}
+
 
 @Component({
   selector: 'app-orders',
@@ -12,6 +18,7 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 export class OrdersComponent implements OnInit {
 
   items: Order[] = [];
+  alerts: Alert[] = [];
   newOrderForm!: FormGroup;
   totalItems = 0;
   page = 0;
@@ -19,7 +26,7 @@ export class OrdersComponent implements OnInit {
   private modalService = inject(NgbModal);
   closeResult = '';
 
-  constructor (private orderService: OrdersService) {}
+  constructor(private orderService: OrdersService) { }
 
   ngOnInit(): void {
     this.getOrders();
@@ -27,7 +34,15 @@ export class OrdersComponent implements OnInit {
 
   onPageChange(page: number) {
     this.page = page;
-    this.getOrders();
+    //this.getOrders();
+  }
+
+  close(alert: Alert) {
+    this.alerts.splice(this.alerts.indexOf(alert), 1);
+  }
+
+  reset() {
+    this.alerts = [];
   }
 
   initForm() {
@@ -40,10 +55,10 @@ export class OrdersComponent implements OnInit {
   }
 
   tagUnString(str: string): string[] {
-    let empty: string [] = []
-    if(str.length != 0)
+    let empty: string[] = []
+    if (str.length != 0)
       return str.replace(/\s/g, '').split(',').reverse();
-    else 
+    else
       return empty;
   }
 
@@ -71,10 +86,40 @@ export class OrdersComponent implements OnInit {
   }
 
   getOrders(): void {
-    this.orderService.GetOrders(this.page-1).subscribe(p => {
-     this.items = p.content;
-     this.totalItems = p.totalElements;
-    })
+    this.orderService.GetOrders(this.page - 1).subscribe(p => {
+      this.items = p.content;
+      this.totalItems = p.totalElements;
+    });
+  }
+
+  getOrdersState(state: number): void {
+    this.page = 0;
+    this.orderService.GetOrdersState(this.page - 1, state).subscribe(p => {
+      this.items = p.content;
+      this.totalItems = p.totalElements;
+    });
+  }
+
+  getOrdersPage(page: boolean): void {
+    this.page = 0;
+    this.orderService.GetOrdersPrice(this.page - 1, page).subscribe(p => {
+      this.items = p.content;
+      this.totalItems = p.totalElements;
+    });
+  }
+
+  getOrdersTag(tag: string): void {
+    this.page = 0;
+    this.orderService.GetOrdersTag(this.page - 1, tag).subscribe({
+      next: (p: OrdersResponse) => {
+        this.items = p.content;
+        this.totalItems = p.totalElements;
+      },
+      error: (err) => {
+        this.reset();
+        this.alerts.push({ type: 'danger', message: `${err.error.message}` });
+      }
+    });
   }
 
   details(id: string) {
@@ -88,7 +133,7 @@ export class OrdersComponent implements OnInit {
       this.tagUnString(this.newOrderForm.value.tags),
       this.newOrderForm.value.price
     ).subscribe(p => {
-      window.location.reload();
+      this.getOrders();
     })
   }
 
