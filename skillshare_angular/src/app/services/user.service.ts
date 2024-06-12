@@ -12,9 +12,9 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  GetUsers(): Observable<Users> {
+  GetUsers(page: number): Observable<Users> {
     let token = localStorage.getItem('TOKEN');
-    return this.http.get<Users>(`http://localhost:8080/user`,
+    return this.http.get<Users>(`http://localhost:8080/user?page=${page}`,
       {
         headers: {
           Accept: 'application/json',

@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './UI/login/login.component';
-import { NgbAlertModule, NgbDropdownModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAlertModule, NgbDropdownModule, NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { PageNotFoundComponent } from './UI/page-not-found/page-not-found.component';
@@ -46,7 +46,8 @@ import { ImATeaPotComponent } from './UI/im-atea-pot/im-atea-pot.component';
     ReactiveFormsModule,
     HttpClientModule,
     NgbAlertModule,
-    NgbDropdownModule
+    NgbDropdownModule,
+    NgbPaginationModule
   ],
   providers: [],
   bootstrap: [AppComponent]

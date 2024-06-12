@@ -9,9 +9,16 @@ import { UserService } from '../../services/user.service';
 })
 export class MessagesComponent implements OnInit {
   items: User[] = [];
+  totalItems = 0;
+  page = 0;
+  pageSize = 10;
 
   constructor(private userService: UserService) {}
 
+  onPageChange(page: number) {
+    this.page = page;
+    this.getUsers();
+  }
 
   ngOnInit(): void {
     this.getUsers();
@@ -41,8 +48,9 @@ export class MessagesComponent implements OnInit {
   }
 
   getUsers() {
-    this.userService.GetUsers().subscribe(p => {
+    this.userService.GetUsers(this.page-1).subscribe(p => {
       this.items = p.content;
+      this.totalItems = p.totalElements;
     })
   }
 }
