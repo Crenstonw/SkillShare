@@ -24,7 +24,12 @@ class OrderListBloc extends Bloc<OrderListEvent, OrderListState> {
 
     try {
       currentPage = event.loadMore ? currentPage + 1 : 0;
-      final response = await orderListRepository.orderList(currentPage);
+      final response;
+      if(listType == 0) {
+        response = await orderListRepository.orderList(currentPage);
+      } else {
+        response = await orderListRepository.myOrderList(currentPage);
+      }
       if (event.loadMore) {
         final currentState = state;
         if (currentState is DoOrderListSuccess) {

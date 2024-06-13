@@ -19,7 +19,7 @@ class MyOrdersBloc extends Bloc<DoMyOrdersEvent, MyOrdersState> {
     emit(MyOrdersLoading());
 
     try{
-      final orderResponse = await repository.myOrderList();
+      final orderResponse = await repository.myOrderList(0);
       final me = await userRepository.me();
       emit(MyOrdersSuccess(orderResponse, me));
       return;
