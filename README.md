@@ -1,7 +1,9 @@
 ![image](https://github.com/Crenstonw/SkillShare/assets/119967718/2627c86b-f4b3-49a7-b6a2-bf3263b0be37)
 https://docs.google.com/document/d/1lBfgtpBHtmFPm7tIsKl9djEaAgiJ7cdlQMGvgzKtsCM/edit?usp=sharing
 <p>Memoria del proyecto</p>
+
 ## INDICE
+
 <ul>
   <li>Descripción del Proyecto</li>
   <li>Estado del proyecto</li>
