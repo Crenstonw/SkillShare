@@ -83,6 +83,8 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web -> web.ignoring()
                 .requestMatchers(
+                        antMatcher("/swagger-ui/**"),
+                        antMatcher("/api-docs"),
                         antMatcher("/h2-console/**"),
                         antMatcher("/auth/**"),
                         antMatcher("/error")

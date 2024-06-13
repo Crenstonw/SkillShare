@@ -2,6 +2,7 @@ package com.triana.salesianos.edu.skillshare.Tag.service;
 
 import com.triana.salesianos.edu.skillshare.Tag.dto.TagDto;
 import com.triana.salesianos.edu.skillshare.Tag.dto.TagRequest;
+import com.triana.salesianos.edu.skillshare.Tag.exceptions.TagNotFoundException;
 import com.triana.salesianos.edu.skillshare.Tag.model.Tag;
 import com.triana.salesianos.edu.skillshare.Tag.repository.TagRepository;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
@@ -48,40 +49,26 @@ public class TagService {
     }
 
     public Page<TagDto> getAllTags(Pageable pageable) {
-
         Page<Tag> tagPage = tagRepository.finAllTags(pageable);
         return tagPage.map(TagDto::of);
     }
 
     public TagDto getTag(String id) {
-        Optional<Tag> findTag = tagRepository.findById(UUID.fromString(id));
-        if(findTag.isPresent()) {
-            return TagDto.of(findTag.get());
-        } else {
-            return null; //throw exception
-        }
+        Tag findTag = tagRepository.findById(UUID.fromString(id)).orElseThrow(TagNotFoundException::new);
+        return TagDto.of(findTag);
     }
 
     public TagDto putTag(String id, TagRequest name) {
-        Optional<Tag> findTag = tagRepository.findById(UUID.fromString(id));
-        if(findTag.isPresent()) {
-            findTag.get().setName(name.name());
-            tagRepository.save(findTag.get());
-            return TagDto.of(findTag.get());
-        } else {
-            return null;//throw exception
-        }
+        Tag findTag = tagRepository.findById(UUID.fromString(id)).orElseThrow(TagNotFoundException::new);
+        findTag.setName(name.name());
+        tagRepository.save(findTag);
+        return TagDto.of(findTag);
     }
 
     @Transactional
     public void deleteTag(String id) {
-        Optional<Tag> findTag = tagRepository.findById(UUID.fromString(id));
-
-        if(findTag.isPresent()) {
-            tagRepository.deleteOrderTags(UUID.fromString(id));
-            tagRepository.deleteById(UUID.fromString(id));
-        } else {
-            //throw exception
-        }
+        Tag findTag = tagRepository.findById(UUID.fromString(id)).orElseThrow(TagNotFoundException::new);
+        tagRepository.deleteOrderTags(UUID.fromString(id));
+        tagRepository.deleteById(UUID.fromString(id));
     }
 }

@@ -17,6 +17,12 @@ interface Alert {
 })
 export class OrdersComponent implements OnInit {
 
+  sortState = false;
+  sortPrice = false;
+  sortTag = false;
+  setState = 0;
+  setPrice = true;
+  setTag = '';
   items: Order[] = [];
   alerts: Alert[] = [];
   newOrderForm!: FormGroup;
@@ -34,7 +40,14 @@ export class OrdersComponent implements OnInit {
 
   onPageChange(page: number) {
     this.page = page;
-    //this.getOrders();
+    if(this.sortPrice)
+      this.getOrdersPrice(this.setPrice);
+    else if(this.sortState)
+      this.getOrdersState
+    else if(this.sortTag)
+      this.getOrdersTag
+    else
+      this.getOrders();
   }
 
   close(alert: Alert) {
@@ -86,6 +99,11 @@ export class OrdersComponent implements OnInit {
   }
 
   getOrders(): void {
+    if(this.sortPrice || this.sortState || this.sortTag)
+      this.page = 0;
+    this.sortState = false;
+    this.sortPrice = false;
+    this.sortTag = false;
     this.orderService.GetOrders(this.page - 1).subscribe(p => {
       this.items = p.content;
       this.totalItems = p.totalElements;
@@ -93,23 +111,32 @@ export class OrdersComponent implements OnInit {
   }
 
   getOrdersState(state: number): void {
-    this.page = 0;
+    if(!this.sortState)
+      this.page = 0;
+    this.sortState = true;
+    this.setState = state;
     this.orderService.GetOrdersState(this.page - 1, state).subscribe(p => {
       this.items = p.content;
       this.totalItems = p.totalElements;
     });
   }
 
-  getOrdersPage(page: boolean): void {
-    this.page = 0;
-    this.orderService.GetOrdersPrice(this.page - 1, page).subscribe(p => {
+  getOrdersPrice(price: boolean): void {
+    if(!this.sortPrice)
+      this.page = 0;
+    this.sortPrice = true;
+    this.setPrice = price;
+    this.orderService.GetOrdersPrice(this.page - 1, price).subscribe(p => {
       this.items = p.content;
       this.totalItems = p.totalElements;
     });
   }
 
   getOrdersTag(tag: string): void {
-    this.page = 0;
+    if(!this.sortTag)
+      this.page = 0;
+    this.sortTag = true;
+    this.setTag = tag;
     this.orderService.GetOrdersTag(this.page - 1, tag).subscribe({
       next: (p: OrdersResponse) => {
         this.items = p.content;

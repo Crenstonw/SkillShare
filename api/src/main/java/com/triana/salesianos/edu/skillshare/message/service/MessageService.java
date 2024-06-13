@@ -1,6 +1,7 @@
 package com.triana.salesianos.edu.skillshare.message.service;
 
 import com.triana.salesianos.edu.skillshare.message.dto.*;
+import com.triana.salesianos.edu.skillshare.message.exception.MessageNotFoundException;
 import com.triana.salesianos.edu.skillshare.message.model.DirectMessage;
 import com.triana.salesianos.edu.skillshare.message.model.OrderMessage;
 import com.triana.salesianos.edu.skillshare.message.repository.DirectMessageRepository;
@@ -9,6 +10,7 @@ import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
 import com.triana.salesianos.edu.skillshare.user.dto.AllUserResponse;
+import com.triana.salesianos.edu.skillshare.user.exception.NotEnoughPrivilegesException;
 import com.triana.salesianos.edu.skillshare.user.exception.UserNotFound;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
@@ -67,49 +69,40 @@ public class MessageService {
 
     public DirectMessageResponse postDirectMessage(NewDirectMessageRequest request) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> userFrom = userRepository.findByUsername(userDetails.getUsername());
-        Optional<User> userTo = userRepository.findByEmail(request.toUserEmail());
-        if(userTo.isPresent()) {
-            DirectMessage directMessage = DirectMessage.builder()
-                    .title(request.title())
-                    .message(request.message())
-                    .dateTime(LocalDateTime.now())
-                    .userFrom(userFrom.get())
-                    .userTo(userTo.get())
-                    .build();
-            directMessageRepository.save(directMessage);
-            return DirectMessageResponse.of(directMessage);
-        } else {
-            return null; //throw error
-        }
+        User userFrom = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        User userTo = userRepository.findByEmail(request.toUserEmail()).orElseThrow(UserNotFound::new);
+        DirectMessage directMessage = DirectMessage.builder()
+                .title(request.title())
+                .message(request.message())
+                .dateTime(LocalDateTime.now())
+                .userFrom(userFrom)
+                .userTo(userTo)
+                .build();
+        directMessageRepository.save(directMessage);
+        return DirectMessageResponse.of(directMessage);
     }
 
     public void deleteMessage(String id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> userFrom = userRepository.findByUsername(userDetails.getUsername());
-        Optional<DirectMessage> findMessage = directMessageRepository.findById(UUID.fromString(id));
-        if(findMessage.isPresent()
-                && Objects.equals(findMessage.get().getUserFrom(), userFrom.get())
-                || Objects.equals(userFrom.get().getUserRole().toString(), "[ADMIN]")) {
-            directMessageRepository.delete(findMessage.get());
-        } else {
-            //throw error
-        }
+        User userFrom = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        DirectMessage findMessage = directMessageRepository
+                .findById(UUID.fromString(id))
+                .orElseThrow(MessageNotFoundException::new);
+        if(Objects.equals(findMessage.getUserFrom(), userFrom)
+                || Objects.equals(userFrom.getUserRole().toString(), "[ADMIN]")) {
+            directMessageRepository.delete(findMessage);
+        } else throw new NotEnoughPrivilegesException();
     }
     //////////////////////////////Order Messages///////////////////////////////////
     public ListOrderMessageResponse getOrderMessages(String id) {
-        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        if(findOrder.isPresent()) {
-            List<OrderMessage> getMessages = orderMessageRepository
-                    .getMessagesOfAnOrder(findOrder.get());
-            List<OrderMessageResponse> response = new ArrayList<>();
-            for(OrderMessage om : getMessages) {
-                response.add(OrderMessageResponse.of(om));
-            }
-            return ListOrderMessageResponse.of(response);
-        } else {
-            return null; //throw error
+        Order findOrder = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
+        List<OrderMessage> getMessages = orderMessageRepository
+                .getMessagesOfAnOrder(findOrder);
+        List<OrderMessageResponse> response = new ArrayList<>();
+        for(OrderMessage om : getMessages) {
+            response.add(OrderMessageResponse.of(om));
         }
+        return ListOrderMessageResponse.of(response);
     }
 
     public Page<OrderMessageDetailResponse> getOrdersMessageByUser(Pageable pageable, String id) {
@@ -136,33 +129,28 @@ public class MessageService {
     }
 
     public OrderMessageResponse editOrderMessage(String id, EditOrderMessageRequest messageRequest) {
-        Optional<OrderMessage> findMessage = orderMessageRepository
-                .findById(UUID.fromString(id));
-        if(findMessage.isPresent()) {
+        OrderMessage findMessage = orderMessageRepository
+                .findById(UUID.fromString(id)).orElseThrow(MessageNotFoundException::new);
+
             OrderMessage result = OrderMessage.builder()
-                    .id(findMessage.get().getId())
+                    .id(findMessage.getId())
                     .title(messageRequest.title())
                     .message(messageRequest.message())
-                    .order(findMessage.get().getOrder())
-                    .dateTime(findMessage.get().getDateTime())
-                    .author(findMessage.get().getAuthor())
+                    .order(findMessage.getOrder())
+                    .dateTime(findMessage.getDateTime())
+                    .author(findMessage.getAuthor())
                     .build();
             orderMessageRepository.save(result);
             return OrderMessageResponse.of(result);
-        } else {
-            return null; //throw error
-        }
     }
 
     public void deleteOrderMessage(String id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
-        Optional<OrderMessage> findMessage = orderMessageRepository
-                .findById(UUID.fromString(id));
-        if(findMessage.isPresent() && findMessage.get().getAuthor() == user.get() || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
-            orderMessageRepository.delete(findMessage.get());
-        } else {
-             //throw error
-        }
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        OrderMessage findMessage = orderMessageRepository
+                .findById(UUID.fromString(id)).orElseThrow(MessageNotFoundException::new);
+        if(findMessage.getAuthor() == user || Objects.equals(user.getUserRole().toString(), "[ADMIN]")) {
+            orderMessageRepository.delete(findMessage);
+        } else throw new NotEnoughPrivilegesException();
     }
 }
