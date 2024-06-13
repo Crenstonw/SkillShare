@@ -4,9 +4,11 @@ import com.triana.salesianos.edu.skillshare.Tag.model.Tag;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.model.OrderState;
 import com.triana.salesianos.edu.skillshare.user.model.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
@@ -77,4 +79,11 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             AND o.state = ?2
             """)
     List<Order> findDeleteableOrders(LocalDateTime expiredDate, OrderState state);
+
+    @Transactional
+    @Modifying
+    @Query(value = """
+        DELETE FROM favorite_orders WHERE order_id = ?1
+        """, nativeQuery = true)
+    void deleteFavoriteOrder(UUID id);
 }
