@@ -5,5 +5,6 @@ sealed class OrderListEvent {}
 
 class DoOrderListEvent extends OrderListEvent {
   final String title;
-  DoOrderListEvent(this.title);
+  final bool loadMore;
+  DoOrderListEvent(this.title, {this.loadMore = false});
 }

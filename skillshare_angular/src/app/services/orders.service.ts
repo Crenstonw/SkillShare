@@ -10,10 +10,50 @@ import { OrderDetail } from '../models/orderDetail.model';
 export class OrdersService {
 
   constructor(private http: HttpClient) { }
-
-  GetOrders(): Observable<OrdersResponse> {
+  
+  GetOrders(page: number): Observable<OrdersResponse> {
     let token = localStorage.getItem('TOKEN');
-    return this.http.get<OrdersResponse>(`http://localhost:8080/order`,
+    let url = `http://localhost:8080/order?page=${page}`;
+    return this.http.get<OrdersResponse>(url,
+      {
+        headers: {
+          acept: 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+  }
+
+  GetOrdersState(page: number, state: number): Observable<OrdersResponse> {
+    let token = localStorage.getItem('TOKEN');
+    let url = `http://localhost:8080/order?page=${page}&status=${state}`;
+    return this.http.get<OrdersResponse>(url,
+      {
+        headers: {
+          acept: 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+  }
+
+  GetOrdersPrice(page: number, price: boolean): Observable<OrdersResponse> {
+    let token = localStorage.getItem('TOKEN');
+    let url = `http://localhost:8080/order?page=${page}&price=${price}`;
+    return this.http.get<OrdersResponse>(url,
+      {
+        headers: {
+          acept: 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+  }
+
+  GetOrdersTag(page: number, tag: string): Observable<OrdersResponse> {
+    let token = localStorage.getItem('TOKEN');
+    let url = `http://localhost:8080/order?page=${page}&tag=${tag}`;
+    return this.http.get<OrdersResponse>(url,
       {
         headers: {
           acept: 'application/json',

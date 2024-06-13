@@ -4,9 +4,11 @@ import com.triana.salesianos.edu.skillshare.Tag.model.Tag;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.model.OrderState;
 import com.triana.salesianos.edu.skillshare.user.model.User;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
@@ -20,6 +22,33 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             ORDER BY o.createdAt DESC
             """)
     Page<Order> findAll(Pageable pageable);
+
+    @Query("""
+            SELECT o
+            FROM Order o
+            WHERE o.state = ?1
+            ORDER BY o.createdAt DESC
+            """)
+    Page<Order> findByState(OrderState state, Pageable pageable);
+
+
+    @Query("""
+            SELECT o
+            FROM Order o
+            ORDER BY
+                CASE WHEN ?1 = true THEN o.price END ASC,
+                CASE WHEN ?1 = false THEN o.price END DESC,
+            o.createdAt DESC
+            """)
+    Page<Order> findOrderByPrice(boolean asc, Pageable pageable);
+
+    @Query("""
+            SELECT o
+            FROM Order o
+            WHERE ?1 MEMBER OF o.tags
+            ORDER BY o.createdAt DESC
+            """)
+    Page<Order> findOrdersWithTag(Tag tag, Pageable pageable);
 
     @Query("""
             SELECT o
@@ -51,18 +80,10 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             """)
     List<Order> findDeleteableOrders(LocalDateTime expiredDate, OrderState state);
 
-    @Query("""
-            SELECT DISTINCT o
-            FROM Order o JOIN o.tags t
-            WHERE  t IN ?1
-            """)
-    List<Order> findOrdersByDate();
-
-    @Query("""
-               SELECT o
-               FROM Order o
-               JOIN o.tags t
-               WHERE ?1 = t
-               """)
-    List<Order> findOrderWithTag(Tag tag);
+    @Transactional
+    @Modifying
+    @Query(value = """
+        DELETE FROM favorite_orders WHERE order_id = ?1
+        """, nativeQuery = true)
+    void deleteFavoriteOrder(UUID id);
 }

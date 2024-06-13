@@ -131,7 +131,7 @@ public class InitData {
                 .title("Ensenio a comer caracoles")
                 .user(user3)
                 .state(OrderState.OPEN)
-                .price(23.34)
+                .price(24.34)
                 .description("descripcion de la ordenanza lorem ipsum amet")
                 .createdAt(LocalDateTime.now().minusMonths(4))
                 .lastTimeModified(LocalDateTime.now().minusMonths(1).minusDays(29))
@@ -143,7 +143,7 @@ public class InitData {
                 .id(UUID.randomUUID())
                 .title("titulo2")
                 .user(user1)
-                .price(23.34)
+                .price(25.34)
                 .state(OrderState.OPEN)
                 .description("descripcion 2 de la ordenanza")
                 .tags(Set.of(tag1, tag2))
@@ -154,7 +154,7 @@ public class InitData {
                 .id(UUID.randomUUID())
                 .title("Arreglo cortacespes")
                 .user(user2)
-                .price(23.34)
+                .price(26.34)
                 .state(OrderState.OCCUPIED)
                 .description("Hago de todo en realidad, pero arreglar cortacespes es lo que mejor se me da")
                 .tags(Set.of(tag1))
@@ -182,6 +182,116 @@ public class InitData {
                 .tags(Set.of(tag1))
                 .build();
         orderRepository.save(order5);
+
+        Order order6 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Paseo con perros")
+                .user(user3)
+                .price(20.50)
+                .state(OrderState.OPEN)
+                .description("Paseo con tus perros por el parque durante 1 hora.")
+                .tags(Set.of(tag1))
+                .build();
+        orderRepository.save(order6);
+
+        Order order7 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Cuidado de plantas")
+                .user(user2)
+                .price(18.75)
+                .state(OrderState.OCCUPIED)
+                .description("Cuido de tus plantas durante tu ausencia.")
+                .tags(Set.of(tag2))
+                .build();
+        orderRepository.save(order7);
+
+        Order order8 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Limpieza del hogar")
+                .user(user1)
+                .price(30.00)
+                .state(OrderState.OPEN)
+                .description("Realizo limpieza completa del hogar.")
+                .tags(Set.of(tag1))
+                .build();
+        orderRepository.save(order8);
+
+        Order order9 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Enseño guitarra")
+                .user(user3)
+                .price(40.00)
+                .state(OrderState.OPEN)
+                .description("Clases de guitarra para principiantes.")
+                .tags(Set.of(tag2))
+                .build();
+        orderRepository.save(order9);
+
+        Order order10 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Corte de cabello a domicilio")
+                .user(user1)
+                .price(15.00)
+                .state(OrderState.CLOSED)
+                .description("Servicio de corte de cabello profesional en tu hogar.")
+                .tags(Set.of(tag2))
+                .build();
+        orderRepository.save(order10);
+
+        Order order11 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Cambio de aceite para autos")
+                .user(user2)
+                .price(50.00)
+                .state(OrderState.OCCUPIED)
+                .description("Cambio de aceite y revisión básica para tu automóvil.")
+                .tags(Set.of(tag1))
+                .build();
+        orderRepository.save(order11);
+
+        Order order12 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Reparación de grifos")
+                .user(user3)
+                .price(25.00)
+                .state(OrderState.OPEN)
+                .description("Reparo cualquier tipo de grifos en tu hogar.")
+                .tags(Set.of(tag1))
+                .build();
+        orderRepository.save(order12);
+
+        Order order13 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Clases de cocina")
+                .user(user2)
+                .price(35.00)
+                .state(OrderState.CLOSED)
+                .description("Clases de cocina para aprender a preparar platos gourmet.")
+                .tags(Set.of(tag2))
+                .build();
+        orderRepository.save(order13);
+
+        Order order14 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Limpieza de jardines")
+                .user(user1)
+                .price(45.00)
+                .state(OrderState.OCCUPIED)
+                .description("Limpieza y mantenimiento de jardines y áreas verdes.")
+                .tags(Set.of(tag1))
+                .build();
+        orderRepository.save(order14);
+
+        Order order15 = Order.builder()
+                .id(UUID.randomUUID())
+                .title("Servicio de lavandería")
+                .user(user3)
+                .price(20.00)
+                .state(OrderState.CLOSED)
+                .description("Lavado, secado y planchado de ropa.")
+                .tags(Set.of(tag1))
+                .build();
+        orderRepository.save(order15);
 
         /////////////////////////////Order Messages///////////////////////////////////////
         OrderMessage om1 = OrderMessage.builder()

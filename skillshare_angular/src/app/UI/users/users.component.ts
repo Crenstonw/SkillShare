@@ -13,11 +13,19 @@ export class UsersComponent implements OnInit{
   private modalService = inject(NgbModal);
   closeResult = '';
   items: User[] = [];
+  totalItems = 0;
+  page = 0;
+  pageSize = 10;
   newUserForm!: FormGroup;
 
   constructor(private userService: UserService) {}
 
   ngOnInit(): void {
+    this.getUsers();
+  }
+
+  onPageChange(page: number) {
+    this.page = page;
     this.getUsers();
   }
 
@@ -87,8 +95,9 @@ export class UsersComponent implements OnInit{
   }
 
   getUsers() {
-    this.userService.GetUsers().subscribe(p => {
+    this.userService.GetUsers(this.page-1).subscribe(p => {
       this.items = p.content;
+      this.totalItems = p.totalElements
     })
   }
 

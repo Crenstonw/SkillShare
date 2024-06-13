@@ -1,11 +1,15 @@
 package com.triana.salesianos.edu.skillshare.order.service;
 
+import com.triana.salesianos.edu.skillshare.Tag.exceptions.TagNotFoundException;
+import com.triana.salesianos.edu.skillshare.Tag.model.Tag;
+import com.triana.salesianos.edu.skillshare.Tag.repository.TagRepository;
 import com.triana.salesianos.edu.skillshare.Tag.service.TagService;
 import com.triana.salesianos.edu.skillshare.order.dto.*;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.model.OrderState;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
+import com.triana.salesianos.edu.skillshare.user.exception.NotEnoughPrivilegesException;
 import com.triana.salesianos.edu.skillshare.user.exception.UserNotFound;
 import com.triana.salesianos.edu.skillshare.user.model.User;
 import com.triana.salesianos.edu.skillshare.user.repository.UserRepository;
@@ -27,6 +31,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final TagRepository tagRepository;
     private final TagService tagService;
 
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
@@ -39,6 +44,23 @@ public class OrderService {
             orderPage = orderRepository.findAllForUsers(pageable);
         }
         return orderPage.map(OrderResponse::of);
+    }
+
+    public Page<OrderResponse> getAllOrdersOrderByStatus(Pageable pageable, int status) {
+        OrderState state = OrderState.values()[status];
+        Page<Order> result = orderRepository.findByState(state, pageable);
+        return result.map(OrderResponse::of);
+    }
+
+    public Page<OrderResponse> getAllOrdersOrderByPrice(Pageable pageable, boolean asc) {
+        Page<Order> result = orderRepository.findOrderByPrice(asc, pageable);
+        return result.map(OrderResponse::of);
+    }
+
+    public Page<OrderResponse> getAllOrdersOrderByTag(Pageable pageable, String tag) {
+        Tag findTag = tagRepository.findTagByName(tag).orElseThrow(TagNotFoundException::new);
+        Page<Order> result = orderRepository.findOrdersWithTag(findTag, pageable);
+        return result.map(OrderResponse::of);
     }
 
     public OrderDetailsResponse getOrderById(String id) {
@@ -77,60 +99,59 @@ public class OrderService {
 
     public OrderResponse putOrder(String id, NewOrderRequest orderRequest) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
-        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        if(findOrder.isPresent() && Objects.equals(user, findOrder.get().getUser())
-            || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        Order findOrder = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
+        if(Objects.equals(user, findOrder.getUser())
+            || Objects.equals(user.getUserRole().toString(), "[ADMIN]")) {
             Order response = Order.builder()
-                    .id(findOrder.get().getId())
+                    .id(findOrder.getId())
                     .title(orderRequest.title())
                     .price(orderRequest.price())
                     .description(orderRequest.description())
-                    .state(findOrder.get().getState())
-                    .createdAt(findOrder.get().getCreatedAt())
+                    .state(findOrder.getState())
+                    .createdAt(findOrder.getCreatedAt())
                     .lastTimeModified(LocalDateTime.now())
                     .tags(tagService.addTags(orderRequest.tags()))
-                    .orderMessages(findOrder.get().getOrderMessages())
-                    .user(findOrder.get().getUser())
+                    .orderMessages(findOrder.getOrderMessages())
+                    .user(findOrder.getUser())
                     .build();
             orderRepository.save(response);
             return OrderResponse.of(response);
-        } else throw new NoOrderException();
+        } else throw new NotEnoughPrivilegesException();
 
     }
 
     public OrderResponse changeStatus (String id, StatusDto status) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
-        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        if(findOrder.isPresent() && Objects.equals(user.get(), findOrder.get().getUser())
-            || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        Order findOrder = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
+        if(Objects.equals(user, findOrder.getUser())
+            || Objects.equals(user.getUserRole().toString(), "[ADMIN]")) {
             Order result = Order.builder()
-                    .id(findOrder.get().getId())
-                    .tags(findOrder.get().getTags())
-                    .orderMessages(findOrder.get().getOrderMessages())
-                    .price(findOrder.get().getPrice())
+                    .id(findOrder.getId())
+                    .tags(findOrder.getTags())
+                    .orderMessages(findOrder.getOrderMessages())
+                    .price(findOrder.getPrice())
                     .state(OrderState.valueOf(status.status()))
-                    .user(findOrder.get().getUser())
+                    .user(findOrder.getUser())
                     .lastTimeModified(LocalDateTime.now())
-                    .createdAt(findOrder.get().getCreatedAt())
-                    .description(findOrder.get().getDescription())
-                    .title(findOrder.get().getTitle())
+                    .createdAt(findOrder.getCreatedAt())
+                    .description(findOrder.getDescription())
+                    .title(findOrder.getTitle())
                     .build();
             orderRepository.save(result);
             return OrderResponse.of(result);
-        } else throw new NoOrderException();
+        } else throw new NotEnoughPrivilegesException();
     }
 
     public void deleteOrder(String id) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
-        Optional<Order> findOrder = orderRepository.findById(UUID.fromString(id));
-        if(Objects.equals(user.get().getUsername(), findOrder.get().getUser().getUsername())
-                || Objects.equals(user.get().getUserRole().toString(), "[ADMIN]")) {
-            findOrder.ifPresent(orderRepository::delete);
-        } else throw new NoOrderException();
-
-
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
+        Order findOrder = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
+        if(Objects.equals(user.getUsername(), findOrder.getUser().getUsername())
+                || Objects.equals(user.getUserRole().toString(), "[ADMIN]")) {
+            orderRepository.deleteFavoriteOrder(UUID.fromString(id));
+            orderRepository.delete(findOrder);
+        } else throw new NotEnoughPrivilegesException();
     }
 }

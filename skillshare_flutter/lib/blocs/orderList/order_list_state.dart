@@ -5,7 +5,9 @@ sealed class OrderListState {}
 
 final class OrderListInitial extends OrderListState {}
 
-final class DoOrderListLoading extends OrderListState {}
+final class DoOrderListLoading extends OrderListState {
+  
+}
 
 final class DoOrderListSuccess extends OrderListState {
   final AllOrderResponse orderListResponse;

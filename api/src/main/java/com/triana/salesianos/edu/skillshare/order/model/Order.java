@@ -9,9 +9,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Table(name = "order_entity")
 @EntityListeners(AuditingEntityListener.class)
@@ -60,7 +58,7 @@ public class Order {
     private Set<Tag> tags = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "order", orphanRemoval = true)
-    private Set<OrderMessage> orderMessages = new LinkedHashSet<>();
+    private List<OrderMessage> orderMessages = new ArrayList<>();
 
 }
 //@QueryModify
