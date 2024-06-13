@@ -4,7 +4,9 @@ import com.triana.salesianos.edu.skillshare.order.dto.OrderResponse;
 import com.triana.salesianos.edu.skillshare.order.exception.NoOrderException;
 import com.triana.salesianos.edu.skillshare.order.model.Order;
 import com.triana.salesianos.edu.skillshare.order.repository.OrderRepository;
+import com.triana.salesianos.edu.skillshare.security.errorhandling.EmailBeingUsedException;
 import com.triana.salesianos.edu.skillshare.security.errorhandling.JwtTokenException;
+import com.triana.salesianos.edu.skillshare.security.errorhandling.UsernameBeingUsedException;
 import com.triana.salesianos.edu.skillshare.user.dto.*;
 import com.triana.salesianos.edu.skillshare.user.exception.CannotBanYourself;
 import com.triana.salesianos.edu.skillshare.user.exception.CannotModifyPrivileges;
@@ -35,6 +37,10 @@ public class UserService {
     private final OrderRepository orderRepository;
 
     public User createUser(CreateUserRequest createUserRequest, Set<UserRole> roles) {
+        Optional<User> checkEmail = userRepository.findByEmail(createUserRequest.email());
+        Optional<User> checkUsername = userRepository.findByUsername(createUserRequest.username());
+        if(checkEmail.isPresent()) throw new EmailBeingUsedException();
+        if(checkUsername.isPresent()) throw new UsernameBeingUsedException();
         User user = User.builder()
                 .id(UUID.randomUUID())
                 .email(createUserRequest.email())
@@ -64,10 +70,8 @@ public class UserService {
     }
 
     public UserDetailsDto getUser(String id) {
-        Optional<User> findUser = userRepository.findById(UUID.fromString(id));
-        if(findUser.isPresent()) {
-            return UserDetailsDto.of(findUser.get());
-        } else throw new JwtTokenException("User not found");
+        User findUser = userRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
+        return UserDetailsDto.of(findUser);
     }
 
     public UserDetailsDto editUser(String id, EditUserRequest editUserRequest) {
@@ -76,8 +80,8 @@ public class UserService {
         User user = userRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
         Optional<User> checkEmail = userRepository.findByEmail(editUserRequest.email());
         Optional<User> checkUsername = userRepository.findByUsername(editUserRequest.username());
-        if(checkEmail.isPresent() && !Objects.equals(checkEmail.get().getEmail(), user.getEmail())) throw new RuntimeException("Email is being used");
-        if(checkUsername.isPresent() && !Objects.equals(checkUsername.get().getUsername(), user.getUsername())) throw new RuntimeException("Username is being used");
+        if(checkEmail.isPresent() && !Objects.equals(checkEmail.get().getEmail(), user.getEmail())) throw new EmailBeingUsedException();
+        if(checkUsername.isPresent() && !Objects.equals(checkUsername.get().getUsername(), user.getUsername())) throw new UsernameBeingUsedException();
         if(Objects.equals(authenticatedUser.getUserRole().toString(), "[ADMIN]") || user.getId() == UUID.fromString(id)) {
             user.setEmail(editUserRequest.email());
             user.setName(editUserRequest.name());
@@ -90,8 +94,8 @@ public class UserService {
     }
 
     public void deleteUser(String id) {
-        Optional<User> findUser = userRepository.findById(UUID.fromString(id));
-        findUser.ifPresent(userRepository::delete);
+        User findUser = userRepository.findById(UUID.fromString(id)).orElseThrow(UserNotFound::new);
+        userRepository.delete(findUser);
     }
 
     public List<OrderResponse> myFavorites() {
@@ -131,9 +135,7 @@ public class UserService {
 
     public AllUserResponse actualUserInfo() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow(UserNotFound::new);
-
         return AllUserResponse.of(user);
     }
 
@@ -141,7 +143,6 @@ public class UserService {
         UserDetails currentUserDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = userRepository.findByUsername(currentUserDetails.getUsername())
                 .orElseThrow(UserNotFound::new);
-
         if (!currentUser.getUserRole().contains(UserRole.ADMIN)) {
             throw new RuntimeException("You do not have permission to change user roles.");
         }

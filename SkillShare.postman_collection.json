@@ -19,7 +19,8 @@
 									"var json = pm.response.json();\r",
 									"pm.collectionVariables.set(\"access_token\", json.token);"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -28,7 +29,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"a\",\r\n    \"password\": \"a\"\r\n}",
+							"raw": "{\r\n    \"email\": \"hola@hola.com\",\r\n    \"password\": \"a\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -116,7 +117,8 @@
 									"var json = pm.response.json();\r",
 									"pm.collectionVariables.set(\"access_token\", json.token);"
 								],
-								"type": "text/javascript"
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -125,7 +127,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"email@email.com\",\r\n    \"name\": \"nombre\",\r\n    \"surname\": \"apellidos\",\r\n    \"password\": \"contraseña\"\r\n}",
+							"raw": "{\r\n    \"email\": \"email@email.com\",\r\n    \"username\": \"dirtyBilly\",\r\n    \"name\": \"nombre\",\r\n    \"surname\": \"apellidos\",\r\n    \"password\": \"contraseña\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -224,12 +226,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/user",
-							"protocol": "http",
+							"raw": "{{localhost}}/user",
 							"host": [
-								"localhost"
+								"{{localhost}}"
 							],
-							"port": "8080",
 							"path": [
 								"user"
 							]
@@ -331,13 +331,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localhost}}/user/8989733b-3811-46e6-9261-7f1b09b0ad1a",
+							"raw": "{{localhost}}/user/f5fda694-2734-4e47-be60-1bf2c209af85",
 							"host": [
 								"{{localhost}}"
 							],
 							"path": [
 								"user",
-								"8989733b-3811-46e6-9261-7f1b09b0ad1a"
+								"f5fda694-2734-4e47-be60-1bf2c209af85"
 							]
 						}
 					},
@@ -449,6 +449,42 @@
 					]
 				},
 				{
+					"name": "User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"\",\r\n    \"username\": \"\",\r\n    \"name\": \"\",\r\n    \"surname\": \"\",\r\n    \"password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/user",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "EditUser",
 					"request": {
 						"auth": {
@@ -465,7 +501,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"a\",\r\n    \"surname\": \"a\",\r\n    \"password\": \"a\",\r\n    \"profilePicture\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkU60w11NIhPuopZVg_PQurtGNfcnv8quVSQ&usqp=CAU\"\r\n}",
+							"raw": "{\r\n    \"name\": \"user1\",\r\n    \"surname\": \"suruser1\",\r\n    \"profilePicture\": \"https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg\",\r\n    \"username\": \"Antonio22\",\r\n    \"email\": \"hola@hola.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -473,15 +509,98 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/user/84774719-3bce-49de-84c3-38f61b5ed67c",
-							"protocol": "http",
+							"raw": "{{localhost}}/user/de0fa8bf-f5ac-4e67-882d-993377cda916",
 							"host": [
-								"localhost"
+								"{{localhost}}"
 							],
-							"port": "8080",
 							"path": [
 								"user",
-								"84774719-3bce-49de-84c3-38f61b5ed67c"
+								"de0fa8bf-f5ac-4e67-882d-993377cda916"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/user/328a849d-8688-4df7-9268-f46d73c9f7c7",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"328a849d-8688-4df7-9268-f46d73c9f7c7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "favorites",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/user/favorite",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"favorite"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GivePrivileges",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/user/privileges/{id}",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"privileges",
+								"{id}"
 							]
 						}
 					},
@@ -503,14 +622,14 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "{{localhost}}/user/favorite/e438c08c-4e3b-48dc-9b35-95e5ddbdff81",
+							"raw": "{{localhost}}/user/favorite/5789cef5-70b5-4ebe-aa4f-fcab9403ed92",
 							"host": [
 								"{{localhost}}"
 							],
 							"path": [
 								"user",
 								"favorite",
-								"e438c08c-4e3b-48dc-9b35-95e5ddbdff81"
+								"5789cef5-70b5-4ebe-aa4f-fcab9403ed92"
 							]
 						}
 					},
@@ -546,7 +665,31 @@
 					"response": []
 				},
 				{
-					"name": "DeleteUser",
+					"name": "BanUser",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/user/ban/{id}",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"user",
+								"ban",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "AllOrders",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -558,26 +701,104 @@
 								}
 							]
 						},
-						"method": "DELETE",
+						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localhost}}/user/328a849d-8688-4df7-9268-f46d73c9f7c7",
+							"raw": "{{localhost}}/order",
 							"host": [
 								"{{localhost}}"
 							],
 							"path": [
-								"user",
-								"328a849d-8688-4df7-9268-f46d73c9f7c7"
+								"order"
 							]
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "Order",
-			"item": [
+				},
+				{
+					"name": "OrderById",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/order/e438c08c-4e3b-48dc-9b35-95e5ddbdff81",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"order",
+								"e438c08c-4e3b-48dc-9b35-95e5ddbdff81"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "OrderListByTitle",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/order/search/caracoles",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"order",
+								"search",
+								"caracoles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MyOrderList",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/myOrders",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"myOrders"
+							]
+						}
+					},
+					"response": []
+				},
 				{
 					"name": "Order",
 					"request": {
@@ -595,7 +816,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"nuevo order\",\r\n    \"description\": \"la descripcion de la nueva orden\"\r\n}",
+							"raw": "{\r\n    \"title\": \"nuevo order\",\r\n    \"description\": \"la descripcion de la nueva orden\",\r\n    \"tags\": [\"hola\"],\r\n    \"price\": 34.43\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -603,13 +824,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{localhost}}/order/new",
+							"raw": "{{localhost}}/order",
 							"host": [
 								"{{localhost}}"
 							],
 							"path": [
-								"order",
-								"new"
+								"order"
 							]
 						}
 					},
@@ -702,7 +922,7 @@
 					]
 				},
 				{
-					"name": "AllOrders",
+					"name": "EditOrder",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -714,22 +934,32 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"si\",\r\n    \"description\": \"descripcion\",\r\n    \"tags\": [\r\n        \"hola1\",\r\n        \"hola2\",\r\n        \"hola3\"\r\n    ],\r\n    \"price\": 23.45\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{localhost}}/order",
+							"raw": "{{localhost}}/order/b0cc82b9-0122-4bc8-b40d-f55fe3899f95",
 							"host": [
 								"{{localhost}}"
 							],
 							"path": [
-								"order"
+								"order",
+								"b0cc82b9-0122-4bc8-b40d-f55fe3899f95"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "OrderById",
+					"name": "ChangeStatus",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -741,23 +971,416 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "PUT",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\": \"OPEN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{localhost}}/order/e438c08c-4e3b-48dc-9b35-95e5ddbdff81",
+							"raw": "{{localhost}}/order/status/{id}",
 							"host": [
 								"{{localhost}}"
 							],
 							"path": [
 								"order",
-								"e438c08c-4e3b-48dc-9b35-95e5ddbdff81"
+								"status",
+								"{id}"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "OrderListByTitle",
+					"name": "DeleteRequest",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/order/e75b10d4-4adf-4446-bdfe-78ced2749d53",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"order",
+								"e75b10d4-4adf-4446-bdfe-78ced2749d53"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "Direct",
+					"item": [
+						{
+							"name": "myMessages",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}/message/direct",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"message",
+										"direct"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Chat",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}/message/direct/chat?userFrom=b702df56-820f-4d71-acd5-a700e2f809ed&userTo=17e3ac55-754a-4be1-864c-82ac3c6866d5",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"message",
+										"direct",
+										"chat"
+									],
+									"query": [
+										{
+											"key": "userFrom",
+											"value": "b702df56-820f-4d71-acd5-a700e2f809ed"
+										},
+										{
+											"key": "userTo",
+											"value": "17e3ac55-754a-4be1-864c-82ac3c6866d5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "UserWhoTalkedWith",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}/message/direct/users/{fromId}",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"message",
+										"direct",
+										"users",
+										"{fromId}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DirectMessage",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"\",\r\n    \"message\": \"\",\r\n    \"toUserEmail\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}/message/direct",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"message",
+										"direct"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DirectMessage",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"\",\r\n    \"message\": \"\",\r\n    \"toUserEmail\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}/message/direct/{id}",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"message",
+										"direct",
+										"{id}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New Request",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}/message/direct/{id}",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"message",
+										"direct",
+										"{id}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Order",
+					"item": [
+						{
+							"name": "OrderMessages",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}/message/order/{orderId}",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"message",
+										"order",
+										"{orderId}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrderMessagesByUserId",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{localhost}}/message/order/user/{userId}",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"message",
+										"order",
+										"user",
+										"{userId}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrderMessage",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"\",\r\n    \"message\": \"\",\r\n    \"orderId\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}/message/order",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"message",
+										"order"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "OrderMessage",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"\",\r\n    \"message\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{localhost}}/message/order/{id}",
+									"host": [
+										"{{localhost}}"
+									],
+									"path": [
+										"message",
+										"order",
+										"{id}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "tags",
+			"item": [
+				{
+					"name": "AllTags",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -772,14 +1395,141 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{localhost}}/order/find/*",
+							"raw": "{{localhost}}/tag",
 							"host": [
 								"{{localhost}}"
 							],
 							"path": [
-								"order",
-								"find",
-								"*"
+								"tag"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TagById",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/tag/{id}",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"tag",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tag",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/tag",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"tag"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tag",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{localhost}}/tag/{id}",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"tag",
+								"{id}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Tag",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{localhost}}/tag/{id}",
+							"host": [
+								"{{localhost}}"
+							],
+							"path": [
+								"tag",
+								"{id}"
 							]
 						}
 					},

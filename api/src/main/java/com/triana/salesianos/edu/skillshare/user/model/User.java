@@ -27,6 +27,7 @@ public class User implements UserDetails {
     @Column(name = "id", nullable = false)
     private UUID id;
 
+
     @Column(name = "email")
     private String email;
 
