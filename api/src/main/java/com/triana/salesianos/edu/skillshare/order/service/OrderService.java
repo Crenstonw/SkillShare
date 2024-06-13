@@ -150,6 +150,7 @@ public class OrderService {
         Order findOrder = orderRepository.findById(UUID.fromString(id)).orElseThrow(NoOrderException::new);
         if(Objects.equals(user.getUsername(), findOrder.getUser().getUsername())
                 || Objects.equals(user.getUserRole().toString(), "[ADMIN]")) {
+            orderRepository.deleteFavoriteOrder(UUID.fromString(id));
             orderRepository.delete(findOrder);
         } else throw new NotEnoughPrivilegesException();
     }

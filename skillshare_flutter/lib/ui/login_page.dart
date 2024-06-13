@@ -119,6 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                       labelText: 'password',
                     ),
                     onChanged: (value) => password = value,
+                    obscureText: true,
                   ),
                 ),
               ),
